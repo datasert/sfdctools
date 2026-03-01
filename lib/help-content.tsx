@@ -198,6 +198,98 @@ export const helpContent: Record<string, HelpContent> = {
       </div>
     ),
   },
+  "slds-styling-hooks": {
+    title: "SLDS Styling Hooks",
+    content: (
+      <div className="space-y-4">
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Overview</h3>
+          <p className="text-[var(--text-secondary)]">
+            Search and browse Salesforce Lightning Design System styling hooks with live type-based previews. Copy hook names, computed color values, and ready-to-use CSS usage snippets.
+          </p>
+        </div>
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Features</h3>
+          <ul className="list-disc list-inside space-y-1 text-[var(--text-secondary)]">
+            <li><strong>Type Filters:</strong> Filter hooks by preview type (Color, Spacing, Radius, Shadow, Typography, and more).</li>
+            <li><strong>Search:</strong> Search by hook name, token name, value, comment, category, preview type, and CSS property.</li>
+            <li><strong>Live Previews:</strong> Preview each hook in a visual card tailored to its type.</li>
+            <li><strong>Color Conversions:</strong> Color hooks display HEX, RGB, and HSL formats when parseable.</li>
+            <li><strong>Usage Snippets:</strong> Each card includes generated usage lines such as <code>color: var(--slds-g-color-...)</code>.</li>
+            <li><strong>One-click Copy:</strong> Copy hook names and usage snippets directly from each card.</li>
+            <li><strong>Persistent Filters:</strong> Search text and selected filter types are persisted for convenience.</li>
+          </ul>
+        </div>
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Usage</h3>
+          <p className="text-[var(--text-secondary)]">
+            Use type chips at the top to narrow results, then search for specific hooks. Click a card (or hook name) to copy the CSS variable, and use the Usage section in each card to copy ready-to-paste CSS declarations.
+          </p>
+        </div>
+      </div>
+    ),
+  },
+  "slds-css-classes": {
+    title: "SLDS CSS Classes",
+    content: (
+      <div className="space-y-4">
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Overview</h3>
+          <p className="text-[var(--text-secondary)]">
+            Explore SLDS utility CSS classes with searchable declarations, utility/type filters, preview cards, and copy-ready usage snippets.
+          </p>
+        </div>
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Features</h3>
+          <ul className="list-disc list-inside space-y-1 text-[var(--text-secondary)]">
+            <li><strong>Utility Filters:</strong> Filter by utility groups (for example spacing, typography, layout, and more).</li>
+            <li><strong>Type Filters:</strong> Filter by preview type (Color, Spacing, Typography, Border, Shadow, Sizing, Layout).</li>
+            <li><strong>Search:</strong> Search by class name, utility, preview type, summary text, CSS property, and value.</li>
+            <li><strong>Visual Previews:</strong> See class behavior in context-specific preview cards.</li>
+            <li><strong>Declaration View:</strong> Inspect key declarations for each class directly in the card.</li>
+            <li><strong>Copy Support:</strong> Copy class names and example usage snippets with one click.</li>
+            <li><strong>Persistent Filters:</strong> Search and filter selections are persisted between sessions.</li>
+          </ul>
+        </div>
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Usage</h3>
+          <p className="text-[var(--text-secondary)]">
+            Start with utility or type filters, then refine with search. Click a class card to copy the class name, or use the Usage section to copy a scaffold like <code>&lt;div class="slds-..."&gt;...&lt;/div&gt;</code>.
+          </p>
+        </div>
+      </div>
+    ),
+  },
+  "slds-colors": {
+    title: "SLDS Colors",
+    content: (
+      <div className="space-y-4">
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Overview</h3>
+          <p className="text-[var(--text-secondary)]">
+            Browse SLDS color hooks as grouped swatches. Quickly inspect and copy hook names and common color formats (HEX/RGB/HSL), along with CSS usage snippets.
+          </p>
+        </div>
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Features</h3>
+          <ul className="list-disc list-inside space-y-1 text-[var(--text-secondary)]">
+            <li><strong>Sectioned Palette:</strong> Colors are grouped into sections like palette, system, surface, accent, feedback, border, and transparent.</li>
+            <li><strong>Grouped Swatches:</strong> Related color variants are grouped for easier comparison.</li>
+            <li><strong>Search:</strong> Search by hook var, token name, group/category, original value, resolved value, or color formats.</li>
+            <li><strong>Hover Details:</strong> Hover/focus a swatch to open a detail popover.</li>
+            <li><strong>Copy Actions:</strong> Copy hook name, HEX, RGB, HSL, or usage line directly from the popover.</li>
+            <li><strong>Keyboard Support:</strong> Swatches are keyboard focusable and copy on Enter/Space.</li>
+          </ul>
+        </div>
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Usage</h3>
+          <p className="text-[var(--text-secondary)]">
+            Use search to narrow colors, then click a swatch to copy the hook name. Hover a swatch to copy HEX/RGB/HSL values or a usage snippet such as <code>color: var(--slds-g-color-...);</code>.
+          </p>
+        </div>
+      </div>
+    ),
+  },
   "datetime-converter": {
     title: "DateTime Converter",
     content: (
@@ -271,6 +363,37 @@ export const helpContent: Record<string, HelpContent> = {
           <h3 className="font-semibold text-[var(--text-primary)] mb-2">Usage</h3>
           <p className="text-[var(--text-secondary)]">
             Paste or type your JSON in the left pane. The formatted output appears in the right pane automatically. Adjust the indentation setting as needed. Use the Swap button to exchange input and output, or Clear All to reset both panes.
+          </p>
+        </div>
+      </div>
+    ),
+  },
+  "json-diff": {
+    title: "JSON Diff",
+    content: (
+      <div className="space-y-4">
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Overview</h3>
+          <p className="text-[var(--text-secondary)]">
+            Compare two JSON documents side-by-side with optional cleanup rules applied before diffing. The cleaned outputs are rendered in a Monaco diff view for easier review.
+          </p>
+        </div>
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Features</h3>
+          <ul className="list-disc list-inside space-y-1 text-[var(--text-secondary)]">
+            <li><strong>Two-way JSON Input:</strong> Edit left and right JSON independently in Monaco editors.</li>
+            <li><strong>Cleanup Options:</strong> Configure cleanup behavior from the JSON Cleanup dialog before comparison.</li>
+            <li><strong>Indent Control:</strong> Choose output indentation (0-10 spaces) for cleaned JSON formatting.</li>
+            <li><strong>Live Diff:</strong> Diff output updates automatically as input or cleanup settings change.</li>
+            <li><strong>Editable Side Labels:</strong> Rename left/right headers in the diff view for context.</li>
+            <li><strong>Actions:</strong> Swap sides, clear both inputs, and copy cleaned right JSON.</li>
+            <li><strong>Error Reporting:</strong> Shows parse errors when either JSON input is invalid.</li>
+          </ul>
+        </div>
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Usage</h3>
+          <p className="text-[var(--text-secondary)]">
+            Paste JSON into both editors, set indentation and cleanup options, then review the cleaned diff below. Use Swap to reverse comparison direction, and use Copy to export the cleaned right-side JSON.
           </p>
         </div>
       </div>

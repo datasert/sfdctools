@@ -34,8 +34,8 @@ export function Sidebar({ isMobileOpen, onCloseMobile }: SidebarProps) {
 
   return (
     <>
-      <aside className="hidden h-full w-56 flex-col border-r border-[var(--sidebar-border)] bg-[var(--sidebar-bg)] md:flex">
-        <nav className="flex-1 p-3">
+      <aside className="hidden h-full min-h-0 w-56 flex-col overflow-hidden border-r border-[var(--sidebar-border)] bg-[var(--sidebar-bg)] md:flex">
+        <nav className="min-h-0 flex-1 overflow-y-auto p-3">
           <div className="mb-2">
             <input
               type="text"
@@ -136,7 +136,7 @@ export function Sidebar({ isMobileOpen, onCloseMobile }: SidebarProps) {
           </button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto p-3">
+        <nav className="min-h-0 flex-1 overflow-y-auto p-3">
           <div className="mb-2">
             <input
               type="text"

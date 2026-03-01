@@ -1,0 +1,31 @@
+{
+  "manifest_version": 3,
+  "name": "Salesforce Tools",
+  "version": "1.0.0",
+  "description": "Easy access to various Salesforce related information and tools",
+  "permissions": [
+    "storage"
+  ],
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "Salesforce Tools"
+  },
+  "options_page": "index.html",
+  "icons": {
+    "16": "favicon.ico",
+    "48": "favicon.ico",
+    "128": "favicon.ico"
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; worker-src 'none'"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "assets/*",
+        "_next/static/*"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}

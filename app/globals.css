@@ -1,0 +1,191 @@
+@import "tailwindcss";
+
+/* Salesforce Sans Font Face Declarations */
+/* Note: Font files should be placed in public/fonts/ directory */
+@font-face {
+  font-family: 'Salesforce Sans';
+  src: url('/fonts/SalesforceSans-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Salesforce Sans';
+  src: url('/fonts/SalesforceSans-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Salesforce Sans';
+  src: url('/fonts/SalesforceSans-Light.woff2') format('woff2');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Dev-box.app light theme colors */
+  --background: #f5f5f5;
+  --foreground: #1a1a1a;
+  --sidebar-bg: #ffffff;
+  --sidebar-border: #e0e0e0;
+  --card-bg: #ffffff;
+  --card-border: #e0e0e0;
+  --text-primary: #000000;
+  --text-secondary: #1f2937;
+  --text-tertiary: #4b5563;
+  --hover-bg: #f9f9f9;
+  --border-color: #e0e0e0;
+  --accent-color: #6366f1;
+  --accent-hover: #4f46e5;
+  
+  /* Dev-box.app specific variables */
+  --content-color: #ffffff;
+  --content-text: #000000;
+  --content-border: #e0e0e0;
+  --content-faded-color: #f9f9f9;
+  --content-faded-border: #e0e0e0;
+  --primary-color: #6366f1;
+  --primary-text: #ffffff;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --input-color: #ffffff;
+  --input-text: #000000;
+  --input-border: #e0e0e0;
+  --input-background: #ffffff;
+  --title-color: #000000;
+  --title-border: #e0e0e0;
+  --background-border: #e0e0e0;
+  --background-text: #1f2937;
+  --faded-color: #f9f9f9;
+  --font-family: var(--font-sans);
+  --title-font-family: var(--font-sans);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0f0f0f;
+    --foreground: #e5e5e5;
+    --sidebar-bg: #1a1a1a;
+    --sidebar-border: #2a2a2a;
+    --card-bg: #1a1a1a;
+    --card-border: #2a2a2a;
+    --text-primary: #e5e5e5;
+    --text-secondary: #cbd5e1;
+    --text-tertiary: #94a3b8;
+    --hover-bg: #252525;
+    --border-color: #2a2a2a;
+    --accent-color: #818cf8;
+    --accent-hover: #6366f1;
+    
+    /* Dev-box.app dark theme variables */
+    --content-color: #1a1a1a;
+    --content-text: #e5e5e5;
+    --content-border: #2a2a2a;
+    --content-faded-color: #252525;
+    --content-faded-border: #2a2a2a;
+    --primary-color: #818cf8;
+    --primary-text: #ffffff;
+    --shadow-color: rgba(0, 0, 0, 0.3);
+    --input-color: #1a1a1a;
+    --input-text: #e5e5e5;
+    --input-border: #2a2a2a;
+    --input-background: #1a1a1a;
+    --title-color: #e5e5e5;
+    --title-border: #2a2a2a;
+    --background-border: #2a2a2a;
+    --background-text: #cbd5e1;
+    --faded-color: #252525;
+  }
+}
+
+[data-theme="dark"] {
+  --background: #0f0f0f;
+  --foreground: #e5e5e5;
+  --sidebar-bg: #1a1a1a;
+  --sidebar-border: #2a2a2a;
+  --card-bg: #1a1a1a;
+  --card-border: #2a2a2a;
+  --text-primary: #e5e5e5;
+  --text-secondary: #cbd5e1;
+  --text-tertiary: #94a3b8;
+  --hover-bg: #252525;
+  --border-color: #2a2a2a;
+  --accent-color: #818cf8;
+  --accent-hover: #6366f1;
+  
+  /* Dev-box.app dark theme variables */
+  --content-color: #1a1a1a;
+  --content-text: #e5e5e5;
+  --content-border: #2a2a2a;
+  --content-faded-color: #252525;
+  --content-faded-border: #2a2a2a;
+  --primary-color: #818cf8;
+  --primary-text: #ffffff;
+  --shadow-color: rgba(0, 0, 0, 0.3);
+  --input-color: #1a1a1a;
+  --input-text: #e5e5e5;
+  --input-border: #2a2a2a;
+  --input-background: #1a1a1a;
+  --title-color: #e5e5e5;
+  --title-border: #2a2a2a;
+  --background-border: #2a2a2a;
+  --background-text: #cbd5e1;
+  --faded-color: #252525;
+}
+
+[data-theme="light"] {
+  --background: #f5f5f5;
+  --foreground: #1a1a1a;
+  --sidebar-bg: #ffffff;
+  --sidebar-border: #e0e0e0;
+  --card-bg: #ffffff;
+  --card-border: #e0e0e0;
+  --text-primary: #000000;
+  --text-secondary: #1f2937;
+  --text-tertiary: #4b5563;
+  --hover-bg: #f9f9f9;
+  --border-color: #e0e0e0;
+  --accent-color: #6366f1;
+  --accent-hover: #4f46e5;
+  
+  /* Dev-box.app light theme variables */
+  --content-color: #ffffff;
+  --content-text: #000000;
+  --content-border: #e0e0e0;
+  --content-faded-color: #f9f9f9;
+  --content-faded-border: #e0e0e0;
+  --primary-color: #6366f1;
+  --primary-text: #ffffff;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --input-color: #ffffff;
+  --input-text: #000000;
+  --input-border: #e0e0e0;
+  --input-background: #ffffff;
+  --title-color: #000000;
+  --title-border: #e0e0e0;
+  --background-border: #e0e0e0;
+  --background-text: #1f2937;
+  --faded-color: #f9f9f9;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: 'Salesforce Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+* {
+  box-sizing: border-box;
+}

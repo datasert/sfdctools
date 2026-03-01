@@ -1,0 +1,44 @@
+{
+  "name": "sfdctools",
+  "version": "1.1.2",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "next dev -p 3500",
+    "build": "next build",
+    "cfinstall": "cp .npmrc.pages .npmrc && yarn install",
+    "cfbuild": "yarn build",
+    "build:extension": "next build && tsx scripts/build-extension.ts",
+    "start": "next start -p 3500",
+    "lint": "eslint",
+    "generate-icons": "tsx scripts/generate-icons.ts"
+  },
+  "dependencies": {
+    "@datasert/langium-sfsql": "^1.8.13",
+    "@monaco-editor/react": "^4.7.0",
+    "formulon": "^6.25.6",
+    "lz-string": "^1.5.0",
+    "monaco-editor": "^0.55.1",
+    "next": "^16.1.2",
+    "next-themes": "^0.4.4",
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4",
+    "@types/formulon": "^6",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.1.2",
+    "tailwindcss": "^4",
+    "tsx": "^4.19.2",
+    "typescript": "^5"
+  },
+  "packageManager": "npm@10.8.2",
+  "optionalDependencies": {
+    "@tailwindcss/oxide-linux-x64-gnu": "4.1.18",
+    "lightningcss-linux-x64-gnu": "1.30.2"
+  }
+}

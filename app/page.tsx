@@ -7,26 +7,47 @@ export default function Home() {
     <div className="h-full overflow-y-auto">
       <SetPageTitle title="&nbsp;" />
       <div className="relative p-4 md:p-6">
-        <section className="relative mx-auto mb-6 w-full max-w-6xl overflow-hidden rounded-3xl border border-white/40 bg-gradient-to-br from-[#0b1d3a] via-[#103a6c] to-[#126266] p-6 text-white shadow-[0_20px_70px_rgba(9,23,48,0.25)] md:mb-8 md:p-9">
-          <h1 className="text-3xl font-bold tracking-tight md:text-5xl">
-            Salesforce Tools
-          </h1>
-          <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-100/95 md:text-base">
-            A focused toolbox for Salesforce developers and admins. Format SOQL,
-            convert IDs, inspect SLDS assets, diff configs, and run daily
-            utility workflows from one place.
-          </p>
-          <p className="mt-4 text-sm font-semibold text-cyan-100">
-            100% free. No trackers. Open source.
-          </p>
-          <a
-            href="https://github.com/datasert/sfdctools"
-            target="_blank"
-            rel="noreferrer"
-            className="mt-2 inline-flex items-center text-sm font-medium text-cyan-100 underline decoration-cyan-200/70 underline-offset-4 transition hover:text-white"
-          >
-            github.com/datasert/sfdctools
-          </a>
+        <section className="relative mx-auto mb-6 w-full max-w-6xl overflow-hidden rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)] md:mb-8">
+          <div className="h-[3px] bg-[#0176d3]" />
+          <div className="p-6 md:p-8">
+            <p className="mb-1.5 text-xs font-semibold uppercase tracking-widest text-[#0176d3]">
+              Salesforce Developer Toolkit
+            </p>
+            <h1 className="text-2xl font-bold tracking-tight text-[var(--text-primary)] md:text-4xl">
+              Salesforce Tools
+            </h1>
+            <p className="mt-2.5 max-w-2xl text-sm leading-relaxed text-[var(--text-secondary)]">
+              A focused toolbox for Salesforce developers and admins, organized
+              around practical themes: Salesforce data workflows, SLDS design
+              resources, format/transform utilities, comparison tools, and
+              day-to-day productivity helpers.
+            </p>
+            <div className="mt-5 flex flex-wrap items-center gap-2 border-t border-[var(--border-color)] pt-4 text-xs">
+              <span className="rounded-full border border-[var(--border-color)] bg-[var(--hover-bg)] px-3 py-1 font-medium text-[var(--text-secondary)]">
+                100% Free
+              </span>
+              <span className="rounded-full border border-[var(--border-color)] bg-[var(--hover-bg)] px-3 py-1 font-medium text-[var(--text-secondary)]">
+                100% Local
+              </span>
+              <span className="rounded-full border border-[var(--border-color)] bg-[var(--hover-bg)] px-3 py-1 font-medium text-[var(--text-secondary)]">
+                No trackers
+              </span>
+              <span className="rounded-full border border-[var(--border-color)] bg-[var(--hover-bg)] px-3 py-1 font-medium text-[var(--text-secondary)]">
+                Open source
+              </span>
+              <span className="rounded-full border border-[var(--border-color)] bg-[var(--hover-bg)] px-3 py-1 font-medium text-[var(--text-secondary)]">
+                {tools.length} tools
+              </span>
+              <a
+                href="https://github.com/datasert/sfdctools"
+                target="_blank"
+                rel="noreferrer"
+                className="ml-auto text-xs font-medium text-[var(--accent-color)] underline-offset-4 hover:underline"
+              >
+                github.com/datasert/sfdctools
+              </a>
+            </div>
+          </div>
         </section>
 
         <section className="mx-auto w-full max-w-6xl">

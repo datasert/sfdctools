@@ -28,6 +28,7 @@ import { ActionButtons } from "@/components/ActionButtons";
 import { EditorGrid } from "@/components/EditorGrid";
 import { EditorPane } from "@/components/EditorPane";
 import { EditorWrapper } from "@/components/EditorWrapper";
+import { SAMPLE_TEXT_PROCESSOR_INPUT } from "@/lib/tool-samples";
 
 const STORAGE_KEY = "sfdc-tools:text-processor";
 
@@ -192,6 +193,16 @@ export function TextProcessor() {
     const temp = input;
     setInput(output);
     setOutput(temp);
+  };
+
+  const loadSample = () => {
+    setInput(SAMPLE_TEXT_PROCESSOR_INPUT);
+    setTransformations([
+      { id: "sample-trim", type: "trim", trimStart: true, trimEnd: true },
+      { id: "sample-dedupe", type: "dedupe" },
+      { id: "sample-sort", type: "sort", reverse: false, mode: "lexical" },
+    ]);
+    showToast("Sample input loaded.");
   };
 
   const inputLineCount = input.split("\n").length;
@@ -857,6 +868,7 @@ export function TextProcessor() {
           )}
 
           <ActionButtons
+            onSample={loadSample}
             onCopy={copyOutput}
             onSwap={swapPanes}
             onClear={clearAll}

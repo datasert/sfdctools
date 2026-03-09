@@ -13,6 +13,7 @@ import { ActionButtons } from "@/components/ActionButtons";
 import { EditorGrid } from "@/components/EditorGrid";
 import { EditorPane } from "@/components/EditorPane";
 import { EditorWrapper } from "@/components/EditorWrapper";
+import { SAMPLE_HTML } from "@/lib/tool-samples";
 
 const STORAGE_KEY = "sfdc-tools:html-formatter";
 
@@ -156,6 +157,12 @@ export function HtmlFormatter() {
     }
   };
 
+  const loadSample = () => {
+    setInput(SAMPLE_HTML);
+    setError(null);
+    showToast("Sample input loaded.");
+  };
+
   const inputLineCount = input.split("\n").length;
   const outputLineCount = output.split("\n").length;
 
@@ -194,6 +201,7 @@ export function HtmlFormatter() {
           </SettingsGroup>
 
           <ActionButtons
+            onSample={loadSample}
             onCopy={copyOutput}
             onSwap={swapPanes}
             onClear={clearAll}

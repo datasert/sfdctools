@@ -12,6 +12,7 @@ import { EditorGrid } from "@/components/EditorGrid";
 import { EditorPane } from "@/components/EditorPane";
 import { EditorWrapper } from "@/components/EditorWrapper";
 import { SegmentedToggle } from "@/components/SegmentedToggle";
+import { SAMPLE_BASE64_ENCODED, SAMPLE_BASE64_TEXT } from "@/lib/tool-samples";
 
 const STORAGE_KEY = "sfdc-tools:base64-encoder";
 
@@ -93,6 +94,12 @@ export function Base64Encoder() {
     }
   };
 
+  const loadSample = () => {
+    setInput(mode === "encode" ? SAMPLE_BASE64_TEXT : SAMPLE_BASE64_ENCODED);
+    setError(null);
+    showToast("Sample input loaded.");
+  };
+
   const inputLineCount = input.split("\n").length;
   const outputLineCount = output.split("\n").length;
 
@@ -117,6 +124,7 @@ export function Base64Encoder() {
           </SettingsGroup>
 
           <ActionButtons
+            onSample={loadSample}
             onCopy={copyOutput}
             onSwap={swapPanes}
             onClear={clearAll}

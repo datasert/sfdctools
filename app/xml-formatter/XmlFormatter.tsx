@@ -12,6 +12,7 @@ import { ActionButtons } from "@/components/ActionButtons";
 import { EditorGrid } from "@/components/EditorGrid";
 import { EditorPane } from "@/components/EditorPane";
 import { EditorWrapper } from "@/components/EditorWrapper";
+import { SAMPLE_XML } from "@/lib/tool-samples";
 
 const STORAGE_KEY = "sfdc-tools:xml-formatter";
 
@@ -154,6 +155,12 @@ export function XmlFormatter() {
     }
   };
 
+  const loadSample = () => {
+    setInput(SAMPLE_XML);
+    setError(null);
+    showToast("Sample input loaded.");
+  };
+
   const inputLineCount = input.split("\n").length;
   const outputLineCount = output.split("\n").length;
 
@@ -181,6 +188,7 @@ export function XmlFormatter() {
           </SettingsGroup>
 
           <ActionButtons
+            onSample={loadSample}
             onCopy={copyOutput}
             onSwap={swapPanes}
             onClear={clearAll}

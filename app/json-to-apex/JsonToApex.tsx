@@ -14,6 +14,7 @@ import { EditorGrid } from "@/components/EditorGrid";
 import { EditorPane } from "@/components/EditorPane";
 import { EditorWrapper } from "@/components/EditorWrapper";
 import { jsonToApex } from "@/lib/json-to-apex";
+import { SAMPLE_JSON } from "@/lib/tool-samples";
 
 const STORAGE_KEY = "sfdc-tools:json-to-apex";
 
@@ -58,6 +59,12 @@ export function JsonToApex() {
 
   const swapPanes = () => {
     // Swap doesn't make sense for this tool
+  };
+
+  const loadSample = () => {
+    setInput(SAMPLE_JSON);
+    setError(null);
+    showToast("Sample input loaded.");
   };
 
   const inputLineCount = input.split("\n").length;
@@ -115,6 +122,7 @@ export function JsonToApex() {
           </SettingsGroup>
 
           <ActionButtons
+            onSample={loadSample}
             onCopy={copyOutput}
             onSwap={swapPanes}
             onClear={clearAll}

@@ -15,6 +15,7 @@ import { EditorGrid } from "@/components/EditorGrid";
 import { EditorPane } from "@/components/EditorPane";
 import { EditorWrapper } from "@/components/EditorWrapper";
 import { ErrorDisplay } from "@/components/ErrorDisplay";
+import { SAMPLE_IN_CLAUSE_VALUES } from "@/lib/tool-samples";
 
 const STORAGE_KEY = "sfdc-tools:in-clause-generator";
 
@@ -72,6 +73,12 @@ export function InClauseGenerator() {
       setInput(output);
       setOutput("");
     }
+  };
+
+  const loadSample = () => {
+    setInput(SAMPLE_IN_CLAUSE_VALUES);
+    setError(null);
+    showToast("Sample input loaded.");
   };
 
   const inputValueCount = input.split(/[,\n]/).filter((v) => v.trim()).length;
@@ -140,6 +147,7 @@ export function InClauseGenerator() {
           </SettingsGroup>
 
           <ActionButtons
+            onSample={loadSample}
             onCopy={copyOutput}
             onSwap={swapPanes}
             onClear={clearAll}

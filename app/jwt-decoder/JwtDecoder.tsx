@@ -13,6 +13,7 @@ import { EditorGrid } from "@/components/EditorGrid";
 import { EditorPane } from "@/components/EditorPane";
 import { EditorWrapper } from "@/components/EditorWrapper";
 import { decodeJWT } from "@/lib/jwt-utils";
+import { SAMPLE_JWT_SECRET, SAMPLE_JWT_TOKEN } from "@/lib/tool-samples";
 
 const STORAGE_KEY = "sfdc-tools:jwt-decoder";
 
@@ -100,6 +101,13 @@ export function JwtDecoder() {
     setError(null);
   };
 
+  const loadSample = () => {
+    setInput(SAMPLE_JWT_TOKEN);
+    setSecret(SAMPLE_JWT_SECRET);
+    setError(null);
+    showToast("Sample input loaded.");
+  };
+
   const inputLineCount = input.split("\n").length;
   const headerLineCount = headerJson.split("\n").length;
   const payloadLineCount = payloadJson.split("\n").length;
@@ -141,6 +149,7 @@ export function JwtDecoder() {
           )}
 
           <ActionButtons
+            onSample={loadSample}
             onCopy={copyPayload}
             onSwap={() => {}}
             onClear={clearAll}

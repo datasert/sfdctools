@@ -8,6 +8,7 @@ import { ActionButtons } from "@/components/ActionButtons";
 import { EnhancedDiffEditor } from "@/components/EnhancedDiffEditor";
 import { Button } from "@/components/Button";
 import type { DiffOnMount } from "@monaco-editor/react";
+import { SAMPLE_TEXT_DIFF_LEFT, SAMPLE_TEXT_DIFF_RIGHT } from "@/lib/tool-samples";
 
 const STORAGE_KEY = "sfdc-tools:text-diff";
 
@@ -113,6 +114,20 @@ export function TextDiff() {
     }
   };
 
+  const loadSample = () => {
+    originalRef.current = SAMPLE_TEXT_DIFF_LEFT;
+    modifiedRef.current = SAMPLE_TEXT_DIFF_RIGHT;
+    setHasOriginal(true);
+    setHasModified(true);
+    setOriginal(SAMPLE_TEXT_DIFF_LEFT);
+    setModified(SAMPLE_TEXT_DIFF_RIGHT);
+    if (typeof window !== "undefined") {
+      window.localStorage.setItem(`${STORAGE_KEY}:original`, JSON.stringify(SAMPLE_TEXT_DIFF_LEFT));
+      window.localStorage.setItem(`${STORAGE_KEY}:modified`, JSON.stringify(SAMPLE_TEXT_DIFF_RIGHT));
+    }
+    showToast("Sample input loaded.");
+  };
+
   return (
     <>
       {ToastComponent}
@@ -128,6 +143,7 @@ export function TextDiff() {
               Sort Text
             </Button>
             <ActionButtons
+              onSample={loadSample}
               onCopy={copyModified}
               onSwap={swapTexts}
               onClear={clearAll}

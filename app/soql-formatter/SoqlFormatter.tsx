@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-// @ts-ignore - Package doesn't have proper type exports
 import { formatSfsql } from "@datasert/langium-sfsql/dist/language/sfsql-formatter-prettier.js";
 import { Input } from "@/components/Input";
 import { useToast } from "@/components/Toast";
@@ -15,6 +14,7 @@ import { ActionButtons } from "@/components/ActionButtons";
 import { EditorGrid } from "@/components/EditorGrid";
 import { EditorPane } from "@/components/EditorPane";
 import { EditorWrapper } from "@/components/EditorWrapper";
+import { SAMPLE_SOQL } from "@/lib/tool-samples";
 
 const STORAGE_KEY = "sfdc-tools:soql-formatter";
 
@@ -90,6 +90,12 @@ export function SoqlFormatter() {
     }
   };
 
+  const loadSample = () => {
+    setInput(SAMPLE_SOQL);
+    setError(null);
+    showToast("Sample input loaded.");
+  };
+
   const inputLineCount = input.split("\n").length;
   const outputLineCount = output.split("\n").length;
 
@@ -155,6 +161,7 @@ export function SoqlFormatter() {
           </SettingsGroup>
 
           <ActionButtons
+            onSample={loadSample}
             onCopy={copyOutput}
             onSwap={swapPanes}
             onClear={clearAll}

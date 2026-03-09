@@ -12,6 +12,7 @@ import { EditorGrid } from "@/components/EditorGrid";
 import { EditorPane } from "@/components/EditorPane";
 import { EditorWrapper } from "@/components/EditorWrapper";
 import { SegmentedToggle } from "@/components/SegmentedToggle";
+import { SAMPLE_URL_ENCODED, SAMPLE_URL_TEXT } from "@/lib/tool-samples";
 
 const STORAGE_KEY = "sfdc-tools:url-encoder";
 
@@ -151,6 +152,12 @@ export function UrlEncoder() {
     }
   };
 
+  const loadSample = () => {
+    setInput(mode === "encode" ? SAMPLE_URL_TEXT : SAMPLE_URL_ENCODED);
+    setError(null);
+    showToast("Sample input loaded.");
+  };
+
   const inputLineCount = input.split("\n").length;
   const outputLineCount = output.split("\n").length;
 
@@ -175,6 +182,7 @@ export function UrlEncoder() {
           </SettingsGroup>
 
           <ActionButtons
+            onSample={loadSample}
             onCopy={copyOutput}
             onSwap={swapPanes}
             onClear={clearAll}

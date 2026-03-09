@@ -21,9 +21,8 @@ export const helpContent: Record<string, HelpContent> = {
         <div>
           <h3 className="font-semibold text-[var(--text-primary)] mb-2">Features</h3>
           <ul className="list-disc list-inside space-y-1 text-[var(--text-secondary)]">
-            <li><strong>Auto-detect:</strong> Automatically detects the input format and converts to the opposite format</li>
-            <li><strong>15 → 18:</strong> Converts 15-character IDs to 18-character format</li>
-            <li><strong>18 → 15:</strong> Converts 18-character IDs to 15-character format</li>
+            <li><strong>15 → 18:</strong> Expands 15-character IDs to 18-character format</li>
+            <li><strong>18 → 15:</strong> Trims 18-character IDs back to 15-character format</li>
             <li><strong>Batch processing:</strong> Process multiple IDs, one per line</li>
             <li><strong>Error handling:</strong> Invalid IDs are passed through unchanged with error details shown</li>
           </ul>

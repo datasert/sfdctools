@@ -14,15 +14,16 @@ import { EditorGrid } from "@/components/EditorGrid";
 import { EditorPane } from "@/components/EditorPane";
 import { EditorWrapper } from "@/components/EditorWrapper";
 import { ErrorPanel } from "@/components/ErrorPanel";
+import { SAMPLE_IDS } from "@/lib/tool-samples";
 
-type ConversionDirection = "auto" | "to18" | "to15";
+type ConversionDirection = "to18" | "to15";
 
 const STORAGE_KEY = "sfdc-tools:id-converter";
 
 export function IdConverter() {
   const [input, setInput] = usePersistedState<string>(`${STORAGE_KEY}:input`, "");
   const [output, setOutput] = useState("");
-  const [direction, setDirection] = usePersistedState<ConversionDirection>(`${STORAGE_KEY}:direction`, "auto");
+  const [direction, setDirection] = usePersistedState<ConversionDirection>(`${STORAGE_KEY}:direction`, "to18");
   const [errors, setErrors] = useState<Array<{ line: number; id: string; error: string }>>([]);
   const { showToast, ToastComponent } = useToast();
 
@@ -67,6 +68,12 @@ export function IdConverter() {
     setOutput(temp);
   };
 
+  const loadSample = () => {
+    setInput(SAMPLE_IDS);
+    setErrors([]);
+    showToast("Sample input loaded.");
+  };
+
   const inputLineCount = input.split("\n").filter((l) => l.trim()).length;
   const outputLineCount = output.split("\n").filter((l) => l.trim()).length;
 
@@ -82,13 +89,13 @@ export function IdConverter() {
               onChange={(e) => setDirection(e.target.value as ConversionDirection)}
               className="min-w-[140px]"
             >
-              <option value="auto">Auto-detect</option>
               <option value="to18">15 → 18</option>
               <option value="to15">18 → 15</option>
             </Select>
           </SettingsGroup>
 
           <ActionButtons
+            onSample={loadSample}
             onCopy={copyOutput}
             onSwap={swapPanes}
             onClear={clearAll}

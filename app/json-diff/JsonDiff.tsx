@@ -17,6 +17,7 @@ import {
   defaultJsonCleanupOptions,
   type JsonCleanupOptions,
 } from "@/lib/json-cleanup";
+import { SAMPLE_JSON_LEFT, SAMPLE_JSON_RIGHT } from "@/lib/tool-samples";
 
 const STORAGE_KEY = "sfdc-tools:json-diff";
 
@@ -97,6 +98,12 @@ export function JsonDiff() {
     setRightJson(prevLeft);
   };
 
+  const loadSample = () => {
+    setLeftJson(SAMPLE_JSON_LEFT);
+    setRightJson(SAMPLE_JSON_RIGHT);
+    showToast("Sample input loaded.");
+  };
+
   const leftLineCount = leftJson ? leftJson.split("\n").length : 0;
   const rightLineCount = rightJson ? rightJson.split("\n").length : 0;
 
@@ -131,6 +138,7 @@ export function JsonDiff() {
           </SettingsGroup>
 
           <ActionButtons
+            onSample={loadSample}
             onCopy={copyCleanedRight}
             onSwap={swapSides}
             onClear={clearAll}

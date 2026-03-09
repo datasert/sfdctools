@@ -5,7 +5,7 @@ const LEGACY_SHARE_HASH_PARAM = "sfdcShare";
 const SHARE_LZ_PREFIX = "lz.";
 const SHARE_GZIP_PREFIX = "g.";
 const SHARE_RAW_PREFIX = "u.";
-const TOOL_STORAGE_PREFIX = "sfdc-tools:";
+export const TOOL_STORAGE_PREFIX = "sfdc-tools:";
 
 export interface ToolSharePayload {
   v: 1;
@@ -49,6 +49,25 @@ export function getToolStorageKeys(toolId: string): string[] {
     }
   }
   return keys;
+}
+
+export function clearAllToolState(): number {
+  if (typeof window === "undefined") return 0;
+
+  const keysToRemove: string[] = [];
+  for (let index = 0; index < window.localStorage.length; index += 1) {
+    const key = window.localStorage.key(index);
+    if (!key) continue;
+    if (key.startsWith(TOOL_STORAGE_PREFIX)) {
+      keysToRemove.push(key);
+    }
+  }
+
+  for (const key of keysToRemove) {
+    window.localStorage.removeItem(key);
+  }
+
+  return keysToRemove.length;
 }
 
 export function snapshotToolState(toolId: string): Record<string, string> {

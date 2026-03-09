@@ -18,6 +18,7 @@ import {
   defaultJsonCleanupOptions,
   type JsonCleanupOptions,
 } from "@/lib/json-cleanup";
+import { SAMPLE_JSON } from "@/lib/tool-samples";
 
 const STORAGE_KEY = "sfdc-tools:json-formatter";
 
@@ -86,6 +87,12 @@ export function JsonFormatter() {
     }
   };
 
+  const loadSample = () => {
+    setInput(SAMPLE_JSON);
+    setError(null);
+    showToast("Sample input loaded.");
+  };
+
   const inputLineCount = input.split("\n").length;
   const outputLineCount = output.split("\n").length;
 
@@ -119,6 +126,7 @@ export function JsonFormatter() {
           </SettingsGroup>
 
           <ActionButtons
+            onSample={loadSample}
             onCopy={copyOutput}
             onSwap={swapPanes}
             onClear={clearAll}

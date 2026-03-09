@@ -13,6 +13,7 @@ import { ActionButtons } from "@/components/ActionButtons";
 import { EditorPane } from "@/components/EditorPane";
 import { EditorWrapper } from "@/components/EditorWrapper";
 import { Splitter } from "@/components/Splitter";
+import { SAMPLE_OMNI_LEFT, SAMPLE_OMNI_RIGHT } from "@/lib/tool-samples";
 
 const STORAGE_KEY = "sfdc-tools:omni-config-diff";
 
@@ -299,6 +300,12 @@ export function OmniConfigDiff() {
     setRightXml(previousLeft);
   };
 
+  const loadSample = () => {
+    setLeftXml(SAMPLE_OMNI_LEFT);
+    setRightXml(SAMPLE_OMNI_RIGHT);
+    showToast("Sample input loaded.");
+  };
+
   const leftLineCount = leftXml ? leftXml.split("\n").length : 0;
   const rightLineCount = rightXml ? rightXml.split("\n").length : 0;
 
@@ -322,6 +329,7 @@ export function OmniConfigDiff() {
           </SettingsGroup>
 
           <ActionButtons
+            onSample={loadSample}
             onCopy={copyCleanedRight}
             onSwap={swapSides}
             onClear={clearAll}

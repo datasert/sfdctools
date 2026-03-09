@@ -15,6 +15,7 @@ import { EditorGrid } from "@/components/EditorGrid";
 import { EditorPane } from "@/components/EditorPane";
 import { EditorWrapper } from "@/components/EditorWrapper";
 import { ErrorDisplay } from "@/components/ErrorDisplay";
+import { SAMPLE_FORMULA } from "@/lib/tool-samples";
 
 const STORAGE_KEY = "sfdc-tools:formula-formatter";
 
@@ -69,6 +70,12 @@ export function FormulaFormatter() {
     }
   };
 
+  const loadSample = () => {
+    setInput(SAMPLE_FORMULA);
+    setError(null);
+    showToast("Sample input loaded.");
+  };
+
   const inputLineCount = input.split("\n").length;
   const outputLineCount = output.split("\n").length;
 
@@ -102,6 +109,7 @@ export function FormulaFormatter() {
           </SettingsGroup>
 
           <ActionButtons
+            onSample={loadSample}
             onCopy={copyOutput}
             onSwap={swapPanes}
             onClear={clearAll}

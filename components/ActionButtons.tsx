@@ -1,7 +1,7 @@
-import { ReactNode } from "react";
 import { Button } from "./Button";
 
 interface ActionButtonsProps {
+  onSample?: () => void;
   onCopy?: () => void;
   onSwap?: () => void;
   onClear?: () => void;
@@ -11,6 +11,7 @@ interface ActionButtonsProps {
 }
 
 export function ActionButtons({
+  onSample,
   onCopy,
   onSwap,
   onClear,
@@ -29,6 +30,11 @@ export function ActionButtons({
 
   return (
     <div className={`flex items-center gap-2 ml-auto ${className}`}>
+      {onSample && (
+        <Button onClick={onSample} variant="secondary" size="sm">
+          Load Sample
+        </Button>
+      )}
       {onCopy && (
         <Button onClick={onCopy} variant="secondary" size="sm" disabled={copyDisabled}>
           Copy Output

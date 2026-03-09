@@ -12,6 +12,7 @@ import Link from "next/link";
 import { useToast } from "./Toast";
 import {
   SHARE_HASH_PARAM,
+  clearAllToolState,
   applyToolState,
   decodeToolSharePayloadFromHash,
   encodeToolSharePayload,
@@ -145,6 +146,23 @@ export function Header({
     }
   };
 
+  const resetAll = () => {
+    if (typeof window === "undefined") return;
+
+    const confirmed = window.confirm(
+      "This will clear all saved data, settings, and editor contents across every tool. Continue?",
+    );
+    if (!confirmed) return;
+
+    const removedKeys = clearAllToolState();
+    if (removedKeys === 0) {
+      showToast("No saved tool data found.");
+      return;
+    }
+
+    window.location.reload();
+  };
+
   return (
     <>
       {ToastComponent}
@@ -220,6 +238,15 @@ export function Header({
             )}
           </div>
           <div className="flex items-center gap-1.5">
+            <button
+              onClick={resetAll}
+              type="button"
+              className="rounded-md border border-[var(--input-border)] bg-[var(--input-color)] px-2 py-1 text-xs text-[var(--input-text)] hover:bg-[var(--hover-bg)] transition-colors cursor-pointer md:px-2.5"
+              aria-label="Reset all"
+              title="Reset all saved tool data"
+            >
+              Reset All
+            </button>
             {currentTool && (
               <button
                 onClick={copyShareLink}

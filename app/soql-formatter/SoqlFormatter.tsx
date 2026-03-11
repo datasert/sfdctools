@@ -5,6 +5,7 @@ import { formatSfsql } from "@datasert/langium-sfsql/dist/language/sfsql-formatt
 import { Input } from "@/components/Input";
 import { useToast } from "@/components/Toast";
 import { usePersistedState } from "@/lib/use-persisted-state";
+import { usePersistedTextState } from "@/lib/use-persisted-text-state";
 import { MonacoEditor } from "@/components/MonacoEditor";
 import { SettingsBar } from "@/components/SettingsBar";
 import { SettingsGroup } from "@/components/SettingsGroup";
@@ -19,7 +20,7 @@ import { SAMPLE_SOQL } from "@/lib/tool-samples";
 const STORAGE_KEY = "sfdc-tools:soql-formatter";
 
 export function SoqlFormatter() {
-  const [input, setInput] = usePersistedState<string>(`${STORAGE_KEY}:input`, "");
+  const [input, setInput] = usePersistedTextState(`${STORAGE_KEY}:input`, "");
   const [output, setOutput] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [printWidth, setPrintWidth] = usePersistedState<number>(`${STORAGE_KEY}:printWidth`, 150);

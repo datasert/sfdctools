@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useToast } from "@/components/Toast";
 import { usePersistedState } from "@/lib/use-persisted-state";
+import { usePersistedTextState } from "@/lib/use-persisted-text-state";
 import { SettingsBar } from "@/components/SettingsBar";
 import { ActionButtons } from "@/components/ActionButtons";
 import { EnhancedDiffEditor } from "@/components/EnhancedDiffEditor";
@@ -64,8 +65,8 @@ function getMissingLines(source: string, comparison: string): string[] {
 }
 
 export function TextDiff() {
-  const [original, setOriginal] = usePersistedState<string>(`${STORAGE_KEY}:original`, "");
-  const [modified, setModified] = usePersistedState<string>(`${STORAGE_KEY}:modified`, "");
+  const [original, setOriginal] = usePersistedTextState(`${STORAGE_KEY}:original`, "");
+  const [modified, setModified] = usePersistedTextState(`${STORAGE_KEY}:modified`, "");
   const [leftLabel, setLeftLabel] = usePersistedState<string>(
     `${STORAGE_KEY}:left-title`,
     DEFAULT_LEFT_LABEL,
@@ -94,18 +95,14 @@ export function TextDiff() {
       const value = originalEditor.getValue();
       originalRef.current = value;
       setHasOriginal(Boolean(value));
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem(`${STORAGE_KEY}:original`, JSON.stringify(value));
-      }
+      setOriginal(value);
     });
     
     modifiedEditor.onDidChangeModelContent(() => {
       const value = modifiedEditor.getValue();
       modifiedRef.current = value;
       setHasModified(Boolean(value));
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem(`${STORAGE_KEY}:modified`, JSON.stringify(value));
-      }
+      setModified(value);
     });
   };
 
@@ -139,12 +136,6 @@ export function TextDiff() {
     setModified("");
     setLeftLabel(DEFAULT_LEFT_LABEL);
     setRightLabel(DEFAULT_RIGHT_LABEL);
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem(`${STORAGE_KEY}:original`, JSON.stringify(""));
-      window.localStorage.setItem(`${STORAGE_KEY}:modified`, JSON.stringify(""));
-      window.localStorage.setItem(`${STORAGE_KEY}:left-title`, JSON.stringify(DEFAULT_LEFT_LABEL));
-      window.localStorage.setItem(`${STORAGE_KEY}:right-title`, JSON.stringify(DEFAULT_RIGHT_LABEL));
-    }
   };
 
   const swapTexts = () => {
@@ -156,10 +147,6 @@ export function TextDiff() {
     setHasModified(Boolean(nextModified));
     setOriginal(nextOriginal);
     setModified(nextModified);
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem(`${STORAGE_KEY}:original`, JSON.stringify(nextOriginal));
-      window.localStorage.setItem(`${STORAGE_KEY}:modified`, JSON.stringify(nextModified));
-    }
   };
 
   const sortTexts = () => {
@@ -171,10 +158,6 @@ export function TextDiff() {
     setHasModified(Boolean(nextModified));
     setOriginal(nextOriginal);
     setModified(nextModified);
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem(`${STORAGE_KEY}:original`, JSON.stringify(nextOriginal));
-      window.localStorage.setItem(`${STORAGE_KEY}:modified`, JSON.stringify(nextModified));
-    }
   };
 
   const loadSample = () => {
@@ -184,10 +167,6 @@ export function TextDiff() {
     setHasModified(true);
     setOriginal(SAMPLE_TEXT_DIFF_LEFT);
     setModified(SAMPLE_TEXT_DIFF_RIGHT);
-    if (typeof window !== "undefined") {
-      window.localStorage.setItem(`${STORAGE_KEY}:original`, JSON.stringify(SAMPLE_TEXT_DIFF_LEFT));
-      window.localStorage.setItem(`${STORAGE_KEY}:modified`, JSON.stringify(SAMPLE_TEXT_DIFF_RIGHT));
-    }
     showToast("Sample input loaded.", "info");
   };
 
@@ -236,6 +215,7 @@ export function TextDiff() {
             defaultRightLabel={DEFAULT_RIGHT_LABEL}
             onLeftLabelChange={setLeftLabel}
             onRightLabelChange={setRightLabel}
+            autoCollapseOnContentChange={true}
             readOnly={false}
             onMount={handleEditorMount}
           />

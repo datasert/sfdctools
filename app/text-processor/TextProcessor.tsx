@@ -20,6 +20,7 @@ import { Button } from "@/components/Button";
 import { Select } from "@/components/Select";
 import { useToast } from "@/components/Toast";
 import { usePersistedState } from "@/lib/use-persisted-state";
+import { usePersistedTextState } from "@/lib/use-persisted-text-state";
 import { MonacoEditor } from "@/components/MonacoEditor";
 import { SettingsBar } from "@/components/SettingsBar";
 import { SettingsGroup } from "@/components/SettingsGroup";
@@ -100,7 +101,7 @@ const EXTRACT_MODE_OPTIONS: Array<{ value: ExtractMode; label: string }> = [
 
 export function TextProcessor() {
   const [mounted, setMounted] = useState(false);
-  const [input, setInput] = usePersistedState<string>(`${STORAGE_KEY}:input`, "");
+  const [input, setInput] = usePersistedTextState(`${STORAGE_KEY}:input`, "");
   const [output, setOutput] = useState("");
   const [transformations, setTransformations] = usePersistedState<Transformation[]>(
     `${STORAGE_KEY}:transformations`,
@@ -785,6 +786,18 @@ export function TextProcessor() {
                           </option>
                         ))}
                       </select>
+                      <label className="flex items-center gap-1 text-xs text-[var(--text-secondary)]">
+                        <input
+                          type="checkbox"
+                          checked={trans.showCount}
+                          onChange={(event) =>
+                            updateTransformation(trans.id, {
+                              showCount: event.target.checked,
+                            } as Partial<Transformation>)
+                          }
+                        />
+                        Show Count
+                      </label>
                     </div>
                   )}
                   {trans.type === "sort" && (

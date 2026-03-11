@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { usePersistedState } from "@/lib/use-persisted-state";
+import { usePersistedTextState } from "@/lib/use-persisted-text-state";
 import { useToast } from "@/components/Toast";
 import { MonacoEditor } from "@/components/MonacoEditor";
 import { Checkbox } from "@/components/Checkbox";
@@ -262,8 +263,8 @@ function cleanupOmniXml(
 }
 
 export function OmniConfigDiff() {
-  const [leftXml, setLeftXml] = usePersistedState<string>(`${STORAGE_KEY}:left`, "");
-  const [rightXml, setRightXml] = usePersistedState<string>(`${STORAGE_KEY}:right`, "");
+  const [leftXml, setLeftXml] = usePersistedTextState(`${STORAGE_KEY}:left`, "");
+  const [rightXml, setRightXml] = usePersistedTextState(`${STORAGE_KEY}:right`, "");
   const [leftTitle, setLeftTitle] = usePersistedState<string>(`${STORAGE_KEY}:left-title`, "Left XML");
   const [rightTitle, setRightTitle] = usePersistedState<string>(`${STORAGE_KEY}:right-title`, "Right XML");
   const [decodeJson, setDecodeJson] = usePersistedState<boolean>(`${STORAGE_KEY}:decode-json`, true);

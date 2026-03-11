@@ -1,5 +1,16 @@
 import { useState, useEffect } from "react";
 
+function isQuotaExceededError(error: unknown): boolean {
+  if (!(error instanceof DOMException)) {
+    return false;
+  }
+
+  return (
+    error.name === "QuotaExceededError" ||
+    error.name === "NS_ERROR_DOM_QUOTA_REACHED"
+  );
+}
+
 /**
  * Custom hook for persisting state to localStorage
  * @param key - Unique key for localStorage
@@ -37,7 +48,18 @@ export function usePersistedState<T>(
       setStoredValue(valueToStore);
       
       if (isHydrated && typeof window !== "undefined") {
-        window.localStorage.setItem(key, JSON.stringify(valueToStore));
+        const serializedValue = JSON.stringify(valueToStore);
+
+        try {
+          window.localStorage.setItem(key, serializedValue);
+        } catch (error) {
+          if (!isQuotaExceededError(error)) {
+            throw error;
+          }
+
+          // Remove stale saved data for this key and keep the latest value in memory.
+          window.localStorage.removeItem(key);
+        }
       }
     } catch (error) {
       console.error(`Error saving ${key} to localStorage:`, error);

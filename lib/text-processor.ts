@@ -74,7 +74,12 @@ export type Transformation =
     }
   | { id: string; type: 'caseConvert'; mode: CaseConvertMode }
   | { id: string; type: 'filterLines'; mode: FilterLinesMode; value: string; not: boolean }
-  | { id: string; type: 'frequencyReport'; mode: FrequencyReportMode }
+  | {
+      id: string;
+      type: 'frequencyReport';
+      mode: FrequencyReportMode;
+      showCount: boolean;
+    }
   | { id: string; type: 'split'; splitChars: string }
   | { id: string; type: 'join'; joinString: string; everyNLines: number };
 
@@ -123,7 +128,7 @@ export function createTransformation(type: TransformationType, id: string): Tran
     return { id, type, mode: 'text', find: '', replaceWith: '', all: true, caseInsensitive: true };
   }
   if (type === 'frequencyReport') {
-    return { id, type, mode: 'both' };
+    return { id, type, mode: 'both', showCount: true };
   }
   if (type === 'filterLines') {
     return { id, type, mode: 'contains', value: '', not: false };
@@ -243,6 +248,7 @@ export function normalizeTransformation(value: Transformation): Transformation {
     return {
       ...value,
       mode,
+      showCount: typeof value.showCount === 'boolean' ? value.showCount : true,
     };
   }
   if (value.type === 'filterLines') {
@@ -474,7 +480,13 @@ function matchesFilter(line: string, mode: FilterLinesMode, value: string): bool
   }
 }
 
-function buildFrequencyReport(lines: string[], mode: FrequencyReportMode): string {
+function buildFrequencyReport(
+  lines: string[],
+  options: {
+    mode: FrequencyReportMode;
+    showCount: boolean;
+  },
+): string {
   const stats = new Map<string, { count: number; firstIndex: number }>();
 
   lines.forEach((line, index) => {
@@ -493,13 +505,15 @@ function buildFrequencyReport(lines: string[], mode: FrequencyReportMode): strin
     return a[1].firstIndex - b[1].firstIndex;
   });
 
-  if (mode === 'duplicates') {
+  if (options.mode === 'duplicates') {
     entries = entries.filter(([, value]) => value.count > 1);
-  } else if (mode === 'nonDuplicates') {
+  } else if (options.mode === 'nonDuplicates') {
     entries = entries.filter(([, value]) => value.count === 1);
   }
 
-  return entries.map(([line, value]) => `${line} (${value.count})`).join('\n');
+  return entries
+    .map(([line, value]) => (options.showCount ? `${line} (${value.count})` : line))
+    .join('\n');
 }
 
 /**
@@ -691,7 +705,10 @@ function applyTransformation(text: string, transformation: Transformation): stri
     case 'frequencyReport': {
       const normalized = normalizeTransformation(transformation);
       if (normalized.type !== 'frequencyReport') return text;
-      return buildFrequencyReport(lines, normalized.mode);
+      return buildFrequencyReport(lines, {
+        mode: normalized.mode,
+        showCount: normalized.showCount,
+      });
     }
     
     case 'dedupe':

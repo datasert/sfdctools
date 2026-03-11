@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { usePersistedState } from "@/lib/use-persisted-state";
+import { usePersistedTextState } from "@/lib/use-persisted-text-state";
 import { useToast } from "@/components/Toast";
 import { SettingsBar } from "@/components/SettingsBar";
 import { SettingsGroup } from "@/components/SettingsGroup";
@@ -43,11 +44,11 @@ function formatJsonWithCleanup(
 }
 
 export function JsonDiff() {
-  const [leftJson, setLeftJson] = usePersistedState<string>(
+  const [leftJson, setLeftJson] = usePersistedTextState(
     `${STORAGE_KEY}:left`,
     "",
   );
-  const [rightJson, setRightJson] = usePersistedState<string>(
+  const [rightJson, setRightJson] = usePersistedTextState(
     `${STORAGE_KEY}:right`,
     "",
   );

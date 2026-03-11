@@ -47,9 +47,6 @@ export default function ChangeLogPage() {
         <div className="space-y-6">
           <div>
             <h1 className="mb-2 text-2xl font-bold text-[var(--text-primary)]">Change Log</h1>
-            <p className="text-[var(--text-secondary)]">
-              Recent updates generated from repository commit history.
-            </p>
           </div>
 
           <div className="space-y-5">

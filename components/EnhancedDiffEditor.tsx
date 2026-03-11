@@ -24,6 +24,7 @@ interface EnhancedDiffEditorProps {
   readOnly?: boolean;
   showToolbar?: boolean;
   showEditableLabels?: boolean;
+  autoCollapseOnContentChange?: boolean;
   className?: string;
   options?: MonacoType.editor.IDiffEditorConstructionOptions;
   onMount?: DiffOnMount;
@@ -43,6 +44,7 @@ export function EnhancedDiffEditor({
   readOnly = true,
   showToolbar = true,
   showEditableLabels = true,
+  autoCollapseOnContentChange = false,
   className = "",
   options = {},
   onMount,
@@ -64,6 +66,8 @@ export function EnhancedDiffEditor({
   );
   const diffListenerRef = useRef<MonacoType.IDisposable | null>(null);
   const rafRef = useRef<number | null>(null);
+  const effectiveOriginal = original;
+  const effectiveModified = modified;
 
   useEffect(() => {
     const editor = diffEditorRef.current;
@@ -84,6 +88,33 @@ export function EnhancedDiffEditor({
   }, [collapseUnchanged, ignoreWhitespace, wrapText]);
 
   useEffect(() => {
+    if (!autoCollapseOnContentChange) {
+      return;
+    }
+
+    const editor = diffEditorRef.current;
+    if (!editor) {
+      return;
+    }
+
+    editor.updateOptions({
+      hideUnchangedRegions: {
+        enabled: false,
+      },
+    });
+
+    const timeoutId = window.setTimeout(() => {
+      editor.updateOptions({
+        hideUnchangedRegions: {
+          enabled: true,
+        },
+      });
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [autoCollapseOnContentChange, effectiveOriginal, effectiveModified]);
+
+  useEffect(() => {
     return () => {
       if (rafRef.current !== null) {
         cancelAnimationFrame(rafRef.current);
@@ -96,8 +127,6 @@ export function EnhancedDiffEditor({
 
   const monacoTheme =
     resolvedTheme === "dark" || theme === "dark" ? "vs-dark" : "light";
-  const effectiveOriginal = original;
-  const effectiveModified = modified;
   const resolvedLeftLabel = leftLabel ?? localLeftLabel;
   const resolvedRightLabel = rightLabel ?? localRightLabel;
 

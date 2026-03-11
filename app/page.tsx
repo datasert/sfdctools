@@ -13,9 +13,16 @@ export default function Home() {
             <p className="mb-1.5 text-xs font-semibold uppercase tracking-widest text-[#0176d3]">
               Salesforce Developer Toolkit
             </p>
-            <h1 className="text-2xl font-bold tracking-tight text-[var(--text-primary)] md:text-4xl">
-              Salesforce Tools
-            </h1>
+            <div className="flex items-center gap-4">
+              <img
+                src="/logos/circlecompass-svgrepo-com.svg"
+                alt="Salesforce Tools logo"
+                className="h-12 w-12 shrink-0 md:h-14 md:w-14"
+              />
+              <h1 className="text-2xl font-bold tracking-tight text-[var(--text-primary)] md:text-4xl">
+                Salesforce Tools
+              </h1>
+            </div>
             <p className="mt-2.5 max-w-2xl text-sm leading-relaxed text-[var(--text-secondary)]">
               A focused toolbox for Salesforce developers and admins, organized
               around practical themes: Salesforce data workflows, SLDS design

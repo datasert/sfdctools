@@ -8,6 +8,7 @@ type ChangeLogItem = {
 };
 
 const CHANGE_LOG_ITEMS: ChangeLogItem[] = [
+  { date: "2026-03-11", title: "Add Copy Diffs action to Text Diff clipboard tools" },
   { date: "2026-03-09", title: "Add global Reset All action to clear saved tool data" },
   { date: "2026-03-09", title: "Add sample input loader for input-based tools" },
   { date: "2026-02-26", title: "Add ability to sort text in Text Diff" },

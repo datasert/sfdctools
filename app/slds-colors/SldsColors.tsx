@@ -514,12 +514,13 @@ export function SldsColors({ initialColors }: SldsColorsProps) {
       if (navigator.clipboard?.writeText) {
         await navigator.clipboard.writeText(value);
       } else if (!copyWithFallback(value)) {
-        showToast("Failed to copy");
+        showToast("Failed to copy", "error");
         return;
       }
-      showToast(message);
+      showToast(message, "success");
     } catch {
-      showToast(copyWithFallback(value) ? message : "Failed to copy");
+      const copied = copyWithFallback(value);
+      showToast(copied ? message : "Failed to copy", copied ? "success" : "error");
     }
   };
 

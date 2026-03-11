@@ -86,6 +86,7 @@ export function Header({
       } catch (error) {
         showToast(
           error instanceof Error ? error.message : "Failed to load shared URL.",
+          "error",
         );
       }
     };
@@ -133,13 +134,14 @@ export function Header({
       }
 
       if (copied) {
-        showToast("Share URL copied to clipboard.");
+        showToast("Share URL copied to clipboard.", "success");
       } else {
-        showToast("Copy failed. Clipboard is blocked.");
+        showToast("Copy failed. Clipboard is blocked.", "error");
       }
     } catch (error) {
       showToast(
         error instanceof Error ? error.message : "Failed to create share URL.",
+        "error",
       );
     } finally {
       setIsSharing(false);
@@ -156,7 +158,7 @@ export function Header({
 
     const removedKeys = clearAllToolState();
     if (removedKeys === 0) {
-      showToast("No saved tool data found.");
+      showToast("No saved tool data found.", "warn");
       return;
     }
 

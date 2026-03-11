@@ -610,13 +610,14 @@ export const helpContent: Record<string, HelpContent> = {
             <li><strong>Real-time comparison:</strong> Diff updates as you type in either pane</li>
             <li><strong>Line-by-line comparison:</strong> Differences are shown line by line for easy identification</li>
             <li><strong>Copy functionality:</strong> Copy original or modified text separately</li>
+            <li><strong>Copy Diffs:</strong> Copy the lines missing from the left side and the lines missing from the right side to the clipboard</li>
             <li><strong>Swap texts:</strong> Exchange original and modified texts</li>
           </ul>
         </div>
         <div>
           <h3 className="font-semibold text-[var(--text-primary)] mb-2">Usage</h3>
           <p className="text-[var(--text-secondary)]">
-            Enter or paste your original text in the left pane and the modified text in the right pane. The diff view at the bottom will automatically show the differences. Green highlights indicate additions, red indicates deletions, and blue indicates modifications. Use the copy buttons to copy either text, or swap them to reverse the comparison.
+            Enter or paste your original text in the left pane and the modified text in the right pane. The diff view at the bottom will automatically show the differences. Green highlights indicate additions, red indicates deletions, and blue indicates modifications. Use the copy buttons to copy either full text, or use Copy Diffs to copy only the lines missing on each side to the clipboard. Swap reverses the comparison.
           </p>
         </div>
       </div>

@@ -3,4 +3,5 @@
 ## Build Execution Policy
 - Do not run `npm run build` (or any equivalent full build command) on every prompt.
 - Run build commands only when the user explicitly asks for a build, deploy validation, or release verification.
+- If the user asks to commit and push changes, run the appropriate build first before committing and pushing, unless they explicitly say not to.
 - For normal code edits, prefer targeted checks (lint/tests/type checks) only when needed and only when requested.

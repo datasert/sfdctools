@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
 import { DiffEditor } from "@monaco-editor/react";
@@ -57,14 +57,13 @@ export function EnhancedDiffEditor({
   const [isMaximized, setIsMaximized] = useState(false);
   const [localLeftLabel, setLocalLeftLabel] = useState(defaultLeftLabel);
   const [localRightLabel, setLocalRightLabel] = useState(defaultRightLabel);
+  const instanceId = useId();
+  const modelId = `diff-${instanceId.replace(/:/g, "")}`;
   const diffEditorRef = useRef<MonacoType.editor.IStandaloneDiffEditor | null>(
     null,
   );
   const diffListenerRef = useRef<MonacoType.IDisposable | null>(null);
   const rafRef = useRef<number | null>(null);
-  const modelIdRef = useRef<string>(
-    `diff-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`
-  );
 
   useEffect(() => {
     const editor = diffEditorRef.current;
@@ -409,8 +408,8 @@ export function EnhancedDiffEditor({
           language={language}
           original={effectiveOriginal}
           modified={effectiveModified}
-          originalModelPath={`inmemory://${modelIdRef.current}/original.${language}`}
-          modifiedModelPath={`inmemory://${modelIdRef.current}/modified.${language}`}
+          originalModelPath={`inmemory://${modelId}/original.${language}`}
+          modifiedModelPath={`inmemory://${modelId}/modified.${language}`}
           keepCurrentOriginalModel={true}
           keepCurrentModifiedModel={true}
           theme={monacoTheme}

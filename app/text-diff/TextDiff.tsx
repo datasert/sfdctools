@@ -11,6 +11,8 @@ import type { DiffOnMount } from "@monaco-editor/react";
 import { SAMPLE_TEXT_DIFF_LEFT, SAMPLE_TEXT_DIFF_RIGHT } from "@/lib/tool-samples";
 
 const STORAGE_KEY = "sfdc-tools:text-diff";
+const DEFAULT_LEFT_LABEL = "Left";
+const DEFAULT_RIGHT_LABEL = "Right";
 
 function sortTextLines(value: string): string {
   if (!value) return value;
@@ -26,9 +28,52 @@ function sortTextLines(value: string): string {
   return hasTrailingNewline ? `${result}\n` : result;
 }
 
+function getTextLines(value: string): string[] {
+  if (!value) {
+    return [];
+  }
+
+  const lines = value.split("\n");
+  if (value.endsWith("\n")) {
+    lines.pop();
+  }
+
+  return lines;
+}
+
+function getMissingLines(source: string, comparison: string): string[] {
+  const sourceLines = getTextLines(source);
+  const comparisonCounts = new Map<string, number>();
+
+  for (const line of getTextLines(comparison)) {
+    comparisonCounts.set(line, (comparisonCounts.get(line) ?? 0) + 1);
+  }
+
+  const missingLines: string[] = [];
+
+  for (const line of sourceLines) {
+    const remainingCount = comparisonCounts.get(line) ?? 0;
+    if (remainingCount > 0) {
+      comparisonCounts.set(line, remainingCount - 1);
+      continue;
+    }
+    missingLines.push(line);
+  }
+
+  return missingLines;
+}
+
 export function TextDiff() {
   const [original, setOriginal] = usePersistedState<string>(`${STORAGE_KEY}:original`, "");
   const [modified, setModified] = usePersistedState<string>(`${STORAGE_KEY}:modified`, "");
+  const [leftLabel, setLeftLabel] = usePersistedState<string>(
+    `${STORAGE_KEY}:left-title`,
+    DEFAULT_LEFT_LABEL,
+  );
+  const [rightLabel, setRightLabel] = usePersistedState<string>(
+    `${STORAGE_KEY}:right-title`,
+    DEFAULT_RIGHT_LABEL,
+  );
   const [hasOriginal, setHasOriginal] = useState(Boolean(original));
   const [hasModified, setHasModified] = useState(Boolean(modified));
   const originalRef = useRef(original);
@@ -64,11 +109,25 @@ export function TextDiff() {
     });
   };
 
-  const copyModified = () => {
-    if (modifiedRef.current) {
-      navigator.clipboard.writeText(modifiedRef.current);
-      showToast("Modified text copied to clipboard!");
+  const copyDiffs = async () => {
+    const missingInLeft = getMissingLines(modifiedRef.current, originalRef.current);
+    const missingInRight = getMissingLines(originalRef.current, modifiedRef.current);
+
+    if (missingInLeft.length === 0 && missingInRight.length === 0) {
+      showToast("No diff lines to copy.", "warn");
+      return;
     }
+
+    const payload = [
+      `Missing in Left [${DEFAULT_LEFT_LABEL}]:`,
+      ...(missingInLeft.length > 0 ? missingInLeft : ["(none)"]),
+      "",
+      `Missing in Right [${DEFAULT_RIGHT_LABEL}]:`,
+      ...(missingInRight.length > 0 ? missingInRight : ["(none)"]),
+    ].join("\n");
+
+    await navigator.clipboard.writeText(payload);
+    showToast("Diff lines copied to clipboard!", "success");
   };
 
   const clearAll = () => {
@@ -78,9 +137,13 @@ export function TextDiff() {
     setHasModified(false);
     setOriginal("");
     setModified("");
+    setLeftLabel(DEFAULT_LEFT_LABEL);
+    setRightLabel(DEFAULT_RIGHT_LABEL);
     if (typeof window !== "undefined") {
       window.localStorage.setItem(`${STORAGE_KEY}:original`, JSON.stringify(""));
       window.localStorage.setItem(`${STORAGE_KEY}:modified`, JSON.stringify(""));
+      window.localStorage.setItem(`${STORAGE_KEY}:left-title`, JSON.stringify(DEFAULT_LEFT_LABEL));
+      window.localStorage.setItem(`${STORAGE_KEY}:right-title`, JSON.stringify(DEFAULT_RIGHT_LABEL));
     }
   };
 
@@ -125,7 +188,7 @@ export function TextDiff() {
       window.localStorage.setItem(`${STORAGE_KEY}:original`, JSON.stringify(SAMPLE_TEXT_DIFF_LEFT));
       window.localStorage.setItem(`${STORAGE_KEY}:modified`, JSON.stringify(SAMPLE_TEXT_DIFF_RIGHT));
     }
-    showToast("Sample input loaded.");
+    showToast("Sample input loaded.", "info");
   };
 
   return (
@@ -142,12 +205,18 @@ export function TextDiff() {
             >
               Sort Text
             </Button>
+            <Button
+              onClick={copyDiffs}
+              variant="secondary"
+              size="sm"
+              disabled={!hasOriginal && !hasModified}
+            >
+              Copy Diffs
+            </Button>
             <ActionButtons
               onSample={loadSample}
-              onCopy={copyModified}
               onSwap={swapTexts}
               onClear={clearAll}
-              copyDisabled={!hasModified}
               swapDisabled={!hasOriginal && !hasModified}
               className="ml-0"
             />
@@ -161,6 +230,12 @@ export function TextDiff() {
             language="plaintext"
             original={original}
             modified={modified}
+            leftLabel={leftLabel}
+            rightLabel={rightLabel}
+            defaultLeftLabel={DEFAULT_LEFT_LABEL}
+            defaultRightLabel={DEFAULT_RIGHT_LABEL}
+            onLeftLabelChange={setLeftLabel}
+            onRightLabelChange={setRightLabel}
             readOnly={false}
             onMount={handleEditorMount}
           />

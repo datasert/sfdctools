@@ -9,6 +9,14 @@ import { Layout } from "@/components/Layout";
 export const metadata: Metadata = {
   title: "Salesforce Tools",
   description: "Easy access to various Salesforce related information and tools",
+  icons: {
+    icon: [
+      { url: "/logos/circlecompass-svgrepo-com.svg", type: "image/svg+xml" },
+      { url: "/logos/circlecompass-svgrepo-com.png", type: "image/png" },
+    ],
+    shortcut: "/logos/circlecompass-svgrepo-com.png",
+    apple: "/logos/circlecompass-svgrepo-com.png",
+  },
 };
 
 export default function RootLayout({

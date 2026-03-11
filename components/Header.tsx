@@ -171,18 +171,25 @@ export function Header({
       <header className="flex h-12 items-center border-b border-[var(--border-color)] bg-[var(--card-bg)]">
         <Link
           href="/"
-          className="hidden w-56 border-r border-[var(--border-color)] px-4 hover:bg-[var(--hover-bg)] transition-colors cursor-pointer md:block"
+          className="hidden w-56 border-r border-[var(--border-color)] px-4 transition-colors hover:bg-[var(--hover-bg)] md:block"
         >
-          <div className="flex items-baseline gap-2">
-            <h1
-              className="text-base font-bold text-[var(--title-color)]"
-              style={{ fontFamily: "var(--title-font-family)" }}
-            >
-              Salesforce Tools
-            </h1>
-            <span className="text-[10px] text-[var(--text-tertiary)]">
-              {uiVersion}
-            </span>
+          <div className="flex h-full items-center gap-2">
+            <img
+              src="/logos/circlecompass-svgrepo-com.svg"
+              alt="Salesforce Tools logo"
+              className="h-6 w-6 shrink-0"
+            />
+            <div className="min-w-0 leading-none">
+              <h1
+                className="whitespace-nowrap text-base font-bold text-[var(--title-color)]"
+                style={{ fontFamily: "var(--title-font-family)" }}
+              >
+                Salesforce Tools
+              </h1>
+              <span className="mt-0.5 block text-[10px] text-[var(--text-tertiary)]">
+                {uiVersion}
+              </span>
+            </div>
           </div>
         </Link>
 

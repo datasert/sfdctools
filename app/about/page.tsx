@@ -9,10 +9,17 @@ export default function AboutPage() {
       <div className="p-6 max-w-3xl mx-auto">
         <div className="space-y-6">
           <div>
-            <h1 className="text-2xl font-bold text-[var(--text-primary)] mb-4">
-              About Salesforce Tools
-            </h1>
-            <p className="text-[var(--text-secondary)] leading-relaxed">
+            <div className="mb-4 flex items-center gap-3">
+              <img
+                src="/logos/circlecompass-svgrepo-com.svg"
+                alt="Salesforce Tools logo"
+                className="h-8 w-8 shrink-0"
+              />
+              <h1 className="text-3xl font-bold text-[var(--text-primary)]">
+                About Salesforce Tools
+              </h1>
+            </div>
+            <p className="text-lg leading-relaxed text-[var(--text-secondary)]">
               Salesforce Tools is a collection of developer utilities designed
               to make working with Salesforce data and code easier and more
               efficient.
@@ -20,10 +27,10 @@ export default function AboutPage() {
           </div>
 
           <div>
-            <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-3">
+            <h2 className="mb-3 text-2xl font-semibold text-[var(--text-primary)]">
               Privacy & Security
             </h2>
-            <div className="space-y-3 text-[var(--text-secondary)]">
+            <div className="space-y-4 text-base text-[var(--text-secondary)]">
               <div className="flex items-start gap-3">
                 <svg
                   className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0"
@@ -39,7 +46,7 @@ export default function AboutPage() {
                   />
                 </svg>
                 <div>
-                  <p className="font-medium text-[var(--text-primary)]">
+                  <p className="text-lg font-medium text-[var(--text-primary)]">
                     100% Local Processing
                   </p>
                   <p>
@@ -64,7 +71,7 @@ export default function AboutPage() {
                   />
                 </svg>
                 <div>
-                  <p className="font-medium text-[var(--text-primary)]">
+                  <p className="text-lg font-medium text-[var(--text-primary)]">
                     No Data Transmission
                   </p>
                   <p>
@@ -90,7 +97,7 @@ export default function AboutPage() {
                   />
                 </svg>
                 <div>
-                  <p className="font-medium text-[var(--text-primary)]">
+                  <p className="text-lg font-medium text-[var(--text-primary)]">
                     No Tracking
                   </p>
                   <p>This application is completely tracker-free</p>
@@ -100,10 +107,10 @@ export default function AboutPage() {
           </div>
 
           <div>
-            <h2 className="text-xl font-semibold text-[var(--text-primary)] mb-3">
+            <h2 className="mb-3 text-2xl font-semibold text-[var(--text-primary)]">
               Data Storage
             </h2>
-            <p className="text-[var(--text-secondary)] leading-relaxed">
+            <p className="text-base leading-relaxed text-[var(--text-secondary)]">
               Some tools may store your preferences and input data locally in
               your browser's localStorage for convenience. This data remains on
               your device and is never transmitted anywhere. You can clear this
@@ -112,7 +119,7 @@ export default function AboutPage() {
           </div>
 
           <div className="border-t border-[var(--content-border)] pt-4">
-            <p className="text-sm text-[var(--text-secondary)]">
+            <p className="text-base text-[var(--text-secondary)]">
               Built with <span className="text-red-500">❤️</span> by{" "}
               <a
                 href="https://www.datasert.com"

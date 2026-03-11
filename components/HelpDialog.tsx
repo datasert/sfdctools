@@ -32,7 +32,7 @@ export function HelpDialog({ isOpen, onClose, title, children }: HelpDialogProps
         >
           {/* Header */}
           <div className="flex items-center justify-between border-b border-[var(--content-border)] px-4 py-3">
-            <h2 className="text-lg font-bold text-[var(--text-primary)]">
+            <h2 className="text-xl font-bold text-[var(--text-primary)]">
               {title} - Help
             </h2>
             <button
@@ -58,7 +58,7 @@ export function HelpDialog({ isOpen, onClose, title, children }: HelpDialogProps
 
           {/* Content */}
           <div className="flex-1 overflow-y-auto px-4 py-4">
-            <div className="prose prose-sm max-w-none text-[var(--text-primary)]">
+            <div className="prose max-w-none text-[15px] text-[var(--text-primary)] prose-headings:text-[var(--text-primary)] prose-p:text-[var(--text-secondary)] prose-li:text-[var(--text-secondary)]">
               {children}
             </div>
           </div>

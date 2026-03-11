@@ -126,7 +126,7 @@ export const helpContent: Record<string, HelpContent> = {
       </div>
     ),
   },
-  "text-processor": {
+  "text-tool": {
     title: "Text Tool",
     content: (
       <div className="space-y-4">

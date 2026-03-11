@@ -114,11 +114,11 @@ export const tools: Tool[] = [
   },
   // Utilities
   {
-    id: "text-processor",
+    id: "text-tool",
     name: "Text Tool",
     description:
       "Apply series of text transformations (trim, dedupe, sort, shuffle, etc.) in customizable order. Process text line by line.",
-    path: "/text-processor",
+    path: "/text-tool",
     tags: ["Text", "Processor", "Transform"],
   },
   {

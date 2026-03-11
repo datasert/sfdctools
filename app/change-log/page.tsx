@@ -16,7 +16,7 @@ const CHANGE_LOG_ITEMS: ChangeLogItem[] = [
   { date: "2026-02-23", title: "Add SLDS related tools" },
   { date: "2026-02-20", title: "Update Text Tool features" },
   { date: "2026-02-20", title: "Update text operations" },
-  { date: "2026-02-20", title: "Update diff editor and text processor" },
+  { date: "2026-02-20", title: "Update diff editor and text tool" },
   { date: "2026-02-19", title: "Fix issues with diff editor" },
   { date: "2026-02-19", title: "Add json diff tool" },
   { date: "2026-02-19", title: "Add common diff editor and share config" },

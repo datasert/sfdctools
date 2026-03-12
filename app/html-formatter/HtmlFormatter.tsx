@@ -35,13 +35,65 @@ function formatHTML(html: string, indent: number): { formatted: string; error: s
       return { formatted: "", error: errorText };
     }
 
-    // Format HTML with indentation
-    const formatted = formatHTMLNode(xmlDoc.body || xmlDoc.documentElement, indent, 0);
+    // Preserve full documents, including doctype/head/body, and avoid wrapping fragments in a synthetic body tag.
+    const formatted = isFullHtmlDocument(html)
+      ? formatHTMLDocument(xmlDoc, indent)
+      : formatHTMLFragment(xmlDoc, indent);
     return { formatted, error: null };
   } catch (err) {
     const errorMessage = err instanceof Error ? err.message : String(err);
     return { formatted: "", error: errorMessage };
   }
+}
+
+function isFullHtmlDocument(html: string): boolean {
+  return /<!doctype\s+html\b|<html\b/i.test(html);
+}
+
+function formatHTMLDocument(doc: Document, indent: number): string {
+  const parts: string[] = [];
+  const doctype = doc.doctype;
+
+  if (doctype) {
+    parts.push(formatDocumentType(doctype));
+  } else if (/^html$/i.test(doc.documentElement.tagName)) {
+    parts.push("<!DOCTYPE html>");
+  }
+
+  parts.push(formatHTMLNode(doc.documentElement, indent, 0));
+  return parts.join("\n");
+}
+
+function formatHTMLFragment(doc: Document, indent: number): string {
+  return Array.from(doc.body.childNodes)
+    .map((child) => formatHTMLChild(child, indent, 0))
+    .filter(Boolean)
+    .join("\n");
+}
+
+function formatDocumentType(doctype: DocumentType): string {
+  let result = `<!DOCTYPE ${doctype.name}`;
+  if (doctype.publicId) {
+    result += ` PUBLIC "${doctype.publicId}"`;
+  }
+  if (doctype.systemId) {
+    result += `${doctype.publicId ? "" : " SYSTEM"} "${doctype.systemId}"`;
+  }
+  result += ">";
+  return result;
+}
+
+function formatHTMLChild(node: ChildNode, indent: number, level: number): string {
+  if (node.nodeType === Node.ELEMENT_NODE) {
+    return formatHTMLNode(node as Element, indent, level);
+  }
+
+  if (node.nodeType === Node.TEXT_NODE && node.textContent?.trim()) {
+    const indentStr = " ".repeat(indent * level);
+    return `${indentStr}${escapeHTML(node.textContent.trim())}`;
+  }
+
+  return "";
 }
 
 function formatHTMLNode(node: Element | Document | null, indent: number, level: number): string {
@@ -51,14 +103,15 @@ function formatHTMLNode(node: Element | Document | null, indent: number, level: 
 
   if (node.nodeType === Node.DOCUMENT_NODE) {
     const doc = node as Document;
-    return formatHTMLNode(doc.body || doc.documentElement, indent, level);
+    return formatHTMLDocument(doc, indent);
   }
 
   const element = node as Element;
+  const tagName = element.tagName.toLowerCase();
   const indentStr = " ".repeat(indent * level);
   const childIndentStr = " ".repeat(indent * (level + 1));
   
-  let result = `${indentStr}<${element.tagName.toLowerCase()}`;
+  let result = `${indentStr}<${tagName}`;
   
   // Add attributes
   if (element.attributes && element.attributes.length > 0) {
@@ -77,6 +130,19 @@ function formatHTMLNode(node: Element | Document | null, indent: number, level: 
     result += " />";
     return result;
   }
+
+  if (isRawTextElement(tagName)) {
+    const rawContent = Array.from(element.childNodes)
+      .map((child) => child.textContent ?? "")
+      .join("")
+      .trim();
+
+    if (!rawContent) {
+      return `${result}></${tagName}>`;
+    }
+
+    return `${result}>\n${childIndentStr}${rawContent}\n${indentStr}</${tagName}>`;
+  }
   
   // Check if there's only text content
   const textNodes = Array.from(element.childNodes).filter(
@@ -89,7 +155,7 @@ function formatHTMLNode(node: Element | Document | null, indent: number, level: 
   if (textNodes.length > 0 && elementNodes.length === 0) {
     // Single text node - put on same line
     const textContent = textNodes[0].textContent?.trim() || "";
-    result += `>${escapeHTML(textContent)}</${element.tagName.toLowerCase()}>`;
+    result += `>${escapeHTML(textContent)}</${tagName}>`;
     return result;
   }
   
@@ -104,8 +170,12 @@ function formatHTMLNode(node: Element | Document | null, indent: number, level: 
     }
   }
   
-  result += `${indentStr}</${element.tagName.toLowerCase()}>`;
+  result += `${indentStr}</${tagName}>`;
   return result;
+}
+
+function isRawTextElement(tagName: string): boolean {
+  return tagName === "script" || tagName === "style";
 }
 
 function escapeHTML(text: string): string {
@@ -260,7 +330,7 @@ export function HtmlFormatter() {
                 className="w-full border border-[var(--content-border)] rounded bg-white"
                 style={{ minHeight: "400px", height: "400px" }}
                 title="HTML Preview"
-                sandbox="allow-same-origin"
+                sandbox="allow-scripts"
               />
             </div>
           </div>

@@ -247,6 +247,28 @@ export function Header({
             )}
           </div>
           <div className="flex items-center gap-1.5">
+            <a
+              href="https://www.datasert.com/products/brobench"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden items-center gap-2 rounded-md px-2 py-1 transition-colors hover:bg-[var(--hover-bg)] md:flex"
+              aria-label="Brobench"
+              title="Explore Brobench"
+            >
+              <img
+                src="/logos/brobench-logo.svg"
+                alt="Brobench logo"
+                className="h-7 w-7 shrink-0"
+              />
+              <span className="min-w-0 leading-none">
+                <span className="block whitespace-nowrap text-sm font-bold text-[var(--text-primary)]">
+                  Brobench
+                </span>
+                <span className="mt-0.5 block whitespace-nowrap text-[10px] text-[var(--text-tertiary)]">
+                  Salesforce Toolkit
+                </span>
+              </span>
+            </a>
             <button
               onClick={resetAll}
               type="button"

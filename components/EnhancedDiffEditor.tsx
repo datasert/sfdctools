@@ -64,6 +64,7 @@ export function EnhancedDiffEditor({
   const diffEditorRef = useRef<MonacoType.editor.IStandaloneDiffEditor | null>(
     null,
   );
+  const monacoRef = useRef<typeof MonacoType | null>(null);
   const diffListenerRef = useRef<MonacoType.IDisposable | null>(null);
   const rafRef = useRef<number | null>(null);
   const effectiveOriginal = original;
@@ -86,6 +87,29 @@ export function EnhancedDiffEditor({
     editor.getOriginalEditor().updateOptions({ wordWrap: wrapMode });
     editor.getModifiedEditor().updateOptions({ wordWrap: wrapMode });
   }, [collapseUnchanged, ignoreWhitespace, wrapText]);
+
+  useEffect(() => {
+    const editor = diffEditorRef.current;
+    const monaco = monacoRef.current;
+    if (!editor || !monaco) {
+      return;
+    }
+
+    const originalModel = editor.getOriginalEditor().getModel();
+    const modifiedModel = editor.getModifiedEditor().getModel();
+
+    if (originalModel) {
+      monaco.editor.setModelLanguage(originalModel, language);
+    }
+
+    if (modifiedModel) {
+      monaco.editor.setModelLanguage(modifiedModel, language);
+    }
+
+    editor.getOriginalEditor().updateOptions({ wordWrap: wrapText ? "on" : "off" });
+    editor.getModifiedEditor().updateOptions({ wordWrap: wrapText ? "on" : "off" });
+    editor.layout();
+  }, [language, wrapText]);
 
   useEffect(() => {
     if (!autoCollapseOnContentChange) {
@@ -168,6 +192,7 @@ export function EnhancedDiffEditor({
 
   const handleMount: DiffOnMount = (editor, monaco) => {
     diffEditorRef.current = editor;
+    monacoRef.current = monaco;
     diffListenerRef.current?.dispose();
 
     const refreshChanges = () => {
@@ -437,8 +462,8 @@ export function EnhancedDiffEditor({
           language={language}
           original={effectiveOriginal}
           modified={effectiveModified}
-          originalModelPath={`inmemory://${modelId}/original.${language}`}
-          modifiedModelPath={`inmemory://${modelId}/modified.${language}`}
+          originalModelPath={`inmemory://${modelId}/original.txt`}
+          modifiedModelPath={`inmemory://${modelId}/modified.txt`}
           keepCurrentOriginalModel={true}
           keepCurrentModifiedModel={true}
           theme={monacoTheme}

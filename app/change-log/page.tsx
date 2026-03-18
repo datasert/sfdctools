@@ -8,6 +8,7 @@ type ChangeLogItem = {
 };
 
 const CHANGE_LOG_ITEMS: ChangeLogItem[] = [
+  { date: "2026-03-18", title: "Add syntax selector to Text Diff with Monaco language support" },
   { date: "2026-03-11", title: "Refresh app branding with new logo favicon and header treatment" },
   { date: "2026-03-11", title: "Add logo to About page and increase About and Help text size" },
   { date: "2026-03-11", title: "Add Copy Diffs action to Text Diff clipboard tools" },

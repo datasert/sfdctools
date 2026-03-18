@@ -5,7 +5,10 @@ import { useToast } from "@/components/Toast";
 import { usePersistedState } from "@/lib/use-persisted-state";
 import { usePersistedTextState } from "@/lib/use-persisted-text-state";
 import { SettingsBar } from "@/components/SettingsBar";
+import { SettingsGroup } from "@/components/SettingsGroup";
+import { SettingsLabel } from "@/components/SettingsLabel";
 import { ActionButtons } from "@/components/ActionButtons";
+import { Select } from "@/components/Select";
 import { EnhancedDiffEditor } from "@/components/EnhancedDiffEditor";
 import { Button } from "@/components/Button";
 import type { DiffOnMount } from "@monaco-editor/react";
@@ -14,6 +17,27 @@ import { SAMPLE_TEXT_DIFF_LEFT, SAMPLE_TEXT_DIFF_RIGHT } from "@/lib/tool-sample
 const STORAGE_KEY = "sfdc-tools:text-diff";
 const DEFAULT_LEFT_LABEL = "Left";
 const DEFAULT_RIGHT_LABEL = "Right";
+const DEFAULT_SYNTAX = "plaintext";
+
+type SyntaxOption = {
+  value: string;
+  label: string;
+  monacoLanguage: string;
+};
+
+const SYNTAX_OPTIONS: SyntaxOption[] = [
+  { value: "plaintext", label: "Plain Text", monacoLanguage: "plaintext" },
+  { value: "json", label: "JSON", monacoLanguage: "json" },
+  { value: "xml", label: "XML", monacoLanguage: "xml" },
+  { value: "html", label: "HTML", monacoLanguage: "html" },
+  { value: "apex", label: "Apex Class", monacoLanguage: "java" },
+  { value: "java", label: "Java", monacoLanguage: "java" },
+  { value: "javascript", label: "JavaScript", monacoLanguage: "javascript" },
+];
+
+function getMonacoLanguage(syntax: string): string {
+  return SYNTAX_OPTIONS.find((option) => option.value === syntax)?.monacoLanguage ?? DEFAULT_SYNTAX;
+}
 
 function sortTextLines(value: string): string {
   if (!value) return value;
@@ -74,6 +98,10 @@ export function TextDiff() {
   const [rightLabel, setRightLabel] = usePersistedState<string>(
     `${STORAGE_KEY}:right-title`,
     DEFAULT_RIGHT_LABEL,
+  );
+  const [syntax, setSyntax] = usePersistedState<string>(
+    `${STORAGE_KEY}:syntax`,
+    DEFAULT_SYNTAX,
   );
   const [hasOriginal, setHasOriginal] = useState(Boolean(original));
   const [hasModified, setHasModified] = useState(Boolean(modified));
@@ -175,6 +203,22 @@ export function TextDiff() {
       {ToastComponent}
       <div className="flex h-full flex-col">
         <SettingsBar>
+          <SettingsGroup>
+            <SettingsLabel>Syntax:</SettingsLabel>
+            <Select
+              value={syntax}
+              onChange={(event) => setSyntax(event.target.value)}
+              className="min-w-[150px]"
+              aria-label="Text diff syntax"
+            >
+              {SYNTAX_OPTIONS.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </Select>
+          </SettingsGroup>
+
           <div className="ml-auto flex items-center gap-2">
             <Button
               onClick={sortTexts}
@@ -206,7 +250,7 @@ export function TextDiff() {
         <div className="flex-1 p-3">
           <EnhancedDiffEditor
             height="100%"
-            language="plaintext"
+            language={getMonacoLanguage(syntax)}
             original={original}
             modified={modified}
             leftLabel={leftLabel}

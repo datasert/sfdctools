@@ -2,6 +2,15 @@ export const SAMPLE_IDS = `001xx000003DGbY
 001xx000003DGbYAAW
 003xx000004TmiQAAS`;
 
+export const SAMPLE_EXTRACT_IDS = `Paste any text here with IDs like 001xx000003DGbY, 003xx000004TmiQAAS, or mixed content such as:
+
+Case 500xx0000012345
+User 005xx000001ABCDE
+Unknown a0Bxx0000012345
+
+Repeat 001xx000003DGbY to see deduping.
+`;
+
 export const SAMPLE_SOQL = `select id,name,industry,(select lastname,email from contacts where email != null order by lastname) from account where billingcountry = 'USA' and createddate = last_n_days:30 order by name limit 25`;
 
 export const SAMPLE_FORMULA = `IF(

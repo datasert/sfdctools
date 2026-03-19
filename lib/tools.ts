@@ -42,11 +42,19 @@ export const tools: Tool[] = [
   },
   {
     id: "id-converter",
-    name: "ID Converter",
+    name: "Convert IDs",
     description:
       "Convert Salesforce IDs between 15-character and 18-character formats. Supports batch conversion line by line.",
-    path: "/id-converter",
+    path: "/convert-ids",
     tags: ["ID", "Converter", "Salesforce"],
+  },
+  {
+    id: "extract-ids",
+    name: "Extract IDs",
+    description:
+      "Extract Salesforce IDs from pasted text and optionally group them by object using the first three characters of each ID.",
+    path: "/extract-ids",
+    tags: ["ID", "Extractor", "Salesforce", "Utility"],
   },
   {
     id: "soql-formatter",

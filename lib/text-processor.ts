@@ -2,11 +2,18 @@
  * Text Tool - Apply series of transformations to text
  */
 
+import {
+  convertExtractedIdsTo18,
+  extractSalesforceIds,
+  formatExtractedIds,
+} from "@/lib/extract-ids";
+
 export type TransformationType =
   | 'trim'
   | 'pad'
   | 'truncate'
   | 'extract'
+  | 'extractIds'
   | 'fill'
   | 'split'
   | 'join'
@@ -60,6 +67,12 @@ export type Transformation =
       last: boolean;
       remove: boolean;
     }
+  | {
+      id: string;
+      type: 'extractIds';
+      groupByObject: boolean;
+      convertTo18: boolean;
+    }
   | { id: string; type: 'sort'; reverse: boolean; mode: SortMode }
   | { id: string; type: 'addPrefixSuffix'; prefix: string; suffix: string; ifMissing: boolean }
   | { id: string; type: 'removePrefixSuffix'; prefix: string; suffix: string }
@@ -103,6 +116,14 @@ export function createTransformation(type: TransformationType, id: string): Tran
       end: '',
       last: false,
       remove: false,
+    };
+  }
+  if (type === 'extractIds') {
+    return {
+      id,
+      type,
+      groupByObject: true,
+      convertTo18: true,
     };
   }
   if (type === 'fill') {
@@ -199,6 +220,13 @@ export function normalizeTransformation(value: Transformation): Transformation {
       end: typeof value.end === 'string' ? value.end : '',
       last: Boolean(value.last),
       remove: Boolean(value.remove),
+    };
+  }
+  if (value.type === 'extractIds') {
+    return {
+      ...value,
+      groupByObject: typeof value.groupByObject === 'boolean' ? value.groupByObject : true,
+      convertTo18: typeof value.convertTo18 === 'boolean' ? value.convertTo18 : true,
     };
   }
   if (value.type === 'fill') {
@@ -601,6 +629,16 @@ function applyTransformation(text: string, transformation: Transformation): stri
         .join('\n');
     }
 
+    case 'extractIds': {
+      const normalized = normalizeTransformation(transformation);
+      if (normalized.type !== 'extractIds') return text;
+      const extractedIds = extractSalesforceIds(text);
+      const normalizedIds = normalized.convertTo18
+        ? convertExtractedIdsTo18(extractedIds)
+        : extractedIds;
+      return formatExtractedIds(normalizedIds, normalized.groupByObject);
+    }
+
     case 'fill': {
       const normalized = normalizeTransformation(transformation);
       if (normalized.type !== 'fill') return text;
@@ -786,6 +824,7 @@ export function getTransformationName(type: TransformationType): string {
     pad: 'Pad',
     truncate: 'Truncate',
     extract: 'Extract',
+    extractIds: 'Extract IDs',
     fill: 'Fill',
     split: 'Split',
     join: 'Join',

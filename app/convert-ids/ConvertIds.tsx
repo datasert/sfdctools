@@ -2,13 +2,13 @@
 
 import { useState, useEffect } from "react";
 import { convertIds } from "@/lib/id-converter";
-import { Select } from "@/components/Select";
 import { useToast } from "@/components/Toast";
 import { usePersistedState } from "@/lib/use-persisted-state";
 import { MonacoEditor } from "@/components/MonacoEditor";
 import { SettingsBar } from "@/components/SettingsBar";
 import { SettingsGroup } from "@/components/SettingsGroup";
 import { SettingsLabel } from "@/components/SettingsLabel";
+import { SegmentedToggle } from "@/components/SegmentedToggle";
 import { ActionButtons } from "@/components/ActionButtons";
 import { EditorGrid } from "@/components/EditorGrid";
 import { EditorPane } from "@/components/EditorPane";
@@ -20,7 +20,7 @@ type ConversionDirection = "to18" | "to15";
 
 const STORAGE_KEY = "sfdc-tools:id-converter";
 
-export function IdConverter() {
+export function ConvertIds() {
   const [input, setInput] = usePersistedState<string>(`${STORAGE_KEY}:input`, "");
   const [output, setOutput] = useState("");
   const [direction, setDirection] = usePersistedState<ConversionDirection>(`${STORAGE_KEY}:direction`, "to18");
@@ -84,14 +84,14 @@ export function IdConverter() {
         <SettingsBar>
           <SettingsGroup>
             <SettingsLabel>Direction:</SettingsLabel>
-            <Select
+            <SegmentedToggle
               value={direction}
-              onChange={(e) => setDirection(e.target.value as ConversionDirection)}
-              className="min-w-[140px]"
-            >
-              <option value="to18">15 → 18</option>
-              <option value="to15">18 → 15</option>
-            </Select>
+              onChange={setDirection}
+              options={[
+                { label: "15 → 18", value: "to18" },
+                { label: "18 → 15", value: "to15" },
+              ]}
+            />
           </SettingsGroup>
 
           <ActionButtons

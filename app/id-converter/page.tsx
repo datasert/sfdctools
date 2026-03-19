@@ -1,11 +1,5 @@
-import { IdConverter } from "./IdConverter";
-import { SetPageTitle } from "@/components/SetPageTitle";
+import { redirect } from "next/navigation";
 
-export default function IdConverterPage() {
-  return (
-    <>
-      <SetPageTitle title="ID Converter" />
-      <IdConverter />
-    </>
-  );
+export default function IdConverterRedirectPage() {
+  redirect("/convert-ids");
 }

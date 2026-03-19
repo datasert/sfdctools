@@ -1,4 +1,9 @@
 import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from "lz-string";
+import {
+  deleteIndexedDbValue,
+  getIndexedDbValue,
+  setIndexedDbValue,
+} from "@/lib/indexed-db";
 
 export const SHARE_HASH_PARAM = "config";
 const LEGACY_SHARE_HASH_PARAM = "sfdcShare";
@@ -6,6 +11,19 @@ const SHARE_LZ_PREFIX = "lz.";
 const SHARE_GZIP_PREFIX = "g.";
 const SHARE_RAW_PREFIX = "u.";
 export const TOOL_STORAGE_PREFIX = "sfdc-tools:";
+
+const TOOL_INDEXED_DB_STORAGE_KEYS: Record<string, string[]> = {
+  "formula-formatter": ["input"],
+  "html-formatter": ["input"],
+  "json-diff": ["left", "right"],
+  "json-formatter": ["input"],
+  "json-to-apex": ["input"],
+  "omni-config-diff": ["left", "right"],
+  "soql-formatter": ["input"],
+  "text-diff": ["original", "modified"],
+  "text-tool": ["input"],
+  "xml-formatter": ["input"],
+};
 
 export interface ToolSharePayload {
   v: 1;
@@ -70,7 +88,7 @@ export function clearAllToolState(): number {
   return keysToRemove.length;
 }
 
-export function snapshotToolState(toolId: string): Record<string, string> {
+export async function snapshotToolState(toolId: string): Promise<Record<string, string>> {
   if (typeof window === "undefined") return {};
 
   const state: Record<string, string> = {};
@@ -80,17 +98,41 @@ export function snapshotToolState(toolId: string): Record<string, string> {
       state[key] = value;
     }
   }
+
+  const indexedDbSuffixes = TOOL_INDEXED_DB_STORAGE_KEYS[toolId] ?? [];
+  for (const suffix of indexedDbSuffixes) {
+    const indexedDbKey = `${TOOL_STORAGE_PREFIX}${toolId}:${suffix}`;
+    const value = await getIndexedDbValue(indexedDbKey);
+    if (value !== null) {
+      state[indexedDbKey] = value;
+    }
+  }
+
   return state;
 }
 
-export function applyToolState(toolId: string, state: Record<string, string>): void {
+export async function applyToolState(toolId: string, state: Record<string, string>): Promise<void> {
   if (typeof window === "undefined") return;
 
   for (const key of getToolStorageKeys(toolId)) {
     window.localStorage.removeItem(key);
   }
 
+  const indexedDbSuffixes = TOOL_INDEXED_DB_STORAGE_KEYS[toolId] ?? [];
+  for (const suffix of indexedDbSuffixes) {
+    await deleteIndexedDbValue(`${TOOL_STORAGE_PREFIX}${toolId}:${suffix}`);
+  }
+
   for (const [key, value] of Object.entries(state)) {
+    if (indexedDbSuffixes.some((suffix) => key === `${TOOL_STORAGE_PREFIX}${toolId}:${suffix}`)) {
+      if (value === "") {
+        await deleteIndexedDbValue(key);
+      } else {
+        await setIndexedDbValue(key, value);
+      }
+      continue;
+    }
+
     window.localStorage.setItem(key, value);
   }
 }

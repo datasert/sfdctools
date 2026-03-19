@@ -47,11 +47,13 @@ export default function AboutPage() {
                 </svg>
                 <div>
                   <p className="text-lg font-medium text-[var(--text-primary)]">
-                    100% Local Processing
+                    100% Secure with Local Processing
                   </p>
                   <p>
                     All processing happens entirely on your device. Your data
-                    never leaves your browser or computer.
+                    never leaves your browser or computer. We will not add any
+                    tools/features that would send data to internet or pull data
+                    from internet.
                   </p>
                 </div>
               </div>

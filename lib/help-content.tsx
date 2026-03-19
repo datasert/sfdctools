@@ -9,7 +9,7 @@ export interface HelpContent {
 
 export const helpContent: Record<string, HelpContent> = {
   "id-converter": {
-    title: "ID Converter",
+    title: "Convert IDs",
     content: (
       <div className="space-y-4">
         <div>
@@ -31,6 +31,34 @@ export const helpContent: Record<string, HelpContent> = {
           <h3 className="font-semibold text-[var(--text-primary)] mb-2">Usage</h3>
           <p className="text-[var(--text-secondary)]">
             Paste your Salesforce IDs (one per line) in the input pane. The conversion happens automatically as you type. Use the Swap button to exchange input and output, or Clear All to reset both panes.
+          </p>
+        </div>
+      </div>
+    ),
+  },
+  "extract-ids": {
+    title: "Extract IDs",
+    content: (
+      <div className="space-y-4">
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Overview</h3>
+          <p className="text-[var(--text-secondary)]">
+            Extract valid Salesforce IDs from pasted text and group them by object using the first three characters of each ID. Unknown prefixes are grouped separately under Unknown.
+          </p>
+        </div>
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Features</h3>
+          <ul className="list-disc list-inside space-y-1 text-[var(--text-secondary)]">
+            <li><strong>Auto extraction:</strong> Pulls 15-character and 18-character Salesforce IDs from mixed text.</li>
+            <li><strong>Group by object:</strong> Groups IDs by object name using the ID prefix, with an Unknown bucket for unmapped prefixes.</li>
+            <li><strong>Convert to 18 chars:</strong> Normalizes extracted 15-character IDs to the 18-character format.</li>
+            <li><strong>Copy output:</strong> Copy the extracted result to the clipboard.</li>
+          </ul>
+        </div>
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Usage</h3>
+          <p className="text-[var(--text-secondary)]">
+            Paste any text into the input pane. The extracted IDs appear automatically in the output pane. Use the toggles to group results by object or normalize IDs to 18 characters.
           </p>
         </div>
       </div>
@@ -143,6 +171,7 @@ export const helpContent: Record<string, HelpContent> = {
             <li><strong>Pad:</strong> Pad at Start/End with configurable length and pad text.</li>
             <li><strong>Truncate:</strong> Truncate from Start/End with optional ellipsis abbreviation.</li>
             <li><strong>Extract:</strong> Extract by Numbers, Between, After String, Before String, or Regex. Supports Last (for before/after) and Remove mode.</li>
+            <li><strong>Extract IDs:</strong> Pull Salesforce IDs from mixed text, with options to group by object and convert to 18-character format.</li>
             <li><strong>Fill:</strong> Insert text/number at a character index. Number mode supports start, step, pad length, and pad char.</li>
             <li><strong>Split:</strong> Split lines by each delimiter character provided.</li>
             <li><strong>Join:</strong> Join with a delimiter, optionally every N lines.</li>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   processText,
   Transformation,
@@ -29,15 +29,18 @@ import { ActionButtons } from "@/components/ActionButtons";
 import { EditorGrid } from "@/components/EditorGrid";
 import { EditorPane } from "@/components/EditorPane";
 import { EditorWrapper } from "@/components/EditorWrapper";
+import { getIndexedDbValue } from "@/lib/indexed-db";
 import { SAMPLE_TEXT_PROCESSOR_INPUT } from "@/lib/tool-samples";
 
-const STORAGE_KEY = "sfdc-tools:text-processor";
+const STORAGE_KEY = "sfdc-tools:text-tool";
+const LEGACY_STORAGE_KEY = "sfdc-tools:text-processor";
 
 const AVAILABLE_TRANSFORMATIONS: TransformationType[] = [
   'addPrefixSuffix',
   'caseConvert',
   'dedupe',
   'extract',
+  'extractIds',
   'fill',
   'filterLines',
   'frequencyReport',
@@ -107,12 +110,62 @@ export function TextProcessor() {
     `${STORAGE_KEY}:transformations`,
     []
   );
-  const [selectedTransformation, setSelectedTransformation] = useState<TransformationType>('trim');
+  const [selectedTransformation, setSelectedTransformation] = usePersistedState<TransformationType>(
+    `${STORAGE_KEY}:selected-transformation`,
+    'trim'
+  );
   const { showToast, ToastComponent } = useToast();
+  const didMigrateRef = useRef(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (didMigrateRef.current || typeof window === "undefined") {
+      return;
+    }
+
+    didMigrateRef.current = true;
+
+    const legacyInputKey = `${LEGACY_STORAGE_KEY}:input`;
+    const legacyTransformationsKey = `${LEGACY_STORAGE_KEY}:transformations`;
+    const legacySelectedKey = `${LEGACY_STORAGE_KEY}:selected-transformation`;
+
+    const currentInputKey = `${STORAGE_KEY}:input`;
+    const currentTransformationsKey = `${STORAGE_KEY}:transformations`;
+    const currentSelectedKey = `${STORAGE_KEY}:selected-transformation`;
+
+    const migrateIndexedDbValue = async () => {
+      const currentValue = await getIndexedDbValue(currentInputKey);
+      if (currentValue !== null) {
+        return;
+      }
+
+      const legacyValue = await getIndexedDbValue(legacyInputKey);
+      if (legacyValue !== null) {
+        setInput(legacyValue);
+      }
+    };
+
+    void migrateIndexedDbValue();
+
+    const currentTransformationsValue = window.localStorage.getItem(currentTransformationsKey);
+    if (currentTransformationsValue === null) {
+      const legacyTransformationsValue = window.localStorage.getItem(legacyTransformationsKey);
+      if (legacyTransformationsValue !== null) {
+        setTransformations(JSON.parse(legacyTransformationsValue));
+      }
+    }
+
+    const currentSelectedValue = window.localStorage.getItem(currentSelectedKey);
+    if (currentSelectedValue === null) {
+      const legacySelectedValue = window.localStorage.getItem(legacySelectedKey);
+      if (legacySelectedValue !== null) {
+        setSelectedTransformation(JSON.parse(legacySelectedValue) as TransformationType);
+      }
+    }
+  }, [setInput, setSelectedTransformation, setTransformations]);
 
   useEffect(() => {
     const normalized = transformations.map(normalizeTransformation);
@@ -440,6 +493,34 @@ export function TextProcessor() {
                           }
                         />
                         Remove
+                      </label>
+                    </div>
+                  )}
+                  {trans.type === "extractIds" && (
+                    <div className="flex items-center gap-2">
+                      <label className="flex items-center gap-1 text-xs text-[var(--text-secondary)]">
+                        <input
+                          type="checkbox"
+                          checked={trans.groupByObject}
+                          onChange={(event) =>
+                            updateTransformation(trans.id, {
+                              groupByObject: event.target.checked,
+                            } as Partial<Transformation>)
+                          }
+                        />
+                        Group by Object
+                      </label>
+                      <label className="flex items-center gap-1 text-xs text-[var(--text-secondary)]">
+                        <input
+                          type="checkbox"
+                          checked={trans.convertTo18}
+                          onChange={(event) =>
+                            updateTransformation(trans.id, {
+                              convertTo18: event.target.checked,
+                            } as Partial<Transformation>)
+                          }
+                        />
+                        Convert to 18 chars
                       </label>
                     </div>
                   )}

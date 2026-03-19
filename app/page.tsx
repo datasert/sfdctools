@@ -10,9 +10,6 @@ export default function Home() {
         <section className="relative mx-auto mb-6 w-full max-w-6xl overflow-hidden rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)] md:mb-8">
           <div className="h-[3px] bg-[#0176d3]" />
           <div className="p-6 md:p-8">
-            <p className="mb-1.5 text-xs font-semibold uppercase tracking-widest text-[#0176d3]">
-              Salesforce Developer Toolkit
-            </p>
             <div className="flex items-center gap-4">
               <img
                 src="/logos/circlecompass-svgrepo-com.svg"

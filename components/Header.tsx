@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { ThemeSwitcher } from "./ThemeSwitcher";
 import { useTitle } from "./TitleContext";
@@ -33,6 +33,7 @@ export function Header({
   const { title } = useTitle();
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isSharing, setIsSharing] = useState(false);
+  const lastProcessedShareHashRef = useRef<string | null>(null);
   const { showToast, ToastComponent } = useToast();
 
   // Determine tool from pathname (for help content)
@@ -56,6 +57,10 @@ export function Header({
   useEffect(() => {
     if (typeof window === "undefined" || !window.location.hash) return;
 
+    if (lastProcessedShareHashRef.current === window.location.hash) {
+      return;
+    }
+
     const loadFromHash = async () => {
       try {
         const payload = await decodeToolSharePayloadFromHash(
@@ -72,17 +77,20 @@ export function Header({
           throw new Error("Invalid shared URL payload.");
         }
 
+        console.log("Parsed share payload JSON:", JSON.stringify(payload));
+        console.log("Applying share payload JSON:", JSON.stringify(payload.state));
+        lastProcessedShareHashRef.current = window.location.hash;
+
         if (window.location.pathname !== payload.path) {
           const targetUrl = `${window.location.origin}${payload.path}#${window.location.hash.slice(1)}`;
           window.location.replace(targetUrl);
           return;
         }
 
-        applyToolState(payload.toolId, payload.state);
+        await applyToolState(payload.toolId, payload.state);
 
         const cleanUrl = `${window.location.pathname}${window.location.search}`;
         window.history.replaceState(null, "", cleanUrl);
-        window.location.reload();
       } catch (error) {
         showToast(
           error instanceof Error ? error.message : "Failed to load shared URL.",
@@ -103,8 +111,10 @@ export function Header({
         v: 1 as const,
         toolId: currentTool.id,
         path: currentTool.path,
-        state: snapshotToolState(currentTool.id),
+        state: await snapshotToolState(currentTool.id),
       };
+
+      console.log("Share payload JSON:", JSON.stringify(payload));
 
       const encoded = await encodeToolSharePayload(payload);
       const hashParams = new URLSearchParams();

@@ -10,7 +10,7 @@ import { MonacoEditor } from "@/components/MonacoEditor";
 import { SettingsBar } from "@/components/SettingsBar";
 import { SettingsGroup } from "@/components/SettingsGroup";
 import { SettingsLabel } from "@/components/SettingsLabel";
-import { Checkbox } from "@/components/Checkbox";
+import { InputCheckbox } from "@/components/InputCheckbox";
 import { ActionButtons } from "@/components/ActionButtons";
 import { EditorGrid } from "@/components/EditorGrid";
 import { EditorPane } from "@/components/EditorPane";
@@ -102,7 +102,7 @@ export function FormulaFormatter() {
           </SettingsGroup>
 
           <SettingsGroup>
-            <Checkbox
+            <InputCheckbox
               checked={uppercase}
               onChange={(e) => setUppercase(e.target.checked)}
               label="Keywords Uppercase"

@@ -14,6 +14,7 @@ import { ActionButtons } from "@/components/ActionButtons";
 import { EditorGrid } from "@/components/EditorGrid";
 import { EditorPane } from "@/components/EditorPane";
 import { EditorWrapper } from "@/components/EditorWrapper";
+import { InputCheckbox } from "@/components/InputCheckbox";
 import { useToast } from "@/components/Toast";
 import { SAMPLE_EXTRACT_IDS } from "@/lib/tool-samples";
 
@@ -63,24 +64,16 @@ export function ExtractIds() {
       <div className="flex h-full flex-col">
         <SettingsBar>
           <SettingsGroup>
-            <label className="flex items-center gap-2 text-sm font-medium text-[var(--text-primary)]">
-              <input
-                type="checkbox"
-                checked={groupByObject}
-                onChange={(event) => setGroupByObject(event.target.checked)}
-                className="h-4 w-4 rounded border-[var(--input-border)] text-[var(--accent-color)] focus:ring-[var(--accent-color)]"
-              />
-              Group by object
-            </label>
-            <label className="flex items-center gap-2 text-sm font-medium text-[var(--text-primary)]">
-              <input
-                type="checkbox"
-                checked={convertTo18}
-                onChange={(event) => setConvertTo18(event.target.checked)}
-                className="h-4 w-4 rounded border-[var(--input-border)] text-[var(--accent-color)] focus:ring-[var(--accent-color)]"
-              />
-              Convert to 18 chars
-            </label>
+            <InputCheckbox
+              checked={groupByObject}
+              onChange={(event) => setGroupByObject(event.target.checked)}
+              label="Group by object"
+            />
+            <InputCheckbox
+              checked={convertTo18}
+              onChange={(event) => setConvertTo18(event.target.checked)}
+              label="Convert to 18 chars"
+            />
           </SettingsGroup>
 
           <ActionButtons

@@ -9,7 +9,7 @@ import { MonacoEditor } from "@/components/MonacoEditor";
 import { SettingsBar } from "@/components/SettingsBar";
 import { SettingsGroup } from "@/components/SettingsGroup";
 import { SettingsLabel } from "@/components/SettingsLabel";
-import { Checkbox } from "@/components/Checkbox";
+import { InputCheckbox } from "@/components/InputCheckbox";
 import { ActionButtons } from "@/components/ActionButtons";
 import { EditorGrid } from "@/components/EditorGrid";
 import { EditorPane } from "@/components/EditorPane";
@@ -115,7 +115,7 @@ export function JsonToApex() {
           </SettingsGroup>
 
           <SettingsGroup>
-            <Checkbox
+            <InputCheckbox
               checked={auraEnabled}
               onChange={(e) => setAuraEnabled(e.target.checked)}
               label="@AuraEnabled"

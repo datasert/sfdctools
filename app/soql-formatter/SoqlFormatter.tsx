@@ -10,7 +10,7 @@ import { MonacoEditor } from "@/components/MonacoEditor";
 import { SettingsBar } from "@/components/SettingsBar";
 import { SettingsGroup } from "@/components/SettingsGroup";
 import { SettingsLabel } from "@/components/SettingsLabel";
-import { Checkbox } from "@/components/Checkbox";
+import { InputCheckbox } from "@/components/InputCheckbox";
 import { ActionButtons } from "@/components/ActionButtons";
 import { EditorGrid } from "@/components/EditorGrid";
 import { EditorPane } from "@/components/EditorPane";
@@ -122,7 +122,7 @@ export function SoqlFormatter() {
           </SettingsGroup>
 
           <SettingsGroup>
-            <Checkbox
+            <InputCheckbox
               checked={uppercase}
               onChange={(e) => setUppercase(e.target.checked)}
               label="Keywords Uppercase"
@@ -130,7 +130,7 @@ export function SoqlFormatter() {
           </SettingsGroup>
 
           <SettingsGroup>
-            <Checkbox
+            <InputCheckbox
               checked={fieldsInNewLine}
               onChange={(e) => setFieldsInNewLine(e.target.checked)}
               label="Select Field in New Line"
@@ -138,7 +138,7 @@ export function SoqlFormatter() {
           </SettingsGroup>
 
           <SettingsGroup>
-            <Checkbox
+            <InputCheckbox
               checked={childQueriesInNewLine}
               onChange={(e) => setChildQueriesInNewLine(e.target.checked)}
               label="Child Query in New Line"
@@ -146,7 +146,7 @@ export function SoqlFormatter() {
           </SettingsGroup>
 
           <SettingsGroup>
-            <Checkbox
+            <InputCheckbox
               checked={clauseInNewLine}
               onChange={(e) => setClauseInNewLine(e.target.checked)}
               label="Clause in New Line"
@@ -154,7 +154,7 @@ export function SoqlFormatter() {
           </SettingsGroup>
 
           <SettingsGroup>
-            <Checkbox
+            <InputCheckbox
               checked={whereConditionInNewLine}
               onChange={(e) => setWhereConditionInNewLine(e.target.checked)}
               label="Where Condition in New Line"

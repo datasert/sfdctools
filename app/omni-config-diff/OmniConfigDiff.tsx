@@ -5,7 +5,7 @@ import { usePersistedState } from "@/lib/use-persisted-state";
 import { usePersistedTextState } from "@/lib/use-persisted-text-state";
 import { useToast } from "@/components/Toast";
 import { MonacoEditor } from "@/components/MonacoEditor";
-import { Checkbox } from "@/components/Checkbox";
+import { InputCheckbox } from "@/components/InputCheckbox";
 import { EnhancedDiffEditor } from "@/components/EnhancedDiffEditor";
 import { EditableLabel } from "@/components/EditableLabel";
 import { SettingsBar } from "@/components/SettingsBar";
@@ -316,12 +316,12 @@ export function OmniConfigDiff() {
       <div className="flex h-full flex-col">
         <SettingsBar>
           <SettingsGroup>
-            <Checkbox
+            <InputCheckbox
               label="Decode Json"
               checked={decodeJson}
               onChange={(event) => setDecodeJson(event.target.checked)}
             />
-            <Checkbox
+            <InputCheckbox
               label="Decode Email Body"
               checked={decodeEmailBody}
               disabled={!decodeJson}

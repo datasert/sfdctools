@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { DiffEditor } from "@monaco-editor/react";
 import type { DiffOnMount } from "@monaco-editor/react";
 import type * as MonacoType from "monaco-editor";
-import { Checkbox } from "./Checkbox";
+import { InputCheckbox } from "./InputCheckbox";
 import { useToast } from "./Toast";
 import { EditableLabel } from "./EditableLabel";
 
@@ -400,14 +400,14 @@ export function EnhancedDiffEditor({
                     )}
                   </button>
 
-                  <Checkbox
+                  <InputCheckbox
                     label="Ignore Whitespace"
                     checked={ignoreWhitespace}
                     onChange={(event) =>
                       setIgnoreWhitespace(event.target.checked)
                     }
                   />
-                  <Checkbox
+                  <InputCheckbox
                     label="Wrap Text"
                     checked={wrapText}
                     onChange={(event) => setWrapText(event.target.checked)}

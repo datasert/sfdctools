@@ -9,3 +9,9 @@
 ## Versioning Policy
 - Increment the minor version when adding a new tool or adding a user-facing feature to an existing tool.
 - Increment the patch version when fixing a bug or making a non-feature correction.
+
+## UI Component Policy
+- If a generic UI element is needed in more than one place, create a shared component and reuse it instead of duplicating markup.
+
+## Release Policy
+- When the user says `release`, update the changelog, bump the version by minor or patch as appropriate, run the build, then commit and push the release changes.

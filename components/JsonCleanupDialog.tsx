@@ -1,7 +1,7 @@
 "use client";
 
-import { Checkbox } from "./Checkbox";
 import { Button } from "./Button";
+import { InputCheckbox } from "./InputCheckbox";
 import type { JsonCleanupOptions } from "@/lib/json-cleanup";
 
 interface JsonCleanupDialogProps {
@@ -47,48 +47,48 @@ export function JsonCleanupDialog({ isOpen, onClose, options, onChange }: JsonCl
 
           <div className="flex-1 overflow-y-auto px-4 py-4">
             <div className="space-y-2">
-              <Checkbox
+              <InputCheckbox
                 label="Remove Null/Undefined"
                 checked={options.removeNullUndefined}
                 onChange={(event) =>
                   onChange(optionUpdater(options, "removeNullUndefined", event.target.checked))
                 }
               />
-              <Checkbox
+              <InputCheckbox
                 label="Remove False"
                 checked={options.removeFalse}
                 onChange={(event) => onChange(optionUpdater(options, "removeFalse", event.target.checked))}
               />
-              <Checkbox
+              <InputCheckbox
                 label="Remove Blank"
                 checked={options.removeBlank}
                 onChange={(event) => onChange(optionUpdater(options, "removeBlank", event.target.checked))}
               />
-              <Checkbox
+              <InputCheckbox
                 label="Remove Null/Undefined Array Items"
                 checked={options.removeNullUndefinedArrayItems}
                 onChange={(event) =>
                   onChange(optionUpdater(options, "removeNullUndefinedArrayItems", event.target.checked))
                 }
               />
-              <Checkbox
+              <InputCheckbox
                 label="Remove Blank Array Items"
                 checked={options.removeBlankArrayItems}
                 onChange={(event) =>
                   onChange(optionUpdater(options, "removeBlankArrayItems", event.target.checked))
                 }
               />
-              <Checkbox
+              <InputCheckbox
                 label="Remove Empty Array"
                 checked={options.removeEmptyArray}
                 onChange={(event) => onChange(optionUpdater(options, "removeEmptyArray", event.target.checked))}
               />
-              <Checkbox
+              <InputCheckbox
                 label="Remove Empty Object"
                 checked={options.removeEmptyObject}
                 onChange={(event) => onChange(optionUpdater(options, "removeEmptyObject", event.target.checked))}
               />
-              <Checkbox
+              <InputCheckbox
                 label="Sort JSON Fields"
                 checked={options.sortJsonFields}
                 onChange={(event) => onChange(optionUpdater(options, "sortJsonFields", event.target.checked))}

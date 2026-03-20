@@ -9,7 +9,7 @@ import { MonacoEditor } from "@/components/MonacoEditor";
 import { SettingsBar } from "@/components/SettingsBar";
 import { SettingsGroup } from "@/components/SettingsGroup";
 import { SettingsLabel } from "@/components/SettingsLabel";
-import { Checkbox } from "@/components/Checkbox";
+import { InputCheckbox } from "@/components/InputCheckbox";
 import { ActionButtons } from "@/components/ActionButtons";
 import { EditorGrid } from "@/components/EditorGrid";
 import { EditorPane } from "@/components/EditorPane";
@@ -90,7 +90,7 @@ export function InClauseGenerator() {
       <div className="flex h-full flex-col">
         <SettingsBar>
           <SettingsGroup>
-            <Checkbox
+            <InputCheckbox
               checked={dedupe}
               onChange={(e) => setDedupe(e.target.checked)}
               label="Dedupe"
@@ -98,7 +98,7 @@ export function InClauseGenerator() {
           </SettingsGroup>
 
           <SettingsGroup>
-            <Checkbox
+            <InputCheckbox
               checked={sorted}
               onChange={(e) => setSorted(e.target.checked)}
               label="Sorted"
@@ -122,7 +122,7 @@ export function InClauseGenerator() {
           </SettingsGroup>
 
           <SettingsGroup>
-            <Checkbox
+            <InputCheckbox
               checked={quoted}
               onChange={(e) => setQuoted(e.target.checked)}
               label="Quoted"

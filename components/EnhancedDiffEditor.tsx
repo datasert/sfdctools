@@ -221,7 +221,7 @@ export function EnhancedDiffEditor({
     useMemo<MonacoType.editor.IDiffEditorConstructionOptions>(
       () => ({
         minimap: { enabled: false },
-        fontSize: 13,
+        fontSize: 14,
         lineNumbers: "on",
         wordWrap: wrapText ? "on" : "off",
         diffWordWrap: wrapText ? "on" : "off",

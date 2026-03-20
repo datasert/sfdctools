@@ -8,6 +8,7 @@ type ChangeLogItem = {
 };
 
 const CHANGE_LOG_ITEMS: ChangeLogItem[] = [
+  { date: "2026-03-20", title: "Increase Monaco editor font size" },
   { date: "2026-03-20", title: "Add shared InputCheckbox component and standardize checkbox styling" },
   { date: "2026-03-19", title: "Add Extract IDs tool, rename ID Converter to Convert IDs, and fix share URL state capture" },
   { date: "2026-03-18", title: "Add syntax selector to Text Diff with Monaco language support" },

@@ -40,7 +40,7 @@ export function MonacoEditor({
   // Default options optimized for Chrome extension and consistent styling
   const defaultOptions: editor.IStandaloneEditorConstructionOptions = {
     minimap: { enabled: false },
-    fontSize: 13,
+    fontSize: 14,
     lineNumbers: "on",
     wordWrap: "on",
     scrollBeyondLastLine: false,

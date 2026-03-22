@@ -123,7 +123,27 @@ export function Sidebar({ isMobileOpen, onCloseMobile }: SidebarProps) {
         }`}
       >
         <div className="flex h-12 items-center justify-between border-b border-[var(--sidebar-border)] px-3">
-          <span className="text-sm font-semibold text-[var(--title-color)]">Tools</span>
+          <div className="flex items-center gap-2">
+            <Link href="/" onClick={closeIfMobile} className="flex items-center">
+              <img
+                src="/logos/circlecompass-svgrepo-com.svg"
+                alt="Salesforce Tools logo"
+                className="h-6 w-6 shrink-0"
+              />
+            </Link>
+            <a
+              href="https://www.datasert.com/products/brobench"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center"
+            >
+              <img
+                src="/logos/brobench-logo.svg"
+                alt="Brobench logo"
+                className="h-6 w-6 shrink-0"
+              />
+            </a>
+          </div>
           <button
             type="button"
             onClick={onCloseMobile}

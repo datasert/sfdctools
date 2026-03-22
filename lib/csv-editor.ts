@@ -82,7 +82,7 @@ export function parseDelimitedText(
     return { columns: [], rows: [], delimiter: delimiterHint ?? "," };
   }
 
-  const delimiter = delimiterHint ?? detectDelimiter(text);
+  const delimiter = normalizeDelimiter(delimiterHint ?? detectDelimiter(text));
   const parsed = Papa.parse<string[]>(text, {
     delimiter,
     skipEmptyLines: "greedy",
@@ -122,7 +122,7 @@ export function appendRowsFromDelimitedText(
     return document;
   }
 
-  const delimiter = delimiterHint ?? document.delimiter;
+  const delimiter = normalizeDelimiter(delimiterHint ?? document.delimiter);
   const parsed = Papa.parse<string[]>(text, {
     delimiter,
     skipEmptyLines: "greedy",
@@ -152,13 +152,14 @@ export function serializeDelimitedText(
   rows: CsvEditorRow[],
   delimiter: CsvDelimiter,
 ): string {
+  const normalizedDelimiter = normalizeDelimiter(delimiter);
   return Papa.unparse(
     {
       fields: columns,
       data: rows.map((row) => columns.map((column) => row[column] ?? "")),
     },
     {
-      delimiter,
+      delimiter: normalizedDelimiter,
       newline: "\r\n",
     },
   );
@@ -184,4 +185,8 @@ function uniquifyHeaders(headers: string[], width: number): string[] {
     seen.set(base, count + 1);
     return count === 0 ? base : `${base} (${count + 1})`;
   });
+}
+
+function normalizeDelimiter(delimiter: string): CsvDelimiter {
+  return delimiter === "," ? "," : "\t";
 }

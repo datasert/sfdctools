@@ -8,6 +8,7 @@ type ChangeLogItem = {
 };
 
 const CHANGE_LOG_ITEMS: ChangeLogItem[] = [
+  { date: "2026-03-22", title: "Refine CSV Editor filtering, copy/export flows, header actions, and mobile header/sidebar branding" },
   { date: "2026-03-22", title: "Add CSV Editor tool with ag-grid based editing, row and column filters, and range copy/export actions" },
   { date: "2026-03-20", title: "Increase Monaco editor font size" },
   { date: "2026-03-20", title: "Add shared InputCheckbox component and standardize checkbox styling" },

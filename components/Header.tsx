@@ -78,7 +78,10 @@ export function Header({
         }
 
         console.log("Parsed share payload JSON:", JSON.stringify(payload));
-        console.log("Applying share payload JSON:", JSON.stringify(payload.state));
+        console.log(
+          "Applying share payload JSON:",
+          JSON.stringify(payload.state),
+        );
         lastProcessedShareHashRef.current = window.location.hash;
 
         if (window.location.pathname !== payload.path) {
@@ -227,6 +230,18 @@ export function Header({
                 />
               </svg>
             </button>
+            <Link
+              href="/"
+              className="flex items-center md:hidden"
+              aria-label="Salesforce Tools"
+              title="Salesforce Tools"
+            >
+              <img
+                src="/logos/circlecompass-svgrepo-com.svg"
+                alt="Salesforce Tools logo"
+                className="h-6 w-6 shrink-0"
+              />
+            </Link>
             <h2
               className="truncate text-base font-bold text-[var(--title-color)]"
               style={{ fontFamily: "var(--title-font-family)" }}
@@ -261,6 +276,20 @@ export function Header({
               href="https://www.datasert.com/products/brobench"
               target="_blank"
               rel="noopener noreferrer"
+              className="flex items-center md:hidden"
+              aria-label="Brobench"
+              title="Explore Brobench"
+            >
+              <img
+                src="/logos/brobench-logo.svg"
+                alt="Brobench logo"
+                className="h-6 w-6 shrink-0"
+              />
+            </a>
+            <a
+              href="https://www.datasert.com/products/brobench"
+              target="_blank"
+              rel="noopener noreferrer"
               className="hidden items-center gap-2 rounded-md px-2 py-1 transition-colors hover:bg-[var(--hover-bg)] md:flex"
               aria-label="Brobench"
               title="Explore Brobench"
@@ -275,7 +304,7 @@ export function Header({
                   Brobench
                 </span>
                 <span className="mt-0.5 block whitespace-nowrap text-[10px] text-[var(--text-tertiary)]">
-                  Salesforce Toolkit
+                  Salesforce Admin Toolkit
                 </span>
               </span>
             </a>

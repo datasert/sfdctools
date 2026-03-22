@@ -89,6 +89,14 @@ export const tools: Tool[] = [
     tags: ["JSON", "Apex", "Salesforce", "Code Generation"],
   },
   {
+    id: "csv-editor",
+    name: "CSV Editor",
+    description:
+      "Load CSV or TSV from a file or clipboard, edit cells in a grid, and bulk add or remove rows and columns.",
+    path: "/csv-editor",
+    tags: ["CSV", "TSV", "Grid", "Data", "Editor"],
+  },
+  {
     id: "json-formatter",
     name: "JSON Formatter",
     description:

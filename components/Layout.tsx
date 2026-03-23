@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Sidebar } from "./Sidebar";
 import { Header } from "./Header";
+import { ReleaseBanner } from "./ReleaseBanner";
 import { TitleProvider } from "./TitleContext";
 
 export function Layout({ children }: { children: React.ReactNode }) {
@@ -11,6 +12,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   return (
     <TitleProvider>
       <div className="flex h-screen flex-col overflow-hidden bg-[var(--background)]">
+        <ReleaseBanner />
         <Header
           isMobileSidebarOpen={isMobileSidebarOpen}
           onToggleMobileSidebar={() => setIsMobileSidebarOpen((prev) => !prev)}

@@ -15,6 +15,21 @@ export interface CsvEditorDocument {
   delimiter: CsvDelimiter;
 }
 
+export interface CsvReplaceOptions {
+  rowScope: "selected" | "all";
+  selectedRowIds: string[];
+  columns: string[];
+  findText: string;
+  replaceText: string;
+  matchWholeString: boolean;
+  caseSensitive: boolean;
+}
+
+export interface CsvReplaceResult {
+  document: CsvEditorDocument;
+  replacements: number;
+}
+
 export interface ParsedDelimitedText {
   columns: string[];
   rows: CsvEditorRow[];
@@ -176,6 +191,57 @@ export function parseColumnNames(input: string): string[] {
   );
 }
 
+export function replaceValuesInDocument(
+  document: CsvEditorDocument,
+  options: CsvReplaceOptions,
+): CsvReplaceResult {
+  const findText = options.findText;
+  if (!findText) {
+    return { document, replacements: 0 };
+  }
+
+  const columns = options.columns.filter((column) => document.columns.includes(column));
+  if (columns.length === 0) {
+    return { document, replacements: 0 };
+  }
+
+  const rowIds =
+    options.rowScope === "selected"
+      ? new Set(options.selectedRowIds)
+      : null;
+
+  const findNeedle = options.caseSensitive ? findText : findText.toLowerCase();
+  let replacements = 0;
+
+  const nextDocument: CsvEditorDocument = {
+    ...document,
+    rows: document.rows.map((row) => {
+      if (rowIds && !rowIds.has(row.__id)) {
+        return row;
+      }
+
+      let rowChanged = false;
+      const nextRow: CsvEditorRow = { ...row };
+
+      columns.forEach((column) => {
+        const currentValue = row[column] ?? "";
+        const nextValue = replaceInValue(currentValue, findNeedle, options, (count) => {
+          replacements += count;
+          rowChanged = true;
+        });
+
+        if (nextValue !== currentValue) {
+          nextRow[column] = nextValue;
+        }
+      });
+
+      return rowChanged ? nextRow : row;
+    }),
+  };
+
+  return { document: nextDocument, replacements };
+}
+
 function uniquifyHeaders(headers: string[], width: number): string[] {
   const seen = new Map<string, number>();
 
@@ -189,4 +255,51 @@ function uniquifyHeaders(headers: string[], width: number): string[] {
 
 function normalizeDelimiter(delimiter: string): CsvDelimiter {
   return delimiter === "," ? "," : "\t";
+}
+
+function replaceInValue(
+  value: string,
+  findNeedle: string,
+  options: Pick<CsvReplaceOptions, "matchWholeString" | "caseSensitive" | "replaceText">,
+  onReplace: (count: number) => void,
+): string {
+  if (!findNeedle) {
+    return value;
+  }
+
+  if (options.matchWholeString) {
+    const normalizedValue = options.caseSensitive ? value : value.toLowerCase();
+    if (normalizedValue === findNeedle) {
+      onReplace(1);
+      return options.replaceText;
+    }
+    return value;
+  }
+
+  if (options.caseSensitive) {
+    const matches = value.match(new RegExp(escapeRegExp(findNeedle), "g"));
+    const matchCount = matches?.length ?? 0;
+    if (matchCount > 0) {
+      onReplace(matchCount);
+      return value.replace(
+        new RegExp(escapeRegExp(findNeedle), "g"),
+        options.replaceText,
+      );
+    }
+    return value;
+  }
+
+  const regex = new RegExp(escapeRegExp(findNeedle), "gi");
+  const matches = value.match(regex);
+  const matchCount = matches?.length ?? 0;
+  if (matchCount > 0) {
+    onReplace(matchCount);
+    return value.replace(regex, options.replaceText);
+  }
+
+  return value;
+}
+
+function escapeRegExp(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }

@@ -28,6 +28,7 @@ import {
   CSV_EDITOR_STORAGE_KEY,
   parseColumnNames,
   parseDelimitedText,
+  replaceValuesInDocument,
   serializeDelimitedText,
   type CsvDelimiter,
   type CsvEditorDocument,
@@ -50,6 +51,7 @@ type ColumnInsertPosition = "start" | "end" | "at";
 type RowInsertPosition = "start" | "end" | "row";
 type FillTargetRows = "selected" | "all";
 type CopyRangeRows = "selected" | "all";
+type FindReplaceRows = "selected" | "all";
 
 export function CsvEditor() {
   const [document, setDocument] = usePersistedState<CsvEditorDocument>(
@@ -64,6 +66,7 @@ export function CsvEditor() {
   const [isAddRowsOpen, setIsAddRowsOpen] = useState(false);
   const [isNewDialogOpen, setIsNewDialogOpen] = useState(false);
   const [isCopyRangeOpen, setIsCopyRangeOpen] = useState(false);
+  const [isFindReplaceOpen, setIsFindReplaceOpen] = useState(false);
 
   const [newColumnsInput, setNewColumnsInput] = useState("");
   const [columnsInput, setColumnsInput] = useState("");
@@ -74,15 +77,24 @@ export function CsvEditor() {
 
   const [fillValue, setFillValue] = useState("");
   const [fillTargetColumns, setFillTargetColumns] = useState<string[]>([]);
-  const [fillTargetRows, setFillTargetRows] = useState<FillTargetRows>("selected");
+  const [fillTargetRows, setFillTargetRows] =
+    useState<FillTargetRows>("selected");
   const [rowFilterText, setRowFilterText] = useState("");
   const [columnFilterText, setColumnFilterText] = useState("");
   const [copyRangeFormat, setCopyRangeFormat] = useState<CsvDelimiter>(",");
   const [copyRangeRows, setCopyRangeRows] = useState<CopyRangeRows>("selected");
   const [copyRangeColumns, setCopyRangeColumns] = useState<string[]>([]);
+  const [findReplaceRows, setFindReplaceRows] =
+    useState<FindReplaceRows>("selected");
+  const [findReplaceColumns, setFindReplaceColumns] = useState<string[]>([]);
+  const [findText, setFindText] = useState("");
+  const [replaceText, setReplaceText] = useState("");
+  const [matchWholeString, setMatchWholeString] = useState(true);
+  const [caseSensitive, setCaseSensitive] = useState(false);
 
   const [rowsToInsert, setRowsToInsert] = useState(1);
-  const [rowInsertPosition, setRowInsertPosition] = useState<RowInsertPosition>("end");
+  const [rowInsertPosition, setRowInsertPosition] =
+    useState<RowInsertPosition>("end");
   const [rowInsertNumber, setRowInsertNumber] = useState(1);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -90,7 +102,12 @@ export function CsvEditor() {
   const { showToast, ToastComponent } = useToast();
 
   const copyColumnValues = async (columnId: string, uniqueOnly: boolean) => {
-    const values = getColumnValues(gridApiRef.current, document.rows, columnId, uniqueOnly);
+    const values = getColumnValues(
+      gridApiRef.current,
+      document.rows,
+      columnId,
+      uniqueOnly,
+    );
 
     try {
       await navigator.clipboard.writeText(values.join("\n"));
@@ -121,8 +138,7 @@ export function CsvEditor() {
     ...document.columns.map((column) => ({
       field: column,
       headerName: column,
-      hide:
-        !matchesAnyPart(column, columnFilterText),
+      hide: !matchesAnyPart(column, columnFilterText),
       headerComponent: CsvHeaderMenu,
       headerComponentParams: {
         onCopyColumnValues: copyColumnValues,
@@ -177,14 +193,19 @@ export function CsvEditor() {
     }
 
     replaceDocument(parsed);
-    showToast(`Loaded ${parsed.rows.length} rows from ${sourceLabel}.`, "success");
+    showToast(
+      `Loaded ${parsed.rows.length} rows from ${sourceLabel}.`,
+      "success",
+    );
   };
 
   const openFilePicker = () => {
     fileInputRef.current?.click();
   };
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = event.target.files?.[0];
     if (!file) {
       return;
@@ -286,6 +307,16 @@ export function CsvEditor() {
     setIsCopyRangeOpen(true);
   };
 
+  const openFindReplaceDialog = () => {
+    setFindReplaceRows(selectedRowCount > 0 ? "selected" : "all");
+    setFindReplaceColumns([...document.columns]);
+    setFindText("");
+    setReplaceText("");
+    setMatchWholeString(true);
+    setCaseSensitive(false);
+    setIsFindReplaceOpen(true);
+  };
+
   const addColumns = () => {
     const requestedColumns = parseColumnNames(columnsInput);
     if (requestedColumns.length === 0) {
@@ -294,7 +325,9 @@ export function CsvEditor() {
     }
 
     const seen = new Set(document.columns);
-    const uniqueColumns = requestedColumns.filter((column) => !seen.has(column));
+    const uniqueColumns = requestedColumns.filter(
+      (column) => !seen.has(column),
+    );
     if (uniqueColumns.length === 0) {
       showToast("All listed columns already exist.", "warn");
       return;
@@ -360,7 +393,11 @@ export function CsvEditor() {
 
   const addRows = () => {
     const count = Math.max(1, Number(rowsToInsert) || 1);
-    const insertIndex = getRowInsertIndex(document.rows.length, rowInsertPosition, rowInsertNumber);
+    const insertIndex = getRowInsertIndex(
+      document.rows.length,
+      rowInsertPosition,
+      rowInsertNumber,
+    );
     const newRows = Array.from({ length: count }, () => {
       const row: CsvEditorRow = { __id: createRowId() };
       document.columns.forEach((column) => {
@@ -404,7 +441,11 @@ export function CsvEditor() {
   const applyFillSelection = (value: string) => {
     const selectedIds =
       fillTargetRows === "selected"
-        ? new Set((gridApiRef.current?.getSelectedRows() ?? []).map((row) => row.__id))
+        ? new Set(
+            (gridApiRef.current?.getSelectedRows() ?? []).map(
+              (row) => row.__id,
+            ),
+          )
         : new Set(document.rows.map((row) => row.__id));
 
     if (selectedIds.size === 0) {
@@ -412,7 +453,9 @@ export function CsvEditor() {
       return;
     }
 
-    const validColumns = fillTargetColumns.filter((column) => document.columns.includes(column));
+    const validColumns = fillTargetColumns.filter((column) =>
+      document.columns.includes(column),
+    );
     if (validColumns.length === 0) {
       showToast("Select at least one column to fill.", "warn");
       return;
@@ -440,7 +483,10 @@ export function CsvEditor() {
     );
   };
 
-  const copyTableToClipboard = async (delimiter: CsvDelimiter, label: string) => {
+  const copyTableToClipboard = async (
+    delimiter: CsvDelimiter,
+    label: string,
+  ) => {
     try {
       await navigator.clipboard.writeText(
         serializeDelimitedText(document.columns, document.rows, delimiter),
@@ -452,7 +498,9 @@ export function CsvEditor() {
   };
 
   const copySelectedRangeToClipboard = async () => {
-    const columns = copyRangeColumns.filter((column) => document.columns.includes(column));
+    const columns = copyRangeColumns.filter((column) =>
+      document.columns.includes(column),
+    );
     if (columns.length === 0) {
       showToast("Select at least one column to copy.", "warn");
       return;
@@ -460,10 +508,17 @@ export function CsvEditor() {
 
     const selectedIds =
       copyRangeRows === "selected"
-        ? new Set((gridApiRef.current?.getSelectedRows() ?? []).map((row) => row.__id))
+        ? new Set(
+            (gridApiRef.current?.getSelectedRows() ?? []).map(
+              (row) => row.__id,
+            ),
+          )
         : null;
 
-    if (copyRangeRows === "selected" && (!selectedIds || selectedIds.size === 0)) {
+    if (
+      copyRangeRows === "selected" &&
+      (!selectedIds || selectedIds.size === 0)
+    ) {
       showToast("Select one or more rows first.", "warn");
       return;
     }
@@ -484,8 +539,51 @@ export function CsvEditor() {
     }
   };
 
+  const applyFindReplace = () => {
+    const columns = findReplaceColumns.filter((column) =>
+      document.columns.includes(column),
+    );
+    if (columns.length === 0) {
+      showToast("Select at least one column to replace in.", "warn");
+      return;
+    }
+
+    const selectedRowIds =
+      findReplaceRows === "selected"
+        ? (gridApiRef.current?.getSelectedRows() ?? []).map((row) => row.__id)
+        : [];
+
+    if (findReplaceRows === "selected" && selectedRowIds.length === 0) {
+      showToast("Select one or more rows first.", "warn");
+      return;
+    }
+
+    const result = replaceValuesInDocument(document, {
+      rowScope: findReplaceRows,
+      selectedRowIds,
+      columns,
+      findText,
+      replaceText,
+      matchWholeString,
+      caseSensitive,
+    });
+
+    if (result.replacements === 0) {
+      showToast("No matches found.", "warn");
+      return;
+    }
+
+    setDocument(result.document);
+    setIsFindReplaceOpen(false);
+    showToast(`Replaced ${result.replacements} value(s).`, "success");
+  };
+
   const downloadTable = (delimiter: CsvDelimiter, label: string) => {
-    const serialized = serializeDelimitedText(document.columns, document.rows, delimiter);
+    const serialized = serializeDelimitedText(
+      document.columns,
+      document.rows,
+      delimiter,
+    );
     const blob = new Blob([serialized], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = window.document.createElement("a");
@@ -504,14 +602,16 @@ export function CsvEditor() {
         <SettingsBar className="space-y-3">
           <div className="flex flex-wrap items-center gap-3">
             <SettingsGroup className="flex-wrap">
-              <Button size="sm" onClick={openNewDialog} className="font-mono">
+              <Button size="sm" onClick={openNewDialog}>
                 New
               </Button>
-              <MenuButton label="Load">
-                <MenuItem onClick={openFilePicker}>Load File</MenuItem>
-                <MenuItem onClick={loadFromClipboard}>Load Clipboard</MenuItem>
-                <MenuItem onClick={appendClipboardRows}>Append Clipboard Rows</MenuItem>
-                <MenuItem onClick={resetSample}>Load Sample</MenuItem>
+              <MenuButton label="Open">
+                <MenuItem onClick={openFilePicker}>Open File</MenuItem>
+                <MenuItem onClick={loadFromClipboard}>Open Clipboard</MenuItem>
+                <MenuItem onClick={appendClipboardRows}>
+                  Append Clipboard Rows
+                </MenuItem>
+                <MenuItem onClick={resetSample}>Open Sample</MenuItem>
               </MenuButton>
             </SettingsGroup>
 
@@ -520,7 +620,9 @@ export function CsvEditor() {
                 <MenuItem onClick={() => copyTableToClipboard(",", "CSV")}>
                   Copy as CSV
                 </MenuItem>
-                <MenuItem onClick={() => copyTableToClipboard("\t", "Excel (TSV)")}>
+                <MenuItem
+                  onClick={() => copyTableToClipboard("\t", "Excel (TSV)")}
+                >
                   Copy as Excel (TSV)
                 </MenuItem>
                 <MenuItem onClick={openCopyRangeDialog}>Copy Range</MenuItem>
@@ -535,12 +637,11 @@ export function CsvEditor() {
                 </MenuItem>
               </MenuButton>
             </SettingsGroup>
-
           </div>
 
           <div className="flex flex-wrap items-center gap-3">
             <SettingsGroup className="flex-wrap">
-              <Button size="sm" onClick={openAddRowsDialog} className="font-mono">
+              <Button onClick={openAddRowsDialog} variant="secondary">
                 Add Rows
               </Button>
               <MenuButton label="Delete Rows">
@@ -549,14 +650,17 @@ export function CsvEditor() {
                 </MenuItem>
                 <MenuItem onClick={clearGrid}>All Rows</MenuItem>
               </MenuButton>
-              <Button size="sm" onClick={openAddColumnsDialog} className="font-mono">
+              <Button size="sm" onClick={openAddColumnsDialog}>
                 Add Columns
               </Button>
-              <Button size="sm" onClick={openDeleteColumnsDialog} className="font-mono">
+              <Button size="sm" onClick={openDeleteColumnsDialog}>
                 Delete Columns
               </Button>
-              <Button size="sm" onClick={openFillSelectionDialog} className="font-mono">
+              <Button size="sm" onClick={openFillSelectionDialog}>
                 Fill
+              </Button>
+              <Button size="sm" onClick={openFindReplaceDialog}>
+                Find / Replace
               </Button>
             </SettingsGroup>
 
@@ -594,7 +698,7 @@ export function CsvEditor() {
                     Empty CSV
                   </h2>
                   <p className="text-sm text-[var(--text-secondary)]">
-                    Load a file, paste from clipboard, load sample data, or add
+                    Open a file, paste from clipboard, open sample data, or add
                     columns and rows to start editing.
                   </p>
                 </div>
@@ -622,7 +726,9 @@ export function CsvEditor() {
                 }
                 onCellValueChanged={syncGridRowChange}
                 onSelectionChanged={() =>
-                  setSelectedRowCount(gridApiRef.current?.getSelectedRows().length ?? 0)
+                  setSelectedRowCount(
+                    gridApiRef.current?.getSelectedRows().length ?? 0,
+                  )
                 }
                 onColumnResized={() => gridApiRef.current?.refreshCells()}
                 animateRows={false}
@@ -646,12 +752,122 @@ export function CsvEditor() {
       </div>
 
       <Dialog
+        isOpen={isFindReplaceOpen}
+        onClose={() => setIsFindReplaceOpen(false)}
+        title="Find and Replace"
+        footer={
+          <>
+            <Button size="sm" onClick={() => setIsFindReplaceOpen(false)}>
+              Cancel
+            </Button>
+            <Button size="sm" variant="primary" onClick={applyFindReplace}>
+              Replace
+            </Button>
+          </>
+        }
+      >
+        <div className="space-y-4 font-mono">
+          <div className="space-y-2">
+            <label className="text-xs text-[var(--text-secondary)]">Rows</label>
+            <div className="space-y-2 rounded-[0.375em] border border-[var(--content-border)] p-3">
+              <label className="flex cursor-pointer items-center gap-2 text-sm text-[var(--text-primary)]">
+                <input
+                  type="radio"
+                  name="find-replace-rows"
+                  checked={findReplaceRows === "selected"}
+                  onChange={() => setFindReplaceRows("selected")}
+                />
+                <span>{selectedRowCount} selected rows</span>
+              </label>
+              <label className="flex cursor-pointer items-center gap-2 text-sm text-[var(--text-primary)]">
+                <input
+                  type="radio"
+                  name="find-replace-rows"
+                  checked={findReplaceRows === "all"}
+                  onChange={() => setFindReplaceRows("all")}
+                />
+                <span>All Rows</span>
+              </label>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <label className="text-xs text-[var(--text-secondary)]">Columns</label>
+              <button
+                type="button"
+                onClick={() =>
+                  setFindReplaceColumns((current) =>
+                    current.length === document.columns.length ? [] : [...document.columns],
+                  )
+                }
+                className="cursor-pointer text-xs text-[var(--accent-color)] hover:underline"
+              >
+                {findReplaceColumns.length === document.columns.length
+                  ? "Clear All"
+                  : "Select All"}
+              </button>
+            </div>
+
+            <div className="grid gap-2 md:grid-cols-2">
+              {document.columns.map((column) => (
+                <InputCheckbox
+                  key={column}
+                  label={<span className="font-mono">{column}</span>}
+                  checked={findReplaceColumns.includes(column)}
+                  onChange={(event) =>
+                    setFindReplaceColumns((current) =>
+                      event.target.checked
+                        ? [...current, column]
+                        : current.filter((item) => item !== column),
+                    )
+                  }
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-xs text-[var(--text-secondary)]">Find</label>
+            <Input
+              autoFocus
+              value={findText}
+              onChange={(event) => setFindText(event.target.value)}
+              placeholder="Find text"
+            />
+          </div>
+
+          <div className="flex flex-wrap items-center gap-4">
+            <InputCheckbox
+              label="Match Whole string"
+              checked={matchWholeString}
+              onChange={(event) => setMatchWholeString(event.target.checked)}
+            />
+            <InputCheckbox
+              label="Case Sensitive"
+              checked={caseSensitive}
+              onChange={(event) => setCaseSensitive(event.target.checked)}
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-xs text-[var(--text-secondary)]">Replace</label>
+            <Input
+              value={replaceText}
+              onChange={(event) => setReplaceText(event.target.value)}
+              placeholder="Replace text"
+            />
+          </div>
+        </div>
+      </Dialog>
+
+      <Dialog
         isOpen={isCopyRangeOpen}
         onClose={() => setIsCopyRangeOpen(false)}
         title="Copy Range"
         footer={
           <>
-            <Button size="sm" onClick={() => setIsCopyRangeOpen(false)} className="font-mono">
+            <Button size="sm" onClick={() => setIsCopyRangeOpen(false)}>
               Cancel
             </Button>
             <Button
@@ -660,7 +876,6 @@ export function CsvEditor() {
               onClick={() => {
                 void copySelectedRangeToClipboard();
               }}
-              className="font-mono"
             >
               Copy
             </Button>
@@ -669,12 +884,15 @@ export function CsvEditor() {
       >
         <div className="space-y-4 font-mono">
           <div className="space-y-1">
-            <label className="text-xs text-[var(--text-secondary)]">Format</label>
+            <label className="text-xs text-[var(--text-secondary)]">
+              Format
+            </label>
             <Select
               autoFocus
               value={copyRangeFormat}
-              onChange={(event) => setCopyRangeFormat(event.target.value as CsvDelimiter)}
-              className="font-mono"
+              onChange={(event) =>
+                setCopyRangeFormat(event.target.value as CsvDelimiter)
+              }
             >
               <option value=",">CSV</option>
               <option value="\t">Excel (TSV)</option>
@@ -707,12 +925,16 @@ export function CsvEditor() {
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label className="text-xs text-[var(--text-secondary)]">Columns</label>
+              <label className="text-xs text-[var(--text-secondary)]">
+                Columns
+              </label>
               <button
                 type="button"
                 onClick={() =>
                   setCopyRangeColumns((current) =>
-                    current.length === document.columns.length ? [] : [...document.columns],
+                    current.length === document.columns.length
+                      ? []
+                      : [...document.columns],
                   )
                 }
                 className="cursor-pointer text-xs text-[var(--accent-color)] hover:underline"
@@ -727,7 +949,7 @@ export function CsvEditor() {
               {document.columns.map((column) => (
                 <InputCheckbox
                   key={column}
-                  label={<span className="font-mono">{column}</span>}
+                  label={<span>{column}</span>}
                   checked={copyRangeColumns.includes(column)}
                   onChange={(event) =>
                     setCopyRangeColumns((current) =>
@@ -749,15 +971,10 @@ export function CsvEditor() {
         title="New CSV"
         footer={
           <>
-            <Button size="sm" onClick={() => setIsNewDialogOpen(false)} className="font-mono">
+            <Button size="sm" onClick={() => setIsNewDialogOpen(false)}>
               Cancel
             </Button>
-            <Button
-              size="sm"
-              variant="primary"
-              onClick={createNewDocument}
-              className="font-mono"
-            >
+            <Button size="sm" variant="primary" onClick={createNewDocument}>
               Create
             </Button>
           </>
@@ -765,7 +982,9 @@ export function CsvEditor() {
       >
         <div className="space-y-4 font-mono">
           <div className="space-y-1">
-            <label className="text-xs text-[var(--text-secondary)]">Columns</label>
+            <label className="text-xs text-[var(--text-secondary)]">
+              Columns
+            </label>
             <textarea
               autoFocus
               value={newColumnsInput}
@@ -775,7 +994,8 @@ export function CsvEditor() {
               className="w-full rounded-[0.375em] border border-[var(--input-border)] bg-[var(--input-color)] px-2.5 py-2 text-sm text-[var(--input-text)] placeholder:text-[var(--text-tertiary)] focus:border-[var(--primary-color)] focus:outline-none"
             />
             <p className="text-xs text-[var(--text-secondary)]">
-              Enter comma-separated column names. Leave blank to start with an empty CSV.
+              Enter comma-separated column names. Leave blank to start with an
+              empty CSV.
             </p>
           </div>
         </div>
@@ -787,10 +1007,10 @@ export function CsvEditor() {
         title="Add Columns"
         footer={
           <>
-            <Button size="sm" onClick={() => setIsAddColumnsOpen(false)} className="font-mono">
+            <Button size="sm" onClick={() => setIsAddColumnsOpen(false)}>
               Cancel
             </Button>
-            <Button size="sm" variant="primary" onClick={addColumns} className="font-mono">
+            <Button size="sm" variant="primary" onClick={addColumns}>
               Add
             </Button>
           </>
@@ -798,7 +1018,9 @@ export function CsvEditor() {
       >
         <div className="space-y-4 font-mono">
           <div className="space-y-1">
-            <label className="text-xs text-[var(--text-secondary)]">Column Names</label>
+            <label className="text-xs text-[var(--text-secondary)]">
+              Column Names
+            </label>
             <textarea
               autoFocus
               value={columnsInput}
@@ -811,13 +1033,16 @@ export function CsvEditor() {
 
           <div className="grid gap-3 md:grid-cols-[12rem_minmax(0,1fr)]">
             <div className="space-y-1">
-              <label className="text-xs text-[var(--text-secondary)]">Position</label>
+              <label className="text-xs text-[var(--text-secondary)]">
+                Position
+              </label>
               <Select
                 value={columnInsertPosition}
                 onChange={(event) =>
-                  setColumnInsertPosition(event.target.value as ColumnInsertPosition)
+                  setColumnInsertPosition(
+                    event.target.value as ColumnInsertPosition,
+                  )
                 }
-                className="font-mono"
               >
                 <option value="start">Start</option>
                 <option value="end">End</option>
@@ -827,11 +1052,12 @@ export function CsvEditor() {
 
             {columnInsertPosition === "at" ? (
               <div className="space-y-1">
-                <label className="text-xs text-[var(--text-secondary)]">At Column</label>
+                <label className="text-xs text-[var(--text-secondary)]">
+                  At Column
+                </label>
                 <Select
                   value={columnAtTarget}
                   onChange={(event) => setColumnAtTarget(event.target.value)}
-                  className="font-mono"
                 >
                   {document.columns.map((column) => (
                     <option key={column} value={column}>
@@ -851,10 +1077,10 @@ export function CsvEditor() {
         title="Delete Columns"
         footer={
           <>
-            <Button size="sm" onClick={() => setIsDeleteColumnsOpen(false)} className="font-mono">
+            <Button size="sm" onClick={() => setIsDeleteColumnsOpen(false)}>
               Cancel
             </Button>
-            <Button size="sm" variant="primary" onClick={removeColumns} className="font-mono">
+            <Button size="sm" variant="primary" onClick={removeColumns}>
               Delete
             </Button>
           </>
@@ -865,7 +1091,7 @@ export function CsvEditor() {
             <InputCheckbox
               key={column}
               autoFocus={column === document.columns[0]}
-              label={<span className="font-mono">{column}</span>}
+              label={<span>{column}</span>}
               checked={columnsToDelete.includes(column)}
               onChange={(event) =>
                 setColumnsToDelete((current) =>
@@ -885,25 +1111,16 @@ export function CsvEditor() {
         title="Fill"
         footer={
           <>
-            <Button
-              size="sm"
-              onClick={() => setIsFillSelectionOpen(false)}
-              className="font-mono"
-            >
+            <Button size="sm" onClick={() => setIsFillSelectionOpen(false)}>
               Cancel
             </Button>
-            <Button
-              size="sm"
-              onClick={() => applyFillSelection("")}
-              className="font-mono"
-            >
+            <Button size="sm" onClick={() => applyFillSelection("")}>
               Clear
             </Button>
             <Button
               size="sm"
               variant="primary"
               onClick={() => applyFillSelection(fillValue)}
-              className="font-mono"
             >
               Fill
             </Button>
@@ -938,12 +1155,16 @@ export function CsvEditor() {
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label className="text-xs text-[var(--text-secondary)]">Columns</label>
+              <label className="text-xs text-[var(--text-secondary)]">
+                Columns
+              </label>
               <button
                 type="button"
                 onClick={() =>
                   setFillTargetColumns((current) =>
-                    current.length === document.columns.length ? [] : [...document.columns],
+                    current.length === document.columns.length
+                      ? []
+                      : [...document.columns],
                   )
                 }
                 className="cursor-pointer text-xs text-[var(--accent-color)] hover:underline"
@@ -958,7 +1179,7 @@ export function CsvEditor() {
               {document.columns.map((column) => (
                 <InputCheckbox
                   key={column}
-                  label={<span className="font-mono">{column}</span>}
+                  label={<span>{column}</span>}
                   checked={fillTargetColumns.includes(column)}
                   onChange={(event) =>
                     setFillTargetColumns((current) =>
@@ -973,12 +1194,13 @@ export function CsvEditor() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs text-[var(--text-secondary)]">Fill Value</label>
+            <label className="text-xs text-[var(--text-secondary)]">
+              Fill Value
+            </label>
             <Input
               value={fillValue}
               onChange={(event) => setFillValue(event.target.value)}
               placeholder="Value to apply"
-              className="font-mono"
             />
           </div>
         </div>
@@ -990,10 +1212,10 @@ export function CsvEditor() {
         title="Add Rows"
         footer={
           <>
-            <Button size="sm" onClick={() => setIsAddRowsOpen(false)} className="font-mono">
+            <Button size="sm" onClick={() => setIsAddRowsOpen(false)}>
               Cancel
             </Button>
-            <Button size="sm" variant="primary" onClick={addRows} className="font-mono">
+            <Button size="sm" variant="primary" onClick={addRows}>
               Insert
             </Button>
           </>
@@ -1001,22 +1223,30 @@ export function CsvEditor() {
       >
         <div className="flex flex-wrap items-end gap-0 font-mono">
           <div className="space-y-1">
-            <label className="text-xs text-[var(--text-secondary)]">Number of Rows</label>
+            <label className="text-xs text-[var(--text-secondary)]">
+              Number of Rows
+            </label>
             <Input
               autoFocus
               type="number"
               min={1}
               value={rowsToInsert}
-              onChange={(event) => setRowsToInsert(Math.max(1, Number(event.target.value) || 1))}
+              onChange={(event) =>
+                setRowsToInsert(Math.max(1, Number(event.target.value) || 1))
+              }
               className="rounded-r-none font-mono"
             />
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs text-[var(--text-secondary)]">Position</label>
+            <label className="text-xs text-[var(--text-secondary)]">
+              Position
+            </label>
             <Select
               value={rowInsertPosition}
-              onChange={(event) => setRowInsertPosition(event.target.value as RowInsertPosition)}
+              onChange={(event) =>
+                setRowInsertPosition(event.target.value as RowInsertPosition)
+              }
               className="rounded-none font-mono"
             >
               <option value="start">Start</option>
@@ -1027,13 +1257,17 @@ export function CsvEditor() {
 
           {rowInsertPosition === "row" ? (
             <div className="space-y-1">
-              <label className="text-xs text-[var(--text-secondary)]">Row Num</label>
+              <label className="text-xs text-[var(--text-secondary)]">
+                Row Num
+              </label>
               <Input
                 type="number"
                 min={1}
                 value={rowInsertNumber}
                 onChange={(event) =>
-                  setRowInsertNumber(Math.max(1, Number(event.target.value) || 1))
+                  setRowInsertNumber(
+                    Math.max(1, Number(event.target.value) || 1),
+                  )
                 }
                 className="rounded-l-none font-mono"
               />
@@ -1248,6 +1482,9 @@ function matchesAnyRowPart(
     return true;
   }
 
-  const haystack = columns.map((column) => row[column] ?? "").join(" ").toLowerCase();
+  const haystack = columns
+    .map((column) => row[column] ?? "")
+    .join(" ")
+    .toLowerCase();
   return parts.some((part) => haystack.includes(part));
 }

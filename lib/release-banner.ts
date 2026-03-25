@@ -5,8 +5,8 @@ export interface ReleaseBannerConfig {
 }
 
 export const CURRENT_RELEASE_BANNER: ReleaseBannerConfig = {
-  version: "1.6.0",
-  title: "New in v1.6.0",
+  version: "1.8.0",
+  title: "New in v1.8.0",
   description:
-    "CSV Editor now includes find and replace, range copy, row and column filtering, custom header actions, and improved mobile navigation branding.",
+    "XML Diff is now available with cleanup controls, recursive empty-node removal, and path-based node sorting, and XML Formatter supports the same normalization options.",
 };

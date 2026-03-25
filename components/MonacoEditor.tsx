@@ -1,9 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { useTheme } from "next-themes";
 import Editor, { EditorProps, OnChange } from "@monaco-editor/react";
 import type { editor } from "monaco-editor";
+import { useTheme } from "./ThemeProvider";
 
 interface MonacoEditorProps extends Omit<EditorProps, "theme" | "options"> {
   value: string;
@@ -28,14 +27,10 @@ export function MonacoEditor({
   ...props
 }: MonacoEditorProps) {
   const { theme, resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   // Determine Monaco theme based on app theme
-  const monacoTheme = mounted && (resolvedTheme === "dark" || theme === "dark") ? "vs-dark" : "light";
+  const monacoTheme =
+    resolvedTheme === "dark" || theme === "dark" ? "vs-dark" : "light";
 
   // Default options optimized for Chrome extension and consistent styling
   const defaultOptions: editor.IStandaloneEditorConstructionOptions = {

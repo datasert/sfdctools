@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import { useTheme } from "next-themes";
 import { usePathname } from "next/navigation";
 import { DiffEditor } from "@monaco-editor/react";
 import type { DiffOnMount } from "@monaco-editor/react";
@@ -9,6 +8,7 @@ import type * as MonacoType from "monaco-editor";
 import { InputCheckbox } from "./InputCheckbox";
 import { useToast } from "./Toast";
 import { EditableLabel } from "./EditableLabel";
+import { useTheme } from "./ThemeProvider";
 
 interface EnhancedDiffEditorProps {
   original: string;

@@ -81,20 +81,36 @@ export const tools: Tool[] = [
     tags: ["SOQL", "IN Clause", "Generator", "Salesforce"],
   },
   {
-    id: "json-to-apex",
-    name: "JSON to Apex",
-    description:
-      "Convert JSON structure to Apex class with inner classes. Automatically generates Apex code representing the JSON shape.",
-    path: "/json-to-apex",
-    tags: ["JSON", "Apex", "Salesforce", "Code Generation"],
-  },
-  {
     id: "csv-editor",
     name: "CSV Editor",
     description:
       "Load CSV or TSV from a file or clipboard, edit cells in a grid, and bulk add or remove rows and columns.",
     path: "/csv-editor",
     tags: ["CSV", "TSV", "Grid", "Data", "Editor"],
+  },
+  {
+    id: "text-tool",
+    name: "Text Tool",
+    description:
+      "Apply series of text transformations (trim, dedupe, sort, shuffle, etc.) in customizable order. Process text line by line.",
+    path: "/text-tool",
+    tags: ["Text", "Processor", "Transform"],
+  },
+  {
+    id: "text-diff",
+    name: "Text Diff",
+    description:
+      "Compare two texts side-by-side and view differences. Shows a visual diff with additions, deletions, and modifications highlighted.",
+    path: "/text-diff",
+    tags: ["Diff", "Compare", "Text", "Utility"],
+  },
+  {
+    id: "json-to-apex",
+    name: "JSON to Apex",
+    description:
+      "Convert JSON structure to Apex class with inner classes. Automatically generates Apex code representing the JSON shape.",
+    path: "/json-to-apex",
+    tags: ["JSON", "Apex", "Salesforce", "Code Generation"],
   },
   {
     id: "json-formatter",
@@ -121,29 +137,12 @@ export const tools: Tool[] = [
     tags: ["XML", "Formatter", "Beautify"],
   },
   {
-    id: "html-formatter",
-    name: "HTML Formatter",
+    id: "xml-diff",
+    name: "XML Diff",
     description:
-      "Format and beautify HTML with customizable indentation. Validates HTML and formats as you type. Optional preview mode to see rendered HTML.",
-    path: "/html-formatter",
-    tags: ["HTML", "Formatter", "Beautify", "Preview"],
-  },
-  // Utilities
-  {
-    id: "text-tool",
-    name: "Text Tool",
-    description:
-      "Apply series of text transformations (trim, dedupe, sort, shuffle, etc.) in customizable order. Process text line by line.",
-    path: "/text-tool",
-    tags: ["Text", "Processor", "Transform"],
-  },
-  {
-    id: "text-diff",
-    name: "Text Diff",
-    description:
-      "Compare two texts side-by-side and view differences. Shows a visual diff with additions, deletions, and modifications highlighted.",
-    path: "/text-diff",
-    tags: ["Diff", "Compare", "Text", "Utility"],
+      "Compare two XML documents side-by-side with optional cleanup rules such as trimming text, removing comments, and sorting attributes or tags.",
+    path: "/xml-diff",
+    tags: ["XML", "Diff", "Compare", "Cleanup", "Utility"],
   },
   {
     id: "omni-config-diff",
@@ -152,6 +151,14 @@ export const tools: Tool[] = [
       "Compare OmniScript XML versions by decoding embedded JSON, sorting JSON keys, and diffing normalized XML side-by-side.",
     path: "/omni-config-diff",
     tags: ["OmniScript", "XML", "JSON", "Diff", "Salesforce"],
+  },
+  {
+    id: "html-formatter",
+    name: "HTML Formatter",
+    description:
+      "Format and beautify HTML with customizable indentation. Validates HTML and formats as you type. Optional preview mode to see rendered HTML.",
+    path: "/html-formatter",
+    tags: ["HTML", "Formatter", "Beautify", "Preview"],
   },
   {
     id: "datetime-converter",

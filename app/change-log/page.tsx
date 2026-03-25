@@ -8,6 +8,8 @@ type ChangeLogItem = {
 };
 
 const CHANGE_LOG_ITEMS: ChangeLogItem[] = [
+  { date: "2026-03-25", title: "Add XML Diff tool plus advanced XML cleanup and path-based node sorting in formatter and diff" },
+  { date: "2026-03-25", title: "Replace theme script injection with local theme provider" },
   { date: "2026-03-23", title: "Add CSV Editor find and replace plus toolbar and header refinements" },
   { date: "2026-03-22", title: "Refine CSV Editor filtering, copy/export flows, header actions, and mobile header/sidebar branding" },
   { date: "2026-03-22", title: "Add CSV Editor tool with ag-grid based editing, row and column filters, and range copy/export actions" },

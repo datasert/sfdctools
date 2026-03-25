@@ -22,6 +22,7 @@ const TOOL_INDEXED_DB_STORAGE_KEYS: Record<string, string[]> = {
   "soql-formatter": ["input"],
   "text-diff": ["original", "modified"],
   "text-tool": ["input"],
+  "xml-diff": ["left", "right"],
   "xml-formatter": ["input"],
 };
 

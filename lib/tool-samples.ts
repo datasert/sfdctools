@@ -36,6 +36,37 @@ export const SAMPLE_JSON_RIGHT = `{"account":{"id":"001xx000003DGbYAAW","name":"
 
 export const SAMPLE_XML = `<account id="001xx000003DGbYAAW"><name>Acme</name><industry>Manufacturing</industry><contacts><contact><firstName>Ada</firstName><lastName>Lovelace</lastName></contact><contact><firstName>Grace</firstName><lastName>Hopper</lastName></contact></contacts></account>`;
 
+export const SAMPLE_XML_LEFT = `<account region="West" id="001xx000003DGbYAAW">
+  <!-- Primary account -->
+  <industry>Manufacturing</industry>
+  <name>Acme</name>
+  <contacts>
+    <contact role="Finance">
+      <lastName>Hopper</lastName>
+      <firstName>Grace</firstName>
+    </contact>
+    <contact role="Engineering">
+      <lastName>Lovelace</lastName>
+      <firstName>Ada</firstName>
+    </contact>
+  </contacts>
+</account>`;
+
+export const SAMPLE_XML_RIGHT = `<account id="001xx000003DGbYAAW" region="West">
+  <name>Acme Corp</name>
+  <industry>Manufacturing</industry>
+  <contacts>
+    <contact role="Engineering">
+      <firstName>Ada</firstName>
+      <lastName>Lovelace</lastName>
+    </contact>
+    <contact role="Support">
+      <firstName>Linus</firstName>
+      <lastName>Torvalds</lastName>
+    </contact>
+  </contacts>
+</account>`;
+
 export const SAMPLE_HTML = `<section class="card"><h1>Release Notes</h1><p>Sample preview content for the formatter.</p><ul><li>Improved diffing</li><li>Added sample loader</li></ul></section>`;
 
 export const SAMPLE_TEXT_DIFF_LEFT = `Acme

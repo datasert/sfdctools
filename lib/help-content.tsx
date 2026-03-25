@@ -456,6 +456,37 @@ export const helpContent: Record<string, HelpContent> = {
       </div>
     ),
   },
+  "xml-diff": {
+    title: "XML Diff",
+    content: (
+      <div className="space-y-4">
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Overview</h3>
+          <p className="text-[var(--text-secondary)]">
+            Compare two XML documents side-by-side with optional cleanup rules applied before diffing. The normalized XML is rendered in a Monaco diff view for easier review.
+          </p>
+        </div>
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Features</h3>
+          <ul className="list-disc list-inside space-y-1 text-[var(--text-secondary)]">
+            <li><strong>Two-way XML Input:</strong> Edit left and right XML independently in Monaco editors.</li>
+            <li><strong>Cleanup Options:</strong> Configure trim, comment removal, attribute sorting, and tag sorting before comparison.</li>
+            <li><strong>Indent Control:</strong> Choose output indentation (0-10 spaces) for normalized XML formatting.</li>
+            <li><strong>Live Diff:</strong> Diff output updates automatically as input or cleanup settings change.</li>
+            <li><strong>Editable Side Labels:</strong> Rename left and right headers in the diff view for context.</li>
+            <li><strong>Actions:</strong> Swap sides, clear both inputs, load a sample, and copy cleaned right XML.</li>
+            <li><strong>Error Reporting:</strong> Shows parse errors when either XML input is invalid.</li>
+          </ul>
+        </div>
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Usage</h3>
+          <p className="text-[var(--text-secondary)]">
+            Paste XML into both editors, open XML Cleanup to choose normalization rules, and review the cleaned diff below. Enable Sort Tags to compare sibling elements in a stable order and use Copy to export the cleaned right-side XML.
+          </p>
+        </div>
+      </div>
+    ),
+  },
   "json-to-apex": {
     title: "JSON to Apex",
     content: (

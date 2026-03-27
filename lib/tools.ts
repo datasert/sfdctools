@@ -192,14 +192,15 @@ export const tools: Tool[] = [
     path: "/jwt-decoder",
     tags: ["JWT", "Token", "Decoder", "Security", "Utility"],
   },
-  {
-    id: "metadata-registry",
-    name: "Metadata Types",
-    description:
-      "Browse the Source Deploy Retrieve metadata registry in an ag-grid table with directory, suffix, and folder flags.",
-    path: "/metadata-types",
-    tags: ["Salesforce", "Metadata", "Registry", "Grid"],
-  },
+  // Temporarily disabled while the metadata types grid issue is being fixed.
+  // {
+  //   id: "metadata-registry",
+  //   name: "Metadata Types",
+  //   description:
+  //     "Browse the Source Deploy Retrieve metadata registry in an ag-grid table with directory, suffix, and folder flags.",
+  //   path: "/metadata-types",
+  //   tags: ["Salesforce", "Metadata", "Registry", "Grid"],
+  // },
   {
     id: "device-information",
     name: "Device Information",

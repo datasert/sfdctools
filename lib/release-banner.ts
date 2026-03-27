@@ -5,8 +5,8 @@ export interface ReleaseBannerConfig {
 }
 
 export const CURRENT_RELEASE_BANNER: ReleaseBannerConfig = {
-  version: "1.10.0",
-  title: "New in v1.10.0",
+  version: "1.10.1",
+  title: "New in v1.10.1",
   description:
-    "Metadata Types now browses the Source Deploy Retrieve registry at /metadata-types and adds CSV export for all loaded records.",
+    "Metadata Types has been temporarily removed from navigation while the grid issue is being fixed.",
 };

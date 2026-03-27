@@ -193,6 +193,14 @@ export const tools: Tool[] = [
     tags: ["JWT", "Token", "Decoder", "Security", "Utility"],
   },
   {
+    id: "metadata-registry",
+    name: "Metadata Types",
+    description:
+      "Browse the Source Deploy Retrieve metadata registry in an ag-grid table with directory, suffix, and folder flags.",
+    path: "/metadata-types",
+    tags: ["Salesforce", "Metadata", "Registry", "Grid"],
+  },
+  {
     id: "device-information",
     name: "Device Information",
     description:

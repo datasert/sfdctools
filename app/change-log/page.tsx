@@ -8,6 +8,8 @@ type ChangeLogItem = {
 };
 
 const CHANGE_LOG_ITEMS: ChangeLogItem[] = [
+  { date: "2026-03-26", title: "Add CSV export to Metadata Types and move the tool to /metadata-types" },
+  { date: "2026-03-26", title: "Add Metadata Types tool with runtime fetching and ag-grid browsing" },
   { date: "2026-03-25", title: "Add XML Diff tool plus advanced XML cleanup and path-based node sorting in formatter and diff" },
   { date: "2026-03-25", title: "Replace theme script injection with local theme provider" },
   { date: "2026-03-23", title: "Add CSV Editor find and replace plus toolbar and header refinements" },

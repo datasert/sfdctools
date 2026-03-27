@@ -5,8 +5,8 @@ export interface ReleaseBannerConfig {
 }
 
 export const CURRENT_RELEASE_BANNER: ReleaseBannerConfig = {
-  version: "1.8.0",
-  title: "New in v1.8.0",
+  version: "1.10.0",
+  title: "New in v1.10.0",
   description:
-    "XML Diff is now available with cleanup controls, recursive empty-node removal, and path-based node sorting, and XML Formatter supports the same normalization options.",
+    "Metadata Types now browses the Source Deploy Retrieve registry at /metadata-types and adds CSV export for all loaded records.",
 };

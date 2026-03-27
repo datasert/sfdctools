@@ -427,6 +427,35 @@ export const helpContent: Record<string, HelpContent> = {
       </div>
     ),
   },
+  "metadata-registry": {
+    title: "Metadata Types",
+    content: (
+      <div className="space-y-4">
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Overview</h3>
+          <p className="text-[var(--text-secondary)]">
+            Browse the Source Deploy Retrieve metadata registry in a grid. The table is loaded at runtime through a CORS proxy and shows the metadata type, directory, file extension suffix, and folder flags.
+          </p>
+        </div>
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Columns</h3>
+          <ul className="list-disc list-inside space-y-1 text-[var(--text-secondary)]">
+            <li><strong>Type:</strong> Metadata type name from the registry.</li>
+            <li><strong>Directory:</strong> Registry directory name used on disk.</li>
+            <li><strong>File Extn:</strong> Metadata file suffix used for the type.</li>
+            <li><strong>In Folder:</strong> Indicates whether the type is stored in a folder.</li>
+            <li><strong>Strict Directory:</strong> Indicates whether the directory name is enforced exactly.</li>
+          </ul>
+        </div>
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Usage</h3>
+          <p className="text-[var(--text-secondary)]">
+            Use the search box and built-in grid filters to narrow the registry. Click Refresh to re-fetch the upstream JSON through the proxy.
+          </p>
+        </div>
+      </div>
+    ),
+  },
   "xml-formatter": {
     title: "XML Formatter",
     content: (

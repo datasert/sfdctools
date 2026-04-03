@@ -33,7 +33,7 @@ export function SegmentedToggle<T extends string>({
               index > 0 ? "border-l border-[var(--content-border)]" : ""
             } ${
               isActive
-                ? "bg-sky-600 text-white hover:bg-sky-700"
+                ? "bg-[var(--primary-color)] text-[var(--primary-text)] hover:opacity-90"
                 : "bg-[var(--content-faded-color)] text-[var(--text-primary)] hover:bg-[var(--content-faded-hover)]"
             }`}
             aria-pressed={isActive}

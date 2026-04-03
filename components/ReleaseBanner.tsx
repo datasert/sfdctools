@@ -1,26 +1,31 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "./Button";
 import { CURRENT_RELEASE_BANNER } from "@/lib/release-banner";
 
 const DISMISSED_RELEASE_BANNER_KEY = "sfdc-tools:dismissed-release-banner-version";
 
 export function ReleaseBanner() {
-  const [isVisible, setIsVisible] = useState(() => {
-    if (typeof window === "undefined") {
-      return false;
-    }
+  const [isMounted, setIsMounted] = useState(false);
+  const [isVisible, setIsVisible] = useState(false);
 
-    try {
-      const dismissedVersion = window.localStorage.getItem(
-        DISMISSED_RELEASE_BANNER_KEY,
-      );
-      return dismissedVersion !== CURRENT_RELEASE_BANNER.version;
-    } catch {
-      return true;
-    }
-  });
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      setIsMounted(true);
+
+      try {
+        const dismissedVersion = window.localStorage.getItem(
+          DISMISSED_RELEASE_BANNER_KEY,
+        );
+        setIsVisible(dismissedVersion !== CURRENT_RELEASE_BANNER.version);
+      } catch {
+        setIsVisible(true);
+      }
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, []);
 
   const dismissBanner = () => {
     try {
@@ -35,7 +40,7 @@ export function ReleaseBanner() {
     setIsVisible(false);
   };
 
-  if (!isVisible) {
+  if (!isMounted || !isVisible) {
     return null;
   }
 

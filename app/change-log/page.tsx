@@ -8,6 +8,7 @@ type ChangeLogItem = {
 };
 
 const CHANGE_LOG_ITEMS: ChangeLogItem[] = [
+  { date: "2026-04-03", title: "Add Base64 Zip Viewer with tree browsing, search, and file preview" },
   { date: "2026-03-26", title: "Temporarily remove Metadata Types from navigation after the grid issue" },
   { date: "2026-03-26", title: "Add CSV export to Metadata Types and move the tool to /metadata-types" },
   { date: "2026-03-26", title: "Add Metadata Types tool with runtime fetching and ag-grid browsing" },

@@ -38,7 +38,7 @@ import {
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 const gridTheme = themeQuartz.withParams({
-  accentColor: "#6366f1",
+  accentColor: "#196EBD",
   backgroundColor: "var(--content-color)",
   borderColor: "var(--content-border)",
   foregroundColor: "var(--text-primary)",
@@ -801,7 +801,7 @@ export function CsvEditor() {
                     current.length === document.columns.length ? [] : [...document.columns],
                   )
                 }
-                className="cursor-pointer text-xs text-[var(--accent-color)] hover:underline"
+                className="cursor-pointer text-xs text-[var(--primary-color)] hover:underline"
               >
                 {findReplaceColumns.length === document.columns.length
                   ? "Clear All"
@@ -937,7 +937,7 @@ export function CsvEditor() {
                       : [...document.columns],
                   )
                 }
-                className="cursor-pointer text-xs text-[var(--accent-color)] hover:underline"
+                className="cursor-pointer text-xs text-[var(--primary-color)] hover:underline"
               >
                 {copyRangeColumns.length === document.columns.length
                   ? "Clear All"
@@ -1167,7 +1167,7 @@ export function CsvEditor() {
                       : [...document.columns],
                   )
                 }
-                className="cursor-pointer text-xs text-[var(--accent-color)] hover:underline"
+                className="cursor-pointer text-xs text-[var(--primary-color)] hover:underline"
               >
                 {fillTargetColumns.length === document.columns.length
                   ? "Clear All"

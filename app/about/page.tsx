@@ -127,7 +127,7 @@ export default function AboutPage() {
                 href="https://www.datasert.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-medium text-[var(--text-primary)] hover:text-[var(--accent-color)] transition-colors cursor-pointer"
+                className="font-medium text-[var(--text-primary)] hover:text-[var(--primary-color)] transition-colors cursor-pointer"
               >
                 Datasert
               </a>

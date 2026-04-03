@@ -39,17 +39,19 @@
   --text-tertiary: #4b5563;
   --hover-bg: #f9f9f9;
   --border-color: #e0e0e0;
-  --accent-color: #6366f1;
-  --accent-hover: #4f46e5;
+  --accent-color: #196ebd;
+  --accent-hover: #196ebd;
   
   /* Dev-box.app specific variables */
   --content-color: #ffffff;
   --content-text: #000000;
   --content-border: #e0e0e0;
   --content-faded-color: #f9f9f9;
+  --content-faded-hover: var(--hover-bg);
   --content-faded-border: #e0e0e0;
-  --primary-color: #6366f1;
+  --primary-color: #196ebd;
   --primary-text: #ffffff;
+  --danger-color: #dc2626;
   --shadow-color: rgba(0, 0, 0, 0.1);
   --input-color: #ffffff;
   --input-text: #000000;
@@ -77,17 +79,19 @@
     --text-tertiary: #94a3b8;
     --hover-bg: #252525;
     --border-color: #2a2a2a;
-    --accent-color: #818cf8;
-    --accent-hover: #6366f1;
+    --accent-color: #196ebd;
+    --accent-hover: #196ebd;
     
     /* Dev-box.app dark theme variables */
     --content-color: #1a1a1a;
     --content-text: #e5e5e5;
     --content-border: #2a2a2a;
     --content-faded-color: #252525;
+    --content-faded-hover: var(--hover-bg);
     --content-faded-border: #2a2a2a;
-    --primary-color: #818cf8;
+    --primary-color: #196ebd;
     --primary-text: #ffffff;
+    --danger-color: #dc2626;
     --shadow-color: rgba(0, 0, 0, 0.3);
     --input-color: #1a1a1a;
     --input-text: #e5e5e5;
@@ -113,17 +117,19 @@
   --text-tertiary: #94a3b8;
   --hover-bg: #252525;
   --border-color: #2a2a2a;
-  --accent-color: #818cf8;
-  --accent-hover: #6366f1;
+  --accent-color: #196ebd;
+  --accent-hover: #196ebd;
   
   /* Dev-box.app dark theme variables */
   --content-color: #1a1a1a;
   --content-text: #e5e5e5;
   --content-border: #2a2a2a;
   --content-faded-color: #252525;
+  --content-faded-hover: var(--hover-bg);
   --content-faded-border: #2a2a2a;
-  --primary-color: #818cf8;
+  --primary-color: #196ebd;
   --primary-text: #ffffff;
+  --danger-color: #dc2626;
   --shadow-color: rgba(0, 0, 0, 0.3);
   --input-color: #1a1a1a;
   --input-text: #e5e5e5;
@@ -148,17 +154,19 @@
   --text-tertiary: #4b5563;
   --hover-bg: #f9f9f9;
   --border-color: #e0e0e0;
-  --accent-color: #6366f1;
-  --accent-hover: #4f46e5;
+  --accent-color: #196ebd;
+  --accent-hover: #196ebd;
   
   /* Dev-box.app light theme variables */
   --content-color: #ffffff;
   --content-text: #000000;
   --content-border: #e0e0e0;
   --content-faded-color: #f9f9f9;
+  --content-faded-hover: var(--hover-bg);
   --content-faded-border: #e0e0e0;
-  --primary-color: #6366f1;
+  --primary-color: #196ebd;
   --primary-text: #ffffff;
+  --danger-color: #dc2626;
   --shadow-color: rgba(0, 0, 0, 0.1);
   --input-color: #ffffff;
   --input-text: #000000;

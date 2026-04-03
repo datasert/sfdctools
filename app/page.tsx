@@ -8,7 +8,7 @@ export default function Home() {
       <SetPageTitle title="&nbsp;" />
       <div className="relative p-4 md:p-6">
         <section className="relative mx-auto mb-6 w-full max-w-6xl overflow-hidden rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)] md:mb-8">
-          <div className="h-[3px] bg-[#0176d3]" />
+          <div className="h-[3px] bg-[var(--primary-color)]" />
           <div className="p-6 md:p-8">
             <div className="flex items-center gap-4">
               <img
@@ -46,7 +46,7 @@ export default function Home() {
                 href="https://github.com/datasert/sfdctools"
                 target="_blank"
                 rel="noreferrer"
-                className="ml-auto text-xs font-medium text-[var(--accent-color)] underline-offset-4 hover:underline"
+                className="ml-auto text-xs font-medium text-[var(--primary-color)] underline-offset-4 hover:underline"
               >
                 github.com/datasert/sfdctools
               </a>

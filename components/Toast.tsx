@@ -12,7 +12,8 @@ interface ToastProps {
 }
 
 const TOAST_VARIANT_CLASSES: Record<ToastVariant, string> = {
-  info: "border-sky-500/50 bg-sky-50 text-sky-950 dark:border-sky-400/40 dark:bg-sky-950/90 dark:text-sky-100",
+  info:
+    "border-[var(--primary-color)]/50 bg-[var(--primary-color)]/10 text-[var(--primary-color)] dark:border-[var(--primary-color)]/40 dark:bg-[var(--primary-color)]/20 dark:text-[var(--primary-color)]",
   warn: "border-amber-500/50 bg-amber-50 text-amber-950 dark:border-amber-400/40 dark:bg-amber-950/90 dark:text-amber-100",
   success:
     "border-emerald-500/50 bg-emerald-50 text-emerald-950 dark:border-emerald-400/40 dark:bg-emerald-950/90 dark:text-emerald-100",

@@ -196,6 +196,60 @@ export const helpContent: Record<string, HelpContent> = {
       </div>
     ),
   },
+  "base64-zip-viewer": {
+    title: "Base64 Zip Viewer",
+    content: (
+      <div className="space-y-4">
+        <div>
+          <h3 className="mb-2 font-semibold text-[var(--text-primary)]">
+            Overview
+          </h3>
+          <p className="text-[var(--text-secondary)]">
+            Inspect a Base64-encoded ZIP archive locally in the browser. Paste
+            the encoded ZIP at the top, browse the extracted file tree below,
+            and preview a file&apos;s contents when you select it.
+          </p>
+        </div>
+        <div>
+          <h3 className="mb-2 font-semibold text-[var(--text-primary)]">
+            Features
+          </h3>
+          <ul className="list-inside list-disc space-y-1 text-[var(--text-secondary)]">
+            <li>
+              <strong>Tree view:</strong> Folders and files are grouped into a
+              collapsible hierarchy.
+            </li>
+            <li>
+              <strong>Search:</strong> Filter by file name or decoded file
+              contents.
+            </li>
+            <li>
+              <strong>Content preview:</strong> Click a file to view its
+              contents on the right.
+            </li>
+            <li>
+              <strong>Binary fallback:</strong> Non-text files show a hex
+              preview instead of unreadable bytes.
+            </li>
+            <li>
+              <strong>Local only:</strong> Parsing happens in the browser and
+              nothing is uploaded.
+            </li>
+          </ul>
+        </div>
+        <div>
+          <h3 className="mb-2 font-semibold text-[var(--text-primary)]">
+            Usage
+          </h3>
+          <p className="text-[var(--text-secondary)]">
+            Paste the Base64 ZIP string into the input pane. Use the search box
+            in the Files header to narrow results by file name or content.
+            Expand folders as needed, then click a file to preview it.
+          </p>
+        </div>
+      </div>
+    ),
+  },
   "slds-icons": {
     title: "SLDS Icons",
     content: (

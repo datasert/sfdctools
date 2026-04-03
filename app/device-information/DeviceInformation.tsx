@@ -293,7 +293,7 @@ export function DeviceInformation() {
               <div className="flex items-start gap-3">
                 <div className="text-sm font-medium text-[var(--text-primary)] min-w-[140px]">User Agent:</div>
                 <div 
-                  className="text-xs text-[var(--text-secondary)] font-mono flex-1 break-all cursor-pointer hover:text-[var(--accent-color)] transition-colors"
+                  className="text-xs text-[var(--text-secondary)] font-mono flex-1 break-all cursor-pointer hover:text-[var(--primary-color)] transition-colors"
                   onClick={() => copyToClipboard(deviceInfo.browser.userAgent)}
                   title="Click to copy"
                 >
@@ -353,7 +353,7 @@ export function DeviceInformation() {
                     <span className="text-[var(--text-tertiary)]">Loading...</span>
                   ) : deviceInfo.externalIP ? (
                     <span 
-                      className="font-mono cursor-pointer hover:text-[var(--accent-color)] transition-colors"
+                      className="font-mono cursor-pointer hover:text-[var(--primary-color)] transition-colors"
                       onClick={() => copyToClipboard(deviceInfo.externalIP!)}
                       title="Click to copy"
                     >

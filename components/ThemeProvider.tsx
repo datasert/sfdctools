@@ -58,11 +58,22 @@ function applyTheme(resolvedTheme: ResolvedTheme): void {
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {
-  const [theme, setThemeState] = useState<ThemeMode>(() => getStoredTheme());
-  const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>(() => {
-    const initialTheme = getStoredTheme();
-    return initialTheme === "system" ? getSystemTheme() : initialTheme;
-  });
+  const [theme, setThemeState] = useState<ThemeMode>("system");
+  const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>("light");
+
+  useEffect(() => {
+    const timeoutId = window.setTimeout(() => {
+      const initialTheme = getStoredTheme();
+      const nextResolvedTheme =
+        initialTheme === "system" ? getSystemTheme() : initialTheme;
+
+      setThemeState(initialTheme);
+      setResolvedTheme(nextResolvedTheme);
+      applyTheme(nextResolvedTheme);
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
+  }, []);
 
   useEffect(() => {
     applyTheme(resolvedTheme);

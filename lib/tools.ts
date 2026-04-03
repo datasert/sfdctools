@@ -177,6 +177,14 @@ export const tools: Tool[] = [
     tags: ["Base64", "Encoder", "Decoder", "Utility"],
   },
   {
+    id: "base64-zip-viewer",
+    name: "Base64 Zip Viewer",
+    description:
+      "Paste a Base64-encoded ZIP archive, browse the extracted files in a list, and inspect each file's contents on demand.",
+    path: "/base64-zip-viewer",
+    tags: ["Base64", "ZIP", "Viewer", "Utility"],
+  },
+  {
     id: "url-encoder",
     name: "URL Encoder/Decoder",
     description:

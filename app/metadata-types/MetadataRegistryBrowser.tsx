@@ -20,7 +20,7 @@ import {
 ModuleRegistry.registerModules([AllCommunityModule]);
 
 const gridTheme = themeQuartz.withParams({
-  accentColor: "#0b5cab",
+  accentColor: "#196EBD",
   backgroundColor: "var(--content-color)",
   borderColor: "var(--content-border)",
   foregroundColor: "var(--text-primary)",
@@ -165,7 +165,7 @@ export function MetadataRegistryBrowser() {
     <div className="h-full overflow-hidden">
       <div className="mx-auto flex h-full max-w-6xl flex-col gap-4">
         <section className="rounded-lg border border-[var(--card-border)] bg-[var(--card-bg)]">
-          <div className="h-[3px] bg-[#0b5cab]" />
+          <div className="h-[3px] bg-[var(--primary-color)]" />
           <div className="flex flex-col gap-4 p-5 md:p-6">
             <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
               <div className="space-y-2">
@@ -187,7 +187,7 @@ export function MetadataRegistryBrowser() {
                     href={METADATA_REGISTRY_SOURCE_URL}
                     target="_blank"
                     rel="noreferrer"
-                    className="rounded-full border border-[var(--border-color)] bg-[var(--hover-bg)] px-3 py-1 font-medium text-[var(--accent-color)] underline-offset-4 hover:underline"
+                    className="rounded-full border border-[var(--border-color)] bg-[var(--hover-bg)] px-3 py-1 font-medium text-[var(--primary-color)] underline-offset-4 hover:underline"
                   >
                     Source URL
                   </a>
@@ -209,7 +209,7 @@ export function MetadataRegistryBrowser() {
                 />
                 <div className="flex flex-wrap items-center gap-2">
                   {status === "error" ? (
-                    <span className="text-xs text-[var(--danger-color, #dc2626)]">
+                    <span className="text-xs text-[var(--danger-color)]">
                       {errorMessage ?? "Unable to load registry."}
                     </span>
                   ) : null}

@@ -17,6 +17,15 @@ export interface Base64ZipArchive {
   files: Base64ZipFileEntry[];
 }
 
+const SAMPLE_PNG_BYTES = new Uint8Array([
+  0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a, 0x00, 0x00, 0x00, 0x0d,
+  0x49, 0x48, 0x44, 0x52, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,
+  0x08, 0x06, 0x00, 0x00, 0x00, 0x1f, 0x15, 0xc4, 0x89, 0x00, 0x00, 0x00,
+  0x0d, 0x49, 0x44, 0x41, 0x54, 0x78, 0x9c, 0x63, 0xf8, 0xcf, 0xc0, 0x00,
+  0x00, 0x03, 0x01, 0x01, 0x00, 0xc9, 0xfe, 0x92, 0xef, 0x00, 0x00, 0x00,
+  0x00, 0x49, 0x45, 0x4e, 0x44, 0xae, 0x42, 0x60, 0x82,
+]);
+
 function cleanBase64(value: string): string {
   return value
     .replace(/^data:.*?;base64,/, "")
@@ -96,17 +105,128 @@ function inferLanguage(path: string): string {
       return "sql";
     case "csv":
       return "csv";
+    case "sh":
+      return "shell";
     case "txt":
     default:
       return "plaintext";
   }
 }
 
+function isJsonContent(content: string): boolean {
+  const trimmed = content.trim();
+  if (!(trimmed.startsWith("{") || trimmed.startsWith("["))) {
+    return false;
+  }
+
+  try {
+    JSON.parse(trimmed);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function isHtmlContent(content: string): boolean {
+  const trimmed = content.trim().toLowerCase();
+  return (
+    trimmed.startsWith("<!doctype html") ||
+    trimmed.startsWith("<html") ||
+    (trimmed.startsWith("<body") || trimmed.startsWith("<head")) ||
+    /<html[\s>]|<body[\s>]|<div[\s>]|<section[\s>]/.test(trimmed)
+  );
+}
+
+function isXmlContent(content: string): boolean {
+  const trimmed = content.trim();
+  if (!(trimmed.startsWith("<?xml") || trimmed.startsWith("<"))) {
+    return false;
+  }
+
+  return /^<([A-Za-z_][\w:.-]*)(\s|>)/.test(trimmed) || trimmed.startsWith("<?xml");
+}
+
+function isYamlContent(content: string): boolean {
+  const trimmed = content.trim();
+  return (
+    trimmed.startsWith("---") ||
+    /^[A-Za-z0-9_-]+:\s+.+/m.test(trimmed) ||
+    /^[A-Za-z0-9_-]+:\s*$/m.test(trimmed)
+  );
+}
+
+function isMarkdownContent(content: string): boolean {
+  return (
+    /^#{1,6}\s+/m.test(content) ||
+    /^-\s+/m.test(content) ||
+    /^\*\s+/m.test(content) ||
+    /```/.test(content)
+  );
+}
+
+function isSqlContent(content: string): boolean {
+  return /^\s*(select|with|insert|update|delete|merge|create|alter)\b/i.test(content);
+}
+
+function isCssContent(content: string): boolean {
+  return /[.#]?[A-Za-z][\w-]*\s*\{[\s\S]*:[\s\S]*\}/.test(content);
+}
+
+function isShellContent(content: string): boolean {
+  return /^\s*#!\/bin\/(ba|z)?sh/.test(content) || /^\s*(export|echo|if\s|\w+=)/m.test(content);
+}
+
+function isCsvContent(content: string): boolean {
+  const lines = content
+    .trim()
+    .split("\n")
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  if (lines.length < 2) {
+    return false;
+  }
+
+  const firstCommaCount = (lines[0].match(/,/g) ?? []).length;
+  return firstCommaCount > 0 && lines.slice(1, 4).every((line) => (line.match(/,/g) ?? []).length === firstCommaCount);
+}
+
+function isTypeScriptContent(content: string): boolean {
+  return (
+    /\binterface\s+\w+/.test(content) ||
+    /\btype\s+\w+\s*=/.test(content) ||
+    /\bimport\s+type\b/.test(content) ||
+    /:\s*[A-Z][A-Za-z0-9_<>\[\]\|&?, ]+/.test(content)
+  );
+}
+
+function isJavaScriptContent(content: string): boolean {
+  return (
+    /\b(import|export|const|let|function)\b/.test(content) ||
+    /=>/.test(content)
+  );
+}
+
+function inferLanguageFromContent(content: string): string {
+  if (isJsonContent(content)) return "json";
+  if (isHtmlContent(content)) return "html";
+  if (isXmlContent(content)) return "xml";
+  if (isYamlContent(content)) return "yaml";
+  if (isMarkdownContent(content)) return "markdown";
+  if (isSqlContent(content)) return "sql";
+  if (isCssContent(content)) return "css";
+  if (isCsvContent(content)) return "csv";
+  if (isShellContent(content)) return "shell";
+  if (isTypeScriptContent(content)) return "typescript";
+  if (isJavaScriptContent(content)) return "javascript";
+  return "plaintext";
+}
+
 async function decodeFileContent(
   bytes: Uint8Array,
   path: string,
 ): Promise<{ content: string; isBinary: boolean; language: string }> {
-  const language = inferLanguage(path);
+  const languageFromPath = inferLanguage(path);
 
   if (!isLikelyText(bytes)) {
     return {
@@ -116,11 +236,112 @@ async function decodeFileContent(
     };
   }
 
+  const content = new TextDecoder("utf-8").decode(bytes);
+  const language =
+    languageFromPath === "plaintext"
+      ? inferLanguageFromContent(content)
+      : languageFromPath;
+
   return {
-    content: new TextDecoder("utf-8").decode(bytes),
+    content,
     isBinary: false,
     language,
   };
+}
+
+export async function createSampleBase64ZipArchive(): Promise<string> {
+  const zip = new JSZip();
+
+  zip.file(
+    "manifest.json",
+    JSON.stringify(
+      {
+        name: "Base64 Zip Viewer Sample",
+        generatedAt: "2026-04-07T12:00:00Z",
+        entries: 8,
+      },
+      null,
+      2,
+    ),
+  );
+  zip.file(
+    "docs/README.md",
+    `# Sample Archive
+
+This sample archive exercises the Base64 Zip Viewer with multiple content types.
+
+- JSON
+- XML
+- HTML
+- CSS
+- SQL
+- YAML without a file extension
+- Binary image preview
+`,
+  );
+  zip.file(
+    "config/app",
+    `environment: sandbox
+features:
+  search: true
+  preview: true
+  heuristics: true
+`,
+  );
+  zip.file(
+    "pages/email-template",
+    `<!doctype html>
+<html>
+  <body>
+    <section>
+      <h1>Sample Email</h1>
+      <p>Generated from the Base64 Zip Viewer sample archive.</p>
+    </section>
+  </body>
+</html>`,
+  );
+  zip.file(
+    "metadata/workflow.xml",
+    `<?xml version="1.0" encoding="UTF-8"?>
+<Workflow>
+  <label>Sample Workflow</label>
+  <active>true</active>
+</Workflow>`,
+  );
+  zip.file(
+    "styles/theme.css",
+    `:root {
+  --accent: #196ebd;
+}
+
+.card {
+  border: 1px solid var(--accent);
+  padding: 1rem;
+}`,
+  );
+  zip.file(
+    "queries/recent_accounts",
+    `select Id, Name, Industry
+from Account
+where LastModifiedDate = LAST_N_DAYS:30
+order by Name`,
+  );
+  zip.file(
+    "scripts/transform.ts",
+    `export interface AccountRecord {
+  id: string;
+  name: string;
+}
+
+export const normalizeName = (value: string): string => value.trim().toUpperCase();
+`,
+  );
+  zip.file("images/pixel.png", SAMPLE_PNG_BYTES);
+
+  return zip.generateAsync({
+    type: "base64",
+    compression: "DEFLATE",
+  });
 }
 
 export async function parseBase64ZipArchive(base64: string): Promise<Base64ZipArchive> {

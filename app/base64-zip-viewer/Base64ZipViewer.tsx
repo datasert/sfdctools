@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useToast } from "@/components/Toast";
 import { Button } from "@/components/Button";
 import { Input } from "@/components/Input";
 import { EditorPane } from "@/components/EditorPane";
@@ -12,6 +13,7 @@ import { SettingsLabel } from "@/components/SettingsLabel";
 import { Splitter } from "@/components/Splitter";
 import { usePersistedTextState } from "@/lib/use-persisted-text-state";
 import {
+  createSampleBase64ZipArchive,
   parseBase64ZipArchive,
   type Base64ZipArchive,
   type Base64ZipFileEntry,
@@ -282,6 +284,7 @@ export function Base64ZipViewer() {
   const [expandedPaths, setExpandedPaths] = useState<string[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isParsing, setIsParsing] = useState(false);
+  const { showToast, ToastComponent } = useToast();
 
   useEffect(() => {
     let isCancelled = false;
@@ -380,6 +383,15 @@ export function Base64ZipViewer() {
     setError(null);
   };
 
+  const loadSample = async () => {
+    setSearchQuery("");
+    setError(null);
+    setSelectedPath("");
+    setExpandedPaths([]);
+    setInput(await createSampleBase64ZipArchive());
+    showToast("Sample ZIP loaded.", "success");
+  };
+
   const expandedPathSet = useMemo(() => new Set(expandedPaths), [expandedPaths]);
   const treeNodes = useMemo(() => buildZipTree(filteredFiles), [filteredFiles]);
 
@@ -428,139 +440,145 @@ export function Base64ZipViewer() {
     : 0;
 
   return (
-    <div className="flex h-full flex-col">
-      <SettingsBar>
-        <SettingsGroup>
-          <SettingsLabel>Base64 ZIP:</SettingsLabel>
-          <span className="text-xs text-[var(--text-secondary)]">
-            Paste a Base64-encoded ZIP archive into the top editor.
-          </span>
-        </SettingsGroup>
+    <>
+      {ToastComponent}
+      <div className="flex h-full flex-col">
+        <SettingsBar>
+          <SettingsGroup>
+            <SettingsLabel>Base64 ZIP:</SettingsLabel>
+            <span className="text-xs text-[var(--text-secondary)]">
+              Paste a Base64-encoded ZIP archive into the top editor.
+            </span>
+          </SettingsGroup>
 
-        <div className="ml-auto">
-          <Button type="button" onClick={clearAll} size="sm">
-            Reset
-          </Button>
-        </div>
-      </SettingsBar>
-
-      <Splitter
-        orientation="vertical"
-        storageKey={`${STORAGE_KEY}:main-split`}
-        defaultSize={28}
-        minSize={16}
-        maxSize={60}
-        className="p-3"
-      >
-        <EditorPane
-          label="Base64 ZIP Input"
-          count={`${inputLineCount} line${inputLineCount === 1 ? "" : "s"}`}
-        >
-          <EditorWrapper>
-            <MonacoEditor
-              value={input}
-              onChange={(value) => setInput(value || "")}
-              language="plaintext"
-            />
-          </EditorWrapper>
-        </EditorPane>
-
-        <div className="flex h-full min-h-0 flex-col overflow-hidden">
-          <div className="mb-2 flex items-center justify-between gap-3 px-1">
-            <div className="text-xs text-[var(--text-secondary)]">
-              {error ? (
-                <span className="text-red-500">{error}</span>
-              ) : isParsing ? (
-                "Parsing archive..."
-              ) : (
-                `${visibleFileCount} of ${fileCount} file${fileCount === 1 ? "" : "s"} shown`
-              )}
-            </div>
-            {selectedFile ? (
-              <div className="text-xs text-[var(--text-tertiary)]">
-                {selectedFile.path} {formatBytes(selectedFile.size)}
-              </div>
-            ) : null}
+          <div className="ml-auto flex items-center gap-2">
+            <Button type="button" onClick={() => void loadSample()} size="sm">
+              Load Sample
+            </Button>
+            <Button type="button" onClick={clearAll} size="sm">
+              Reset
+            </Button>
           </div>
+        </SettingsBar>
 
-          <Splitter
-            orientation="horizontal"
-            storageKey={`${STORAGE_KEY}:files-split`}
-            defaultSize={32}
-            minSize={18}
-            maxSize={70}
-            className="min-h-0 flex-1"
+        <Splitter
+          orientation="vertical"
+          storageKey={`${STORAGE_KEY}:main-split`}
+          defaultSize={28}
+          minSize={16}
+          maxSize={60}
+          className="p-3"
+        >
+          <EditorPane
+            label="Base64 ZIP Input"
+            count={`${inputLineCount} line${inputLineCount === 1 ? "" : "s"}`}
           >
-            <EditorPane
-              label="Files"
-              count={`${visibleFileCount} file${visibleFileCount === 1 ? "" : "s"}`}
-              headerRight={
-                <div className="flex items-center gap-2">
-                <Input
-                  type="search"
-                  value={searchQuery}
-                  onChange={(event) => setSearchQuery(event.target.value)}
-                  placeholder="Search names or contents"
-                  className="w-56"
-                />
+            <EditorWrapper>
+              <MonacoEditor
+                value={input}
+                onChange={(value) => setInput(value || "")}
+                language="plaintext"
+              />
+            </EditorWrapper>
+          </EditorPane>
+
+          <div className="flex h-full min-h-0 flex-col overflow-hidden">
+            <div className="mb-2 flex items-center justify-between gap-3 px-1">
+              <div className="text-xs text-[var(--text-secondary)]">
+                {error ? (
+                  <span className="text-red-500">{error}</span>
+                ) : isParsing ? (
+                  "Parsing archive..."
+                ) : (
+                  `${visibleFileCount} of ${fileCount} file${fileCount === 1 ? "" : "s"} shown`
+                )}
               </div>
-            }
-          >
-            <EditorWrapper className="min-h-0">
-                <div className="h-full overflow-auto bg-[var(--content-color)] p-2">
-                  {error ? (
-                    <div className="rounded border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-500">
-                      {error}
-                    </div>
-                  ) : archive.files.length ? (
-                    <ZipTreeView
-                      nodes={visibleTreeNodes}
-                      selectedPath={selectedPath}
-                      expandedPaths={expandedPathSet}
-                      onToggleFolder={(path) => {
-                        setExpandedPaths((current) =>
-                          current.includes(path)
-                            ? current.filter((entry) => entry !== path)
-                            : [...current, path],
-                        );
-                      }}
-                      onSelectFile={setSelectedPath}
-                      matches={matches}
+              {selectedFile ? (
+                <div className="text-xs text-[var(--text-tertiary)]">
+                  {selectedFile.path} {formatBytes(selectedFile.size)}
+                </div>
+              ) : null}
+            </div>
+
+            <Splitter
+              orientation="horizontal"
+              storageKey={`${STORAGE_KEY}:files-split`}
+              defaultSize={32}
+              minSize={18}
+              maxSize={70}
+              className="min-h-0 flex-1"
+            >
+              <EditorPane
+                label="Files"
+                count={`${visibleFileCount} file${visibleFileCount === 1 ? "" : "s"}`}
+                headerRight={
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="search"
+                      value={searchQuery}
+                      onChange={(event) => setSearchQuery(event.target.value)}
+                      placeholder="Search names or contents"
+                      className="w-56"
+                    />
+                  </div>
+                }
+              >
+                <EditorWrapper className="min-h-0">
+                  <div className="h-full overflow-auto bg-[var(--content-color)] p-2">
+                    {error ? (
+                      <div className="rounded border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-500">
+                        {error}
+                      </div>
+                    ) : archive.files.length ? (
+                      <ZipTreeView
+                        nodes={visibleTreeNodes}
+                        selectedPath={selectedPath}
+                        expandedPaths={expandedPathSet}
+                        onToggleFolder={(path) => {
+                          setExpandedPaths((current) =>
+                            current.includes(path)
+                              ? current.filter((entry) => entry !== path)
+                              : [...current, path],
+                          );
+                        }}
+                        onSelectFile={setSelectedPath}
+                        matches={matches}
+                      />
+                    ) : (
+                      <div className="rounded border border-dashed border-[var(--content-border)] p-4 text-sm text-[var(--text-secondary)]">
+                        Paste a Base64 ZIP to inspect its files here.
+                      </div>
+                    )}
+                  </div>
+                </EditorWrapper>
+              </EditorPane>
+
+              <EditorPane
+                label={selectedFile ? selectedFile.name : "Contents"}
+                count={
+                  selectedFile
+                    ? `${selectedContentLineCount} line${selectedContentLineCount === 1 ? "" : "s"}`
+                    : "0 lines"
+                }
+              >
+                <EditorWrapper className="min-h-0">
+                  {selectedFile ? (
+                    <MonacoEditor
+                      value={selectedFile.content}
+                      language={getEditorLanguage(selectedFile)}
+                      readOnly={true}
                     />
                   ) : (
-                    <div className="rounded border border-dashed border-[var(--content-border)] p-4 text-sm text-[var(--text-secondary)]">
-                      Paste a Base64 ZIP to inspect its files here.
+                    <div className="flex h-full items-center justify-center bg-[var(--content-color)] p-6 text-sm text-[var(--text-secondary)]">
+                      No file selected.
                     </div>
                   )}
-                </div>
-              </EditorWrapper>
-            </EditorPane>
-
-            <EditorPane
-              label={selectedFile ? selectedFile.name : "Contents"}
-              count={
-                selectedFile
-                  ? `${selectedContentLineCount} line${selectedContentLineCount === 1 ? "" : "s"}`
-                  : "0 lines"
-              }
-            >
-              <EditorWrapper className="min-h-0">
-                {selectedFile ? (
-                  <MonacoEditor
-                    value={selectedFile.content}
-                    language={getEditorLanguage(selectedFile)}
-                    readOnly={true}
-                  />
-                ) : (
-                  <div className="flex h-full items-center justify-center bg-[var(--content-color)] p-6 text-sm text-[var(--text-secondary)]">
-                    No file selected.
-                  </div>
-                )}
-              </EditorWrapper>
-            </EditorPane>
-          </Splitter>
-        </div>
-      </Splitter>
-    </div>
+                </EditorWrapper>
+              </EditorPane>
+            </Splitter>
+          </div>
+        </Splitter>
+      </div>
+    </>
   );
 }

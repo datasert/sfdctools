@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useToast } from "@/components/Toast";
 import { usePersistedState } from "@/lib/use-persisted-state";
 import { usePersistedTextState } from "@/lib/use-persisted-text-state";
@@ -10,9 +10,15 @@ import { SettingsLabel } from "@/components/SettingsLabel";
 import { ActionButtons } from "@/components/ActionButtons";
 import { Select } from "@/components/Select";
 import { EnhancedDiffEditor } from "@/components/EnhancedDiffEditor";
+import { TextCleanupDialog } from "@/components/TextCleanupDialog";
 import { Button } from "@/components/Button";
 import type { DiffOnMount } from "@monaco-editor/react";
 import { SAMPLE_TEXT_DIFF_LEFT, SAMPLE_TEXT_DIFF_RIGHT } from "@/lib/tool-samples";
+import {
+  cleanupText,
+  defaultTextCleanupOptions,
+  type TextCleanupOptions,
+} from "@/lib/text-cleanup";
 
 const STORAGE_KEY = "sfdc-tools:text-diff";
 const DEFAULT_LEFT_LABEL = "Left";
@@ -103,16 +109,48 @@ export function TextDiff() {
     `${STORAGE_KEY}:syntax`,
     DEFAULT_SYNTAX,
   );
+  const [cleanupOptions, setCleanupOptions] = usePersistedState<TextCleanupOptions>(
+    `${STORAGE_KEY}:cleanup-options`,
+    defaultTextCleanupOptions,
+  );
+  const [isCleanupDialogOpen, setIsCleanupDialogOpen] = useState(false);
   const [hasOriginal, setHasOriginal] = useState(Boolean(original));
   const [hasModified, setHasModified] = useState(Boolean(modified));
   const originalRef = useRef(original);
   const modifiedRef = useRef(modified);
+  const cleanedOriginalRef = useRef(original);
+  const cleanedModifiedRef = useRef(modified);
+  const ignoreOriginalCleanupSyncRef = useRef(false);
+  const ignoreModifiedCleanupSyncRef = useRef(false);
   const { showToast, ToastComponent } = useToast();
+
+  const cleanedOriginal = useMemo(
+    () => cleanupText(original, cleanupOptions),
+    [cleanupOptions, original],
+  );
+  const cleanedModified = useMemo(
+    () => cleanupText(modified, cleanupOptions),
+    [cleanupOptions, modified],
+  );
 
   useEffect(() => {
     originalRef.current = original;
     modifiedRef.current = modified;
   }, [original, modified]);
+
+  useEffect(() => {
+    cleanedOriginalRef.current = cleanedOriginal;
+    if (cleanedOriginal !== originalRef.current) {
+      ignoreOriginalCleanupSyncRef.current = true;
+    }
+  }, [cleanedOriginal]);
+
+  useEffect(() => {
+    cleanedModifiedRef.current = cleanedModified;
+    if (cleanedModified !== modifiedRef.current) {
+      ignoreModifiedCleanupSyncRef.current = true;
+    }
+  }, [cleanedModified]);
 
   const handleEditorMount: DiffOnMount = (editor) => {
     // Set up change listeners for editable diff editor
@@ -121,6 +159,15 @@ export function TextDiff() {
     
     originalEditor.onDidChangeModelContent(() => {
       const value = originalEditor.getValue();
+      if (
+        ignoreOriginalCleanupSyncRef.current &&
+        value === cleanedOriginalRef.current
+      ) {
+        ignoreOriginalCleanupSyncRef.current = false;
+        return;
+      }
+
+      ignoreOriginalCleanupSyncRef.current = false;
       originalRef.current = value;
       setHasOriginal(Boolean(value));
       setOriginal(value);
@@ -128,6 +175,15 @@ export function TextDiff() {
     
     modifiedEditor.onDidChangeModelContent(() => {
       const value = modifiedEditor.getValue();
+      if (
+        ignoreModifiedCleanupSyncRef.current &&
+        value === cleanedModifiedRef.current
+      ) {
+        ignoreModifiedCleanupSyncRef.current = false;
+        return;
+      }
+
+      ignoreModifiedCleanupSyncRef.current = false;
       modifiedRef.current = value;
       setHasModified(Boolean(value));
       setModified(value);
@@ -135,8 +191,8 @@ export function TextDiff() {
   };
 
   const copyDiffs = async () => {
-    const missingInLeft = getMissingLines(modifiedRef.current, originalRef.current);
-    const missingInRight = getMissingLines(originalRef.current, modifiedRef.current);
+    const missingInLeft = getMissingLines(cleanedModified, cleanedOriginal);
+    const missingInRight = getMissingLines(cleanedOriginal, cleanedModified);
 
     if (missingInLeft.length === 0 && missingInRight.length === 0) {
       showToast("No diff lines to copy.", "warn");
@@ -164,6 +220,7 @@ export function TextDiff() {
     setModified("");
     setLeftLabel(DEFAULT_LEFT_LABEL);
     setRightLabel(DEFAULT_RIGHT_LABEL);
+    setCleanupOptions(defaultTextCleanupOptions);
   };
 
   const swapTexts = () => {
@@ -217,6 +274,13 @@ export function TextDiff() {
                 </option>
               ))}
             </Select>
+            <Button
+              onClick={() => setIsCleanupDialogOpen(true)}
+              variant="secondary"
+              size="sm"
+            >
+              Text Cleanup
+            </Button>
           </SettingsGroup>
 
           <div className="ml-auto flex items-center gap-2">
@@ -249,10 +313,11 @@ export function TextDiff() {
         {/* Editable Diff Editor */}
         <div className="flex-1 p-3">
           <EnhancedDiffEditor
+            key={JSON.stringify(cleanupOptions)}
             height="100%"
             language={getMonacoLanguage(syntax)}
-            original={original}
-            modified={modified}
+            original={cleanedOriginal}
+            modified={cleanedModified}
             leftLabel={leftLabel}
             rightLabel={rightLabel}
             defaultLeftLabel={DEFAULT_LEFT_LABEL}
@@ -265,6 +330,13 @@ export function TextDiff() {
           />
         </div>
       </div>
+
+      <TextCleanupDialog
+        isOpen={isCleanupDialogOpen}
+        onClose={() => setIsCleanupDialogOpen(false)}
+        options={cleanupOptions}
+        onChange={setCleanupOptions}
+      />
     </>
   );
 }

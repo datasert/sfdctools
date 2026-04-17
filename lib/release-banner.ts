@@ -5,8 +5,8 @@ export interface ReleaseBannerConfig {
 }
 
 export const CURRENT_RELEASE_BANNER: ReleaseBannerConfig = {
-  version: "1.9.1",
-  title: "New in v1.9.1",
+  version: "1.10.0",
+  title: "New in v1.10.0",
   description:
-    "Text Diff now includes text cleanup controls, and Base64 ZIP Viewer adds sample loading plus better content-aware previews.",
+    "New SF CLI Reference tool — browse and search Salesforce CLI commands by category, build commands interactively with a flag builder, and copy the generated output.",
 };

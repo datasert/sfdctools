@@ -8,6 +8,7 @@ type ChangeLogItem = {
 };
 
 const CHANGE_LOG_ITEMS: ChangeLogItem[] = [
+  { date: "2026-04-17", title: "Add SF CLI Reference tool with category browser, command search, interactive flag builder, and generated command output" },
   { date: "2026-04-07", title: "Add text cleanup controls to Text Diff while preserving raw source text for option reapply" },
   { date: "2026-04-07", title: "Add Base64 ZIP Viewer sample archive loading and improve content-based language detection" },
   { date: "2026-04-03", title: "Add Base64 Zip Viewer with tree browsing, search, and file preview" },

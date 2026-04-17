@@ -40,3 +40,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# sf-cli generated DITA XML (intermediate files from sfcli-docs-generator)
+/docs/sf-cli-reference/

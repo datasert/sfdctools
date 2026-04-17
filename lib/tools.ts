@@ -41,6 +41,14 @@ export const tools: Tool[] = [
     tags: ["SLDS", "Colors", "Salesforce", "Design Tokens"],
   },
   {
+    id: "sf-cli-reference",
+    name: "SF CLI",
+    description:
+      "Browse and search Salesforce CLI commands by category. Select a command to view flags, build it interactively, and copy the generated output.",
+    path: "/sf-cli",
+    tags: ["Salesforce", "CLI", "SF", "Commands", "Reference"],
+  },
+  {
     id: "id-converter",
     name: "Convert IDs",
     description:

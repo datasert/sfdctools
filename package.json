@@ -1,6 +1,6 @@
 {
   "name": "sfdctools",
-  "version": "1.9.1",
+  "version": "1.10.0",
   "license": "MIT",
   "private": true,
   "scripts": {
@@ -11,7 +11,8 @@
     "build:extension": "next build && tsx scripts/build-extension.ts",
     "start": "next start -p 3500",
     "lint": "eslint",
-    "generate-icons": "tsx scripts/generate-icons.ts"
+    "generate-icons": "tsx scripts/generate-icons.ts",
+    "generate-cli-docs": "node scripts/sfcli-docs-generator.mjs"
   },
   "dependencies": {
     "@datasert/langium-sfsql": "^1.8.13",
@@ -35,6 +36,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@xmldom/xmldom": "^0.9.9",
     "eslint": "^9",
     "eslint-config-next": "16.1.2",
     "tailwindcss": "^4",

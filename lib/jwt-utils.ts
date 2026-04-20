@@ -4,7 +4,9 @@ export interface JWTDecoded {
   signature: string;
   headerRaw: string;
   payloadRaw: string;
-  isValid: boolean;
+  signatureValid: boolean;
+  isExpired: boolean;
+  status: "valid" | "expired";
   verificationError?: string;
 }
 
@@ -102,6 +104,22 @@ async function verifyHMAC256(
   }
 }
 
+function getExpirationStatus(payload: Record<string, any>): boolean {
+  const exp = payload.exp;
+  const expValue =
+    typeof exp === "number"
+      ? exp
+      : typeof exp === "string"
+        ? Number(exp)
+        : Number.NaN;
+
+  if (!Number.isFinite(expValue)) {
+    return false;
+  }
+
+  return Math.floor(Date.now() / 1000) >= expValue;
+}
+
 /**
  * Decode and verify JWT
  */
@@ -116,7 +134,9 @@ export async function decodeJWT(
       signature: '',
       headerRaw: '',
       payloadRaw: '',
-      isValid: false,
+      signatureValid: false,
+      isExpired: false,
+      status: 'valid',
     };
   }
 
@@ -136,7 +156,7 @@ export async function decodeJWT(
     const header = JSON.parse(headerJson);
     const payload = JSON.parse(payloadJson);
 
-    let isValid = false;
+    let signatureValid = false;
     let verificationError: string | undefined;
 
     // Verify signature if secret is provided
@@ -145,8 +165,8 @@ export async function decodeJWT(
         const alg = header.alg || 'HS256';
         
         if (alg === 'HS256') {
-          isValid = await verifyHMAC256(headerRaw, payloadRaw, signature, secret.trim());
-          if (!isValid) {
+          signatureValid = await verifyHMAC256(headerRaw, payloadRaw, signature, secret.trim());
+          if (!signatureValid) {
             verificationError = 'Signature verification failed';
           }
         } else {
@@ -157,13 +177,20 @@ export async function decodeJWT(
       }
     }
 
+    const isExpired = getExpirationStatus(payload);
+    const status = secret && secret.trim()
+      ? (signatureValid && !isExpired ? 'valid' : 'expired')
+      : (isExpired ? 'expired' : 'valid');
+
     return {
       header,
       payload,
       signature,
       headerRaw,
       payloadRaw,
-      isValid,
+      signatureValid,
+      isExpired,
+      status,
       verificationError,
     };
   } catch (err) {
@@ -174,7 +201,9 @@ export async function decodeJWT(
       signature: '',
       headerRaw: '',
       payloadRaw: '',
-      isValid: false,
+      signatureValid: false,
+      isExpired: false,
+      status: 'expired',
       verificationError: errorMessage,
     };
   }

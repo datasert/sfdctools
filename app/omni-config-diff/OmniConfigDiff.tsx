@@ -282,14 +282,6 @@ export function OmniConfigDiff() {
     () => cleanupOmniXml(rightXml, { decodeJson, decodeEmailBody }),
     [rightXml, decodeJson, decodeEmailBody]
   );
-
-  const copyCleanedRight = () => {
-    if (rightResult.cleaned && !rightResult.error) {
-      navigator.clipboard.writeText(rightResult.cleaned);
-      showToast("Cleaned right XML copied.");
-    }
-  };
-
   const clearAll = () => {
     setLeftXml("");
     setRightXml("");
@@ -331,10 +323,8 @@ export function OmniConfigDiff() {
 
           <ActionButtons
             onSample={loadSample}
-            onCopy={copyCleanedRight}
             onSwap={swapSides}
             onClear={clearAll}
-            copyDisabled={!rightResult.cleaned || !!rightResult.error}
             swapDisabled={!leftXml && !rightXml}
           />
         </SettingsBar>

@@ -59,14 +59,6 @@ export function XmlFormatter() {
     formatXml(input, indent, normalizedCleanupOptions);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input, indent, normalizedCleanupOptions]);
-
-  const copyOutput = () => {
-    if (output && !error) {
-      navigator.clipboard.writeText(output);
-      showToast("Copied to clipboard!");
-    }
-  };
-
   const clearAll = () => {
     setInput("");
     setOutput("");
@@ -120,10 +112,8 @@ export function XmlFormatter() {
 
           <ActionButtons
             onSample={loadSample}
-            onCopy={copyOutput}
             onSwap={swapPanes}
             onClear={clearAll}
-            copyDisabled={!output || !!error}
             swapDisabled={!output || !!error}
           />
         </SettingsBar>

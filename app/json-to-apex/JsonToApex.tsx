@@ -44,14 +44,6 @@ export function JsonToApex() {
     convertJson(input, indent, rootClassName, auraEnabled);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input, indent, rootClassName, auraEnabled]);
-
-  const copyOutput = () => {
-    if (output && !error) {
-      navigator.clipboard.writeText(output);
-      showToast("Copied to clipboard!");
-    }
-  };
-
   const clearAll = () => {
     setInput("");
     setOutput("");
@@ -124,10 +116,8 @@ export function JsonToApex() {
 
           <ActionButtons
             onSample={loadSample}
-            onCopy={copyOutput}
             onSwap={swapPanes}
             onClear={clearAll}
-            copyDisabled={!output || !!error}
             swapDisabled={true}
           />
         </SettingsBar>

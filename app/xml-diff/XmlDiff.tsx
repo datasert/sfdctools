@@ -60,14 +60,6 @@ export function XmlDiff() {
     () => formatXmlWithCleanup(rightXml, indent, normalizedCleanupOptions),
     [rightXml, indent, normalizedCleanupOptions],
   );
-
-  const copyCleanedRight = () => {
-    if (rightResult.formatted && !rightResult.error) {
-      navigator.clipboard.writeText(rightResult.formatted);
-      showToast("Cleaned right XML copied.");
-    }
-  };
-
   const clearAll = () => {
     setLeftXml("");
     setRightXml("");
@@ -120,10 +112,8 @@ export function XmlDiff() {
 
           <ActionButtons
             onSample={loadSample}
-            onCopy={copyCleanedRight}
             onSwap={swapSides}
             onClear={clearAll}
-            copyDisabled={!rightResult.formatted || !!rightResult.error}
             swapDisabled={!leftXml && !rightXml}
           />
         </SettingsBar>

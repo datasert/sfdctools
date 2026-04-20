@@ -13,11 +13,11 @@ interface ToastProps {
 
 const TOAST_VARIANT_CLASSES: Record<ToastVariant, string> = {
   info:
-    "border-[var(--primary-color)]/50 bg-[var(--primary-color)]/10 text-[var(--primary-color)] dark:border-[var(--primary-color)]/40 dark:bg-[var(--primary-color)]/20 dark:text-[var(--primary-color)]",
-  warn: "border-amber-500/50 bg-amber-50 text-amber-950 dark:border-amber-400/40 dark:bg-amber-950/90 dark:text-amber-100",
+    "border-[var(--primary-color)]/50 bg-blue-50 text-[var(--primary-color)] dark:border-[var(--primary-color)]/40 dark:bg-blue-950 dark:text-[var(--primary-color)]",
+  warn: "border-amber-500/50 bg-amber-50 text-amber-950 dark:border-amber-400/40 dark:bg-amber-950 dark:text-amber-100",
   success:
-    "border-emerald-500/50 bg-emerald-50 text-emerald-950 dark:border-emerald-400/40 dark:bg-emerald-950/90 dark:text-emerald-100",
-  error: "border-rose-500/50 bg-rose-50 text-rose-950 dark:border-rose-400/40 dark:bg-rose-950/90 dark:text-rose-100",
+    "border-emerald-500/50 bg-emerald-50 text-emerald-950 dark:border-emerald-400/40 dark:bg-emerald-950 dark:text-emerald-100",
+  error: "border-rose-500/50 bg-rose-50 text-rose-950 dark:border-rose-400/40 dark:bg-rose-950 dark:text-rose-100",
 };
 
 export function Toast({

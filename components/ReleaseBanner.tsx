@@ -6,6 +6,15 @@ import { CURRENT_RELEASE_BANNER } from "@/lib/release-banner";
 
 const DISMISSED_RELEASE_BANNER_KEY = "sfdc-tools:dismissed-release-banner-version";
 
+function shouldShowReleaseBanner(version: string): boolean {
+  const [major, minor, patch] = version.split(".").map((part) => Number(part));
+  if (!Number.isFinite(major) || !Number.isFinite(minor) || !Number.isFinite(patch)) {
+    return false;
+  }
+
+  return patch === 0;
+}
+
 export function ReleaseBanner() {
   const [isMounted, setIsMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
@@ -13,6 +22,11 @@ export function ReleaseBanner() {
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
       setIsMounted(true);
+
+      if (!shouldShowReleaseBanner(CURRENT_RELEASE_BANNER.version)) {
+        setIsVisible(false);
+        return;
+      }
 
       try {
         const dismissedVersion = window.localStorage.getItem(

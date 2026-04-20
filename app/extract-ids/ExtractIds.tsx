@@ -40,16 +40,6 @@ export function ExtractIds() {
   const clearAll = () => {
     setInput("");
   };
-
-  const copyOutput = () => {
-    if (!output) {
-      return;
-    }
-
-    navigator.clipboard.writeText(output);
-    showToast("Copied to clipboard!");
-  };
-
   const loadSample = () => {
     setInput(SAMPLE_EXTRACT_IDS);
     showToast("Sample input loaded.");
@@ -78,9 +68,7 @@ export function ExtractIds() {
 
           <ActionButtons
             onSample={loadSample}
-            onCopy={copyOutput}
             onClear={clearAll}
-            copyDisabled={!output}
           />
         </SettingsBar>
 

@@ -80,14 +80,6 @@ export function JsonDiff() {
     () => formatJsonWithCleanup(rightJson, indent, cleanupOptions),
     [rightJson, indent, cleanupOptions],
   );
-
-  const copyCleanedRight = () => {
-    if (rightResult.formatted && !rightResult.error) {
-      navigator.clipboard.writeText(rightResult.formatted);
-      showToast("Cleaned right JSON copied.");
-    }
-  };
-
   const clearAll = () => {
     setLeftJson("");
     setRightJson("");
@@ -140,10 +132,8 @@ export function JsonDiff() {
 
           <ActionButtons
             onSample={loadSample}
-            onCopy={copyCleanedRight}
             onSwap={swapSides}
             onClear={clearAll}
-            copyDisabled={!rightResult.formatted || !!rightResult.error}
             swapDisabled={!leftJson && !rightJson}
           />
         </SettingsBar>

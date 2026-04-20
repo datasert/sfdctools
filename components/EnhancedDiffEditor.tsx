@@ -263,6 +263,33 @@ export function EnhancedDiffEditor({
                   textClassName="w-auto max-w-none whitespace-nowrap"
                 />
               )}
+
+              {showToolbar && (
+                <>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(effectiveOriginal);
+                      showToast("Left copied.");
+                    }}
+                    className="px-2 py-1 text-xs rounded border border-[var(--content-border)] bg-[var(--content-color)] text-[var(--text-primary)] hover:bg-[var(--hover-bg)] transition-colors cursor-pointer"
+                    title="Copy left"
+                    aria-label="Copy left"
+                  >
+                    Copy Left
+                  </button>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(effectiveModified);
+                      showToast("Right copied.");
+                    }}
+                    className="px-2 py-1 text-xs rounded border border-[var(--content-border)] bg-[var(--content-color)] text-[var(--text-primary)] hover:bg-[var(--hover-bg)] transition-colors cursor-pointer"
+                    title="Copy right"
+                    aria-label="Copy right"
+                  >
+                    Copy Right
+                  </button>
+                </>
+              )}
             </div>
 
             <div className="flex items-center justify-end gap-3">
@@ -278,29 +305,6 @@ export function EnhancedDiffEditor({
 
               {showToolbar && (
                 <>
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(effectiveOriginal);
-                      showToast("Left copied.");
-                    }}
-                    className="px-2.5 py-1 text-xs rounded border border-[var(--content-border)] bg-[var(--content-color)] text-[var(--text-primary)] hover:bg-[var(--hover-bg)] transition-colors cursor-pointer"
-                    title="Copy left"
-                    aria-label="Copy left"
-                  >
-                    Copy Left
-                  </button>
-                  <button
-                    onClick={() => {
-                      navigator.clipboard.writeText(effectiveModified);
-                      showToast("Right copied.");
-                    }}
-                    className="px-2.5 py-1 text-xs rounded border border-[var(--content-border)] bg-[var(--content-color)] text-[var(--text-primary)] hover:bg-[var(--hover-bg)] transition-colors cursor-pointer"
-                    title="Copy right"
-                    aria-label="Copy right"
-                  >
-                    Copy Right
-                  </button>
-
                   <button
                     onClick={() => diffEditorRef.current?.goToDiff("previous")}
                     disabled={!hasChanges}

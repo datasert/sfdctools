@@ -88,10 +88,10 @@ export function Splitter({
   return (
     <div
       ref={containerRef}
-      className={`flex-1 flex overflow-hidden ${orientation === "horizontal" ? "flex-row" : "flex-col"} ${className}`}
+      className={`flex h-full min-h-0 w-full overflow-hidden ${orientation === "horizontal" ? "flex-row" : "flex-col"} ${className}`}
     >
       <div
-        className="overflow-hidden"
+        className="min-h-0 overflow-hidden"
         style={
           orientation === "horizontal"
             ? {
@@ -126,7 +126,7 @@ export function Splitter({
       </div>
 
       <div
-        className="overflow-hidden flex-1"
+        className="min-h-0 flex-1 overflow-hidden"
         style={
           orientation === "horizontal"
             ? {

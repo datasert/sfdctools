@@ -70,14 +70,6 @@ export function SoqlFormatter() {
     formatSoql(input, printWidth, uppercase, fieldsInNewLine, childQueriesInNewLine, clauseInNewLine, whereConditionInNewLine);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input, printWidth, uppercase, fieldsInNewLine, childQueriesInNewLine, clauseInNewLine, whereConditionInNewLine]);
-
-  const copyOutput = () => {
-    if (output) {
-      navigator.clipboard.writeText(output);
-      showToast("Copied to clipboard!");
-    }
-  };
-
   const clearAll = () => {
     setInput("");
     setOutput("");
@@ -163,10 +155,8 @@ export function SoqlFormatter() {
 
           <ActionButtons
             onSample={loadSample}
-            onCopy={copyOutput}
             onSwap={swapPanes}
             onClear={clearAll}
-            copyDisabled={!output || !!error}
             swapDisabled={!output || !!error}
           />
         </SettingsBar>

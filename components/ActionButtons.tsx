@@ -2,20 +2,16 @@ import { Button } from "./Button";
 
 interface ActionButtonsProps {
   onSample?: () => void;
-  onCopy?: () => void;
   onSwap?: () => void;
   onClear?: () => void;
-  copyDisabled?: boolean;
   swapDisabled?: boolean;
   className?: string;
 }
 
 export function ActionButtons({
   onSample,
-  onCopy,
   onSwap,
   onClear,
-  copyDisabled = false,
   swapDisabled = false,
   className = "",
 }: ActionButtonsProps) {
@@ -33,11 +29,6 @@ export function ActionButtons({
       {onSample && (
         <Button onClick={onSample} variant="secondary" size="sm">
           Load Sample
-        </Button>
-      )}
-      {onCopy && (
-        <Button onClick={onCopy} variant="secondary" size="sm" disabled={copyDisabled}>
-          Copy Output
         </Button>
       )}
       {onSwap && (

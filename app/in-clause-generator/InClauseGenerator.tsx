@@ -54,14 +54,6 @@ export function InClauseGenerator() {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input, dedupe, sorted, maxValuesPerLine, quoted, splitAfter]);
-
-  const copyOutput = () => {
-    if (output && !error) {
-      navigator.clipboard.writeText(output);
-      showToast("Copied to clipboard!");
-    }
-  };
-
   const clearAll = () => {
     setInput("");
     setOutput("");
@@ -148,10 +140,8 @@ export function InClauseGenerator() {
 
           <ActionButtons
             onSample={loadSample}
-            onCopy={copyOutput}
             onSwap={swapPanes}
             onClear={clearAll}
-            copyDisabled={!output || !!error}
             swapDisabled={!output || !!error}
           />
 

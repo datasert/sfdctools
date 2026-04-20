@@ -235,14 +235,6 @@ export function TextProcessor() {
     setOutput("");
     setTransformations([]);
   };
-
-  const copyOutput = () => {
-    if (output) {
-      navigator.clipboard.writeText(output);
-      showToast("Copied to clipboard!");
-    }
-  };
-
   const swapPanes = () => {
     const temp = input;
     setInput(output);
@@ -963,10 +955,8 @@ export function TextProcessor() {
 
           <ActionButtons
             onSample={loadSample}
-            onCopy={copyOutput}
             onSwap={swapPanes}
             onClear={clearAll}
-            copyDisabled={!output}
             swapDisabled={!input || !output}
           />
         </SettingsBar>

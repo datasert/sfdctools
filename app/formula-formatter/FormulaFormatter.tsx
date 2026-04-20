@@ -50,14 +50,6 @@ export function FormulaFormatter() {
     formatFormulaInput(input, lineWidth, uppercase);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input, lineWidth, uppercase]);
-
-  const copyOutput = () => {
-    if (output && !error) {
-      navigator.clipboard.writeText(output);
-      showToast("Copied to clipboard!");
-    }
-  };
-
   const clearAll = () => {
     setInput("");
     setOutput("");
@@ -111,10 +103,8 @@ export function FormulaFormatter() {
 
           <ActionButtons
             onSample={loadSample}
-            onCopy={copyOutput}
             onSwap={swapPanes}
             onClear={clearAll}
-            copyDisabled={!output || !!error}
             swapDisabled={!output || !!error}
           />
 

@@ -50,12 +50,6 @@ export function ConvertIds() {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input, direction]);
-
-  const copyOutput = () => {
-    navigator.clipboard.writeText(output);
-    showToast("Copied to clipboard!");
-  };
-
   const clearAll = () => {
     setInput("");
     setOutput("");
@@ -96,10 +90,8 @@ export function ConvertIds() {
 
           <ActionButtons
             onSample={loadSample}
-            onCopy={copyOutput}
             onSwap={swapPanes}
             onClear={clearAll}
-            copyDisabled={!output}
             swapDisabled={!input || !output}
           />
 

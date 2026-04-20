@@ -67,14 +67,6 @@ export function JsonFormatter() {
     formatJson(input, indent, cleanupOptions);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input, indent, cleanupOptions]);
-
-  const copyOutput = () => {
-    if (output && !error) {
-      navigator.clipboard.writeText(output);
-      showToast("Copied to clipboard!");
-    }
-  };
-
   const clearAll = () => {
     setInput("");
     setOutput("");
@@ -128,10 +120,8 @@ export function JsonFormatter() {
 
           <ActionButtons
             onSample={loadSample}
-            onCopy={copyOutput}
             onSwap={swapPanes}
             onClear={clearAll}
-            copyDisabled={!output || !!error}
             swapDisabled={!output || !!error}
           />
         </SettingsBar>

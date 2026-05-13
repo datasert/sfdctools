@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useMemo } from "react";
 import { IconCard } from "./IconCard";
 import type { IconInfo } from "@/lib/icon-utils";
 import { Input } from "@/components/Input";

@@ -59,6 +59,8 @@ export function EnhancedDiffEditor({
   const [isMaximized, setIsMaximized] = useState(false);
   const [localLeftLabel, setLocalLeftLabel] = useState(defaultLeftLabel);
   const [localRightLabel, setLocalRightLabel] = useState(defaultRightLabel);
+  const [mountedOriginal] = useState(original);
+  const [mountedModified] = useState(modified);
   const instanceId = useId();
   const modelId = `diff-${instanceId.replace(/:/g, "")}`;
   const diffEditorRef = useRef<MonacoType.editor.IStandaloneDiffEditor | null>(
@@ -67,8 +69,6 @@ export function EnhancedDiffEditor({
   const monacoRef = useRef<typeof MonacoType | null>(null);
   const diffListenerRef = useRef<MonacoType.IDisposable | null>(null);
   const rafRef = useRef<number | null>(null);
-  const effectiveOriginal = original;
-  const effectiveModified = modified;
 
   useEffect(() => {
     const editor = diffEditorRef.current;
@@ -136,7 +136,7 @@ export function EnhancedDiffEditor({
     }, 0);
 
     return () => window.clearTimeout(timeoutId);
-  }, [autoCollapseOnContentChange, effectiveOriginal, effectiveModified]);
+  }, [autoCollapseOnContentChange, original, modified]);
 
   useEffect(() => {
     return () => {
@@ -144,15 +144,17 @@ export function EnhancedDiffEditor({
         cancelAnimationFrame(rafRef.current);
         rafRef.current = null;
       }
-      diffListenerRef.current?.dispose();
-      diffEditorRef.current = null;
-    };
+    diffListenerRef.current?.dispose();
+    diffEditorRef.current = null;
+  };
   }, []);
 
   const monacoTheme =
     resolvedTheme === "dark" || theme === "dark" ? "vs-dark" : "light";
   const resolvedLeftLabel = leftLabel ?? localLeftLabel;
   const resolvedRightLabel = rightLabel ?? localRightLabel;
+  const copyOriginal = () => diffEditorRef.current?.getOriginalEditor().getValue() ?? "";
+  const copyModified = () => diffEditorRef.current?.getModifiedEditor().getValue() ?? "";
 
   const handleLeftLabelChange = (value: string) => {
     if (leftLabel === undefined) {
@@ -188,7 +190,7 @@ export function EnhancedDiffEditor({
       }
       window.clearTimeout(timeoutId);
     };
-  }, [effectiveOriginal, effectiveModified, isMaximized, monacoTheme]);
+  }, [original, modified, isMaximized, monacoTheme]);
 
   const handleMount: DiffOnMount = (editor, monaco) => {
     diffEditorRef.current = editor;
@@ -202,6 +204,9 @@ export function EnhancedDiffEditor({
     diffListenerRef.current = editor.onDidUpdateDiff(refreshChanges);
     refreshChanges();
 
+    const originalEditor = editor.getOriginalEditor();
+    const modifiedEditor = editor.getModifiedEditor();
+
     const wrapMode = wrapText ? "on" : "off";
     editor.updateOptions({
       ignoreTrimWhitespace: ignoreWhitespace,
@@ -211,8 +216,8 @@ export function EnhancedDiffEditor({
         enabled: collapseUnchanged,
       },
     });
-    editor.getOriginalEditor().updateOptions({ wordWrap: wrapMode });
-    editor.getModifiedEditor().updateOptions({ wordWrap: wrapMode });
+    originalEditor.updateOptions({ wordWrap: wrapMode });
+    modifiedEditor.updateOptions({ wordWrap: wrapMode });
 
     onMount?.(editor, monaco);
   };
@@ -268,7 +273,7 @@ export function EnhancedDiffEditor({
                 <>
                   <button
                     onClick={() => {
-                      navigator.clipboard.writeText(effectiveOriginal);
+                      navigator.clipboard.writeText(copyOriginal());
                       showToast("Left copied.");
                     }}
                     className="px-2 py-1 text-xs rounded border border-[var(--content-border)] bg-[var(--content-color)] text-[var(--text-primary)] hover:bg-[var(--hover-bg)] transition-colors cursor-pointer"
@@ -279,7 +284,7 @@ export function EnhancedDiffEditor({
                   </button>
                   <button
                     onClick={() => {
-                      navigator.clipboard.writeText(effectiveModified);
+                      navigator.clipboard.writeText(copyModified());
                       showToast("Right copied.");
                     }}
                     className="px-2 py-1 text-xs rounded border border-[var(--content-border)] bg-[var(--content-color)] text-[var(--text-primary)] hover:bg-[var(--hover-bg)] transition-colors cursor-pointer"
@@ -464,8 +469,8 @@ export function EnhancedDiffEditor({
           key={`diff-editor-${pathname}`}
           height={height}
           language={language}
-          original={effectiveOriginal}
-          modified={effectiveModified}
+          original={mountedOriginal}
+          modified={mountedModified}
           originalModelPath={`inmemory://${modelId}/original.txt`}
           modifiedModelPath={`inmemory://${modelId}/modified.txt`}
           keepCurrentOriginalModel={true}

@@ -8,6 +8,7 @@ type ChangeLogItem = {
 };
 
 const CHANGE_LOG_ITEMS: ChangeLogItem[] = [
+  { date: "2026-05-13", title: "Fix Text Diff copy output labels, swap label handling, and diff editor cursor reset" },
   { date: "2026-04-20", title: "Refine JWT decoder expiration and signature status badges" },
   { date: "2026-04-17", title: "Add SF CLI Reference tool with category browser, command search, interactive flag builder, and generated command output" },
   { date: "2026-04-07", title: "Add text cleanup controls to Text Diff while preserving raw source text for option reapply" },

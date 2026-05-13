@@ -94,6 +94,20 @@ function getMissingLines(source: string, comparison: string): string[] {
   return missingLines;
 }
 
+function formatMissingSection(
+  label: string,
+  fallbackLabel: string,
+  totalCount: number,
+  lines: string[],
+): string {
+  const trimmedLabel = label.trim() || fallbackLabel;
+
+  return [
+    `Missing in ${trimmedLabel} (Total ${totalCount}, Missing ${lines.length})`,
+    ...(lines.length > 0 ? lines : ["(none)"]),
+  ].join("\n");
+}
+
 export function TextDiff() {
   const [original, setOriginal] = usePersistedTextState(`${STORAGE_KEY}:original`, "");
   const [modified, setModified] = usePersistedTextState(`${STORAGE_KEY}:modified`, "");
@@ -113,6 +127,7 @@ export function TextDiff() {
     `${STORAGE_KEY}:cleanup-options`,
     defaultTextCleanupOptions,
   );
+  const [contentVersion, setContentVersion] = useState(0);
   const [isCleanupDialogOpen, setIsCleanupDialogOpen] = useState(false);
   const [hasOriginal, setHasOriginal] = useState(Boolean(original));
   const [hasModified, setHasModified] = useState(Boolean(modified));
@@ -200,11 +215,19 @@ export function TextDiff() {
     }
 
     const payload = [
-      `Missing in Left [${DEFAULT_LEFT_LABEL}]:`,
-      ...(missingInLeft.length > 0 ? missingInLeft : ["(none)"]),
+      formatMissingSection(
+        leftLabel,
+        DEFAULT_LEFT_LABEL,
+        getTextLines(cleanedOriginal).length,
+        missingInLeft,
+      ),
       "",
-      `Missing in Right [${DEFAULT_RIGHT_LABEL}]:`,
-      ...(missingInRight.length > 0 ? missingInRight : ["(none)"]),
+      formatMissingSection(
+        rightLabel,
+        DEFAULT_RIGHT_LABEL,
+        getTextLines(cleanedModified).length,
+        missingInRight,
+      ),
     ].join("\n");
 
     await navigator.clipboard.writeText(payload);
@@ -221,17 +244,23 @@ export function TextDiff() {
     setLeftLabel(DEFAULT_LEFT_LABEL);
     setRightLabel(DEFAULT_RIGHT_LABEL);
     setCleanupOptions(defaultTextCleanupOptions);
+    setContentVersion((currentValue) => currentValue + 1);
   };
 
   const swapTexts = () => {
     const nextOriginal = modifiedRef.current;
     const nextModified = originalRef.current;
+    const nextLeftLabel = rightLabel;
+    const nextRightLabel = leftLabel;
     originalRef.current = nextOriginal;
     modifiedRef.current = nextModified;
     setHasOriginal(Boolean(nextOriginal));
     setHasModified(Boolean(nextModified));
     setOriginal(nextOriginal);
     setModified(nextModified);
+    setLeftLabel(nextLeftLabel);
+    setRightLabel(nextRightLabel);
+    setContentVersion((currentValue) => currentValue + 1);
   };
 
   const sortTexts = () => {
@@ -243,6 +272,7 @@ export function TextDiff() {
     setHasModified(Boolean(nextModified));
     setOriginal(nextOriginal);
     setModified(nextModified);
+    setContentVersion((currentValue) => currentValue + 1);
   };
 
   const loadSample = () => {
@@ -252,6 +282,7 @@ export function TextDiff() {
     setHasModified(true);
     setOriginal(SAMPLE_TEXT_DIFF_LEFT);
     setModified(SAMPLE_TEXT_DIFF_RIGHT);
+    setContentVersion((currentValue) => currentValue + 1);
     showToast("Sample input loaded.", "info");
   };
 
@@ -313,7 +344,7 @@ export function TextDiff() {
         {/* Editable Diff Editor */}
         <div className="flex-1 p-3">
           <EnhancedDiffEditor
-            key={JSON.stringify(cleanupOptions)}
+            key={`${contentVersion}:${JSON.stringify(cleanupOptions)}`}
             height="100%"
             language={getMonacoLanguage(syntax)}
             original={cleanedOriginal}

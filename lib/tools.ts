@@ -41,6 +41,14 @@ export const tools: Tool[] = [
     tags: ["SLDS", "Colors", "Salesforce", "Design Tokens"],
   },
   {
+    id: "sf-formula",
+    name: "SF Formula",
+    description:
+      "Parse, evaluate, and format Salesforce formulas. Inspect the AST, supply field values with type coercion, and trace evaluation step-by-step.",
+    path: "/sf-formula",
+    tags: ["Formula", "Salesforce", "Parser", "Evaluator"],
+  },
+  {
     id: "sf-cli-reference",
     name: "SF CLI",
     description:

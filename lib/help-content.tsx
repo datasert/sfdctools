@@ -8,6 +8,73 @@ export interface HelpContent {
 }
 
 export const helpContent: Record<string, HelpContent> = {
+  "sf-formula": {
+    title: "SF Formula",
+    content: (
+      <div className="space-y-4">
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Overview</h3>
+          <p className="text-[var(--text-secondary)]">
+            Parse, format, and evaluate Salesforce formulas in the browser. The tool shows the formatted output, the parse result, the AST, and a step-by-step evaluation trace — all without any server calls.
+          </p>
+        </div>
+
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Formula Input</h3>
+          <ul className="list-disc list-inside space-y-1 text-[var(--text-secondary)]">
+            <li>Type or paste your Salesforce formula in the Monaco editor at the top.</li>
+            <li>The formula is parsed automatically as you type.</li>
+            <li>If the formula has a syntax error, the error appears immediately below the editor.</li>
+            <li>Use <strong>Load Sample</strong> to populate a multi-field example, or <strong>Clear</strong> to reset the editor.</li>
+            <li>Block comments (<code>{"/* comment */"}</code>) are supported and ignored during evaluation.</li>
+            <li>Your formula is saved in the browser and restored on the next visit.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Parse Tab</h3>
+          <ul className="list-disc list-inside space-y-1 text-[var(--text-secondary)]">
+            <li><strong>Formatted:</strong> The formula re-printed with normalized spacing, uppercased function names, and multi-line layout for long calls. Use the <strong>Copy</strong> button to copy the formatted text.</li>
+            <li><strong>Parse Result:</strong> JSON showing whether the parse succeeded, the list of referenced field names, and the list of called functions.</li>
+            <li><strong>AST:</strong> The full Abstract Syntax Tree of the formula as JSON — useful for understanding how sub-expressions are structured.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Evaluate Tab</h3>
+          <p className="text-[var(--text-secondary)] mb-2">
+            Supply values for each field referenced in the formula, then watch the result update in real time.
+          </p>
+          <ul className="list-disc list-inside space-y-1 text-[var(--text-secondary)]">
+            <li><strong>Field Values table:</strong> One row per field referenced in the formula. Set the <em>Type</em> and <em>Value</em> for each field.</li>
+            <li><strong>Supported types:</strong> Text, Number, Boolean (TRUE/FALSE), Currency (numeric), Percent (enter as whole number — 90 evaluates as 0.90), Date (YYYY-MM-DD), Date/Time, and Time.</li>
+            <li><strong>Result badge:</strong> Shows the final evaluation result (data type + value). A green badge means success; red means an error such as division by zero.</li>
+            <li><strong>Evaluation Steps tree:</strong> Each node shows the sub-expression text and its computed result after the <strong>→</strong> arrow. Click a node to collapse or expand its children. Branches not taken (e.g. the false branch of an IF) are shown with a <em>skipped</em> badge.</li>
+            <li>The splitter between the Field Values panel and the Evaluation Steps panel is draggable.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Function Reference Panel</h3>
+          <ul className="list-disc list-inside space-y-1 text-[var(--text-secondary)]">
+            <li>The right-side panel shows documentation for the function currently under your cursor in the formula editor.</li>
+            <li>Move the cursor onto any function name (e.g. <code>IF</code>, <code>AND</code>, <code>TEXT</code>) to see its syntax, description, parameters, return type, and an example.</li>
+            <li>Functions marked <strong>not supported</strong> can be parsed but will return an error during evaluation.</li>
+            <li>The divider between the main area and the Function Reference panel is draggable.</li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Tips</h3>
+          <ul className="list-disc list-inside space-y-1 text-[var(--text-secondary)]">
+            <li>Leave a field value blank to pass <code>NULL</code> into the formula for that field.</li>
+            <li>Cross-object fields like <code>Account.Name</code> or <code>Opportunity__r.Owner.Email</code> are supported — just enter the dot-notation name as-is in the Field Values table.</li>
+            <li>The formatter automatically breaks long function calls across multiple lines based on the 80-character width limit.</li>
+          </ul>
+        </div>
+      </div>
+    ),
+  },
   "id-converter": {
     title: "Convert IDs",
     content: (
@@ -91,34 +158,6 @@ export const helpContent: Record<string, HelpContent> = {
           <h3 className="font-semibold text-[var(--text-primary)] mb-2">Usage</h3>
           <p className="text-[var(--text-secondary)]">
             Paste or type your SOQL query in the input pane. The formatted output appears in the bottom pane automatically. Adjust the line width and keyword casing options as needed.
-          </p>
-        </div>
-      </div>
-    ),
-  },
-  "formula-formatter": {
-    title: "Formula Formatter",
-    content: (
-      <div className="space-y-4">
-        <div>
-          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Overview</h3>
-          <p className="text-[var(--text-secondary)]">
-            Format and beautify Salesforce formulas with customizable options. The tool formats formulas as you type.
-          </p>
-        </div>
-        <div>
-          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Features</h3>
-          <ul className="list-disc list-inside space-y-1 text-[var(--text-secondary)]">
-            <li><strong>Line Width:</strong> Set the maximum line width for formatting (default: 150 characters)</li>
-            <li><strong>Keywords Uppercase:</strong> Automatically convert formula keywords to uppercase (default: enabled)</li>
-            <li><strong>Real-time formatting:</strong> Formats as you type</li>
-            <li><strong>Error display:</strong> Shows parsing errors if the formula is invalid</li>
-          </ul>
-        </div>
-        <div>
-          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Usage</h3>
-          <p className="text-[var(--text-secondary)]">
-            Paste or type your Salesforce formula in the input pane. The formatted output appears in the bottom pane automatically. Adjust the line width and keyword casing options as needed.
           </p>
         </div>
       </div>

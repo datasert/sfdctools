@@ -13,7 +13,6 @@ const SHARE_RAW_PREFIX = "u.";
 export const TOOL_STORAGE_PREFIX = "sfdc-tools:";
 
 const TOOL_INDEXED_DB_STORAGE_KEYS: Record<string, string[]> = {
-  "formula-formatter": ["input"],
   "html-formatter": ["input"],
   "json-diff": ["left", "right"],
   "json-formatter": ["input"],

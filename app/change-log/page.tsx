@@ -8,6 +8,8 @@ type ChangeLogItem = {
 };
 
 const CHANGE_LOG_ITEMS: ChangeLogItem[] = [
+  { date: "2026-06-27", title: "Add SF Formula tool — parse, format, and evaluate Salesforce formulas with step-by-step evaluation trace" },
+  { date: "2026-06-27", title: "Upgrade @datasert/formulate to published npm package with ESM build, case-insensitive string comparisons, and & operator for concatenation" },
   { date: "2026-05-13", title: "Fix Text Diff copy output labels, swap label handling, and diff editor cursor reset" },
   { date: "2026-04-20", title: "Refine JWT decoder expiration and signature status badges" },
   { date: "2026-04-17", title: "Add SF CLI Reference tool with category browser, command search, interactive flag builder, and generated command output" },

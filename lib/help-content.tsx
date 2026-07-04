@@ -9,13 +9,13 @@ export interface HelpContent {
 
 export const helpContent: Record<string, HelpContent> = {
   "sf-formula": {
-    title: "SF Formula",
+    title: "Formula Spy",
     content: (
       <div className="space-y-4">
         <div>
           <h3 className="font-semibold text-[var(--text-primary)] mb-2">Overview</h3>
           <p className="text-[var(--text-secondary)]">
-            Parse, format, and evaluate Salesforce formulas in the browser. The tool shows the formatted output, the parse result, the AST, and a step-by-step evaluation trace — all without any server calls.
+            Parse, format, and evaluate Salesforce formulas in the browser. The tool shows the parse result, the AST, and a step-by-step evaluation trace — all without any server calls.
           </p>
         </div>
 
@@ -34,7 +34,6 @@ export const helpContent: Record<string, HelpContent> = {
         <div>
           <h3 className="font-semibold text-[var(--text-primary)] mb-2">Parse Tab</h3>
           <ul className="list-disc list-inside space-y-1 text-[var(--text-secondary)]">
-            <li><strong>Formatted:</strong> The formula re-printed with normalized spacing, uppercased function names, and multi-line layout for long calls. Use the <strong>Copy</strong> button to copy the formatted text.</li>
             <li><strong>Parse Result:</strong> JSON showing whether the parse succeeded, the list of referenced field names, and the list of called functions.</li>
             <li><strong>AST:</strong> The full Abstract Syntax Tree of the formula as JSON — useful for understanding how sub-expressions are structured.</li>
           </ul>
@@ -678,6 +677,35 @@ export const helpContent: Record<string, HelpContent> = {
           <h3 className="font-semibold text-[var(--text-primary)] mb-2">Usage</h3>
           <p className="text-[var(--text-secondary)]">
             Select "Encode" to convert text to Base64, or "Decode" to convert Base64 to text. Paste or type your input in the left pane, and the converted output appears in the right pane automatically. Use the Swap button to exchange input and output, which will also toggle the mode automatically.
+          </p>
+        </div>
+      </div>
+    ),
+  },
+  "hash-generator": {
+    title: "Hash Generator",
+    content: (
+      <div className="space-y-4">
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Overview</h3>
+          <p className="text-[var(--text-secondary)]">
+            Generate common cryptographic hashes from pasted text with either whole-text or per-line mode.
+          </p>
+        </div>
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Available Hashes</h3>
+          <ul className="list-disc list-inside space-y-1 text-[var(--text-secondary)]">
+            <li><strong>MD5:</strong> Fast legacy hash for compatibility checks.</li>
+            <li><strong>SHA-1:</strong> Legacy SHA hash for older integrations.</li>
+            <li><strong>SHA-256:</strong> Common general-purpose SHA hash.</li>
+            <li><strong>SHA-384:</strong> Longer SHA-2 variant for stronger digests.</li>
+            <li><strong>SHA-512:</strong> Longest built-in SHA-2 variant in the browser.</li>
+          </ul>
+        </div>
+        <div>
+          <h3 className="font-semibold text-[var(--text-primary)] mb-2">Usage</h3>
+          <p className="text-[var(--text-secondary)]">
+            Paste text, choose a hash algorithm, and toggle Per Line to hash each line separately instead of treating the full input as one string.
           </p>
         </div>
       </div>

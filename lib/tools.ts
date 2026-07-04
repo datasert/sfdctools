@@ -42,7 +42,7 @@ export const tools: Tool[] = [
   },
   {
     id: "sf-formula",
-    name: "SF Formula",
+    name: "Formula Spy",
     description:
       "Parse, evaluate, and format Salesforce formulas. Inspect the AST, supply field values with type coercion, and trace evaluation step-by-step.",
     path: "/sf-formula",
@@ -191,6 +191,14 @@ export const tools: Tool[] = [
       "Encode text to Base64 or decode Base64 to text. Supports real-time conversion with swap functionality.",
     path: "/base64-encoder",
     tags: ["Base64", "Encoder", "Decoder", "Utility"],
+  },
+  {
+    id: "hash-generator",
+    name: "Hash Generator",
+    description:
+      "Generate MD5, SHA-1, SHA-256, SHA-384, or SHA-512 hashes for whole text or each line independently.",
+    path: "/hash-generator",
+    tags: ["Hash", "Crypto", "Utility"],
   },
   {
     id: "base64-zip-viewer",

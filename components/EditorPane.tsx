@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useCallback, useContext, useMemo, useState } from "react";
+import { createContext, Fragment, ReactNode, useCallback, useContext, useMemo, useState } from "react";
 
 interface EditorPaneActionContextValue {
   setAction: (id: string, action: ReactNode | null) => void;
@@ -46,7 +46,13 @@ export function EditorPane({
     [setAction],
   );
 
-  const headerActions = useMemo(() => Object.values(actions), [actions]);
+  const headerActions = useMemo(
+    () =>
+      Object.entries(actions).map(([id, action]) => (
+        <Fragment key={id}>{action}</Fragment>
+      )),
+    [actions],
+  );
 
   return (
     <EditorPaneActionContext.Provider value={contextValue}>

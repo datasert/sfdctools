@@ -189,6 +189,16 @@ function FieldValueInput({
   );
 }
 
+function PanelHeader({ label }: { label: string }) {
+  return (
+    <div className="shrink-0 border-b border-[var(--content-border)] bg-[var(--content-faded-color)] px-3 py-1.5">
+      <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">
+        {label}
+      </span>
+    </div>
+  );
+}
+
 // ─── Function help panel ──────────────────────────────────────────────────────
 
 function FunctionHelpPanel({ fnName }: { fnName: string | null }) {
@@ -291,11 +301,9 @@ export function SfFormula() {
   );
   const [activeTab, setActiveTab] = useState<Tab>("evaluate");
   const [fields, setFields] = useState<Record<string, FieldEntry>>({});
-  const [formattedCopied, setFormattedCopied] = useState(false);
   const [cursorFn, setCursorFn] = useState<string | null>(null);
 
   // Parse-derived state
-  const [formatted, setFormatted] = useState("");
   const [parseJson, setParseJson] = useState("");
   const [astJson, setAstJson] = useState("");
   const [parseError, setParseError] = useState<string | null>(null);
@@ -318,10 +326,10 @@ export function SfFormula() {
   }, []);
 
   // Run parse whenever formula changes
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     const v = formula.trim();
     if (!v) {
-      setFormatted("");
       setParseJson("");
       setAstJson("");
       setParseError(null);
@@ -334,7 +342,6 @@ export function SfFormula() {
 
     if (!result.success) {
       setParseError(result.error);
-      setFormatted("");
       setParseJson(
         JSON.stringify({ success: false, error: result.error }, null, 2),
       );
@@ -358,12 +365,6 @@ export function SfFormula() {
     );
     setAstJson(JSON.stringify(result.ast, null, 2));
 
-    try {
-      setFormatted(format(v));
-    } catch {
-      setFormatted("");
-    }
-
     // Preserve existing field values; add new fields; prune removed ones
     const sortedFields = [...result.fields].sort();
     setFields((prev) => {
@@ -374,8 +375,10 @@ export function SfFormula() {
       return next;
     });
   }, [formula]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   // Re-evaluate whenever formula or field values change
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (!formula.trim() || parseError !== null) {
       setEvalResult(null);
@@ -416,6 +419,7 @@ export function SfFormula() {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     setEvalResult(evaluate(formula, subs, { schema: schema as any, steps: true }));
   }, [formula, fields, parseError]);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   const updateFieldType = useCallback((name: string, type: FieldType) => {
     setFields((prev) => ({ ...prev, [name]: { type, value: "" } }));
@@ -425,16 +429,18 @@ export function SfFormula() {
     setFields((prev) => ({ ...prev, [name]: { ...prev[name], value } }));
   }, []);
 
-  const fieldEntries = Object.entries(fields);
+  const handleFormat = useCallback(() => {
+    const v = formula.trim();
+    if (!v) return;
 
-  // ── Panel header helper ────────────────────────────────────────────────────
-  const PanelHeader = ({ label }: { label: string }) => (
-    <div className="shrink-0 border-b border-[var(--content-border)] bg-[var(--content-faded-color)] px-3 py-1.5">
-      <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">
-        {label}
-      </span>
-    </div>
-  );
+    try {
+      setFormula(format(v));
+    } catch {
+      // Leave the formula unchanged if formatting fails.
+    }
+  }, [formula, setFormula]);
+
+  const fieldEntries = Object.entries(fields);
 
   return (
     <Splitter
@@ -453,6 +459,14 @@ export function SfFormula() {
               Formula
             </span>
             <div className="flex items-center gap-1.5 ml-auto">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={handleFormat}
+                disabled={!formula.trim()}
+              >
+                Format
+              </Button>
               <Button
                 variant="secondary"
                 size="sm"
@@ -514,34 +528,6 @@ export function SfFormula() {
           {/* Parse tab */}
           {activeTab === "parse" && (
             <div className="flex h-full flex-col">
-              {/* Formatted strip */}
-              <div className="shrink-0 border-b border-[var(--content-border)]">
-                <div className="flex items-center justify-between shrink-0 border-b border-[var(--content-border)] bg-[var(--content-faded-color)] px-3 py-1.5">
-                  <span className="text-[10px] font-semibold uppercase tracking-wider text-[var(--text-tertiary)]">
-                    Formatted
-                  </span>
-                  {formatted && (
-                    <button
-                      onClick={() => {
-                        navigator.clipboard.writeText(formatted);
-                        setFormattedCopied(true);
-                        setTimeout(() => setFormattedCopied(false), 1500);
-                      }}
-                      className="text-[10px] font-medium text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors"
-                    >
-                      {formattedCopied ? "Copied!" : "Copy"}
-                    </button>
-                  )}
-                </div>
-                <div className="h-32">
-                  <MonacoEditor
-                    value={formatted}
-                    language="javascript"
-                    readOnly
-                    showCopyButton={false}
-                  />
-                </div>
-              </div>
               {/* Parse Result / AST panels */}
               <div className="flex min-h-0 flex-1">
                 <div className="flex min-w-0 flex-1 flex-col overflow-hidden border-r border-[var(--content-border)]">

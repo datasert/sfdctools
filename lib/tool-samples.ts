@@ -87,6 +87,9 @@ united oil & gas`;
 
 export const SAMPLE_BASE64_TEXT = `Salesforce sample payload`;
 export const SAMPLE_BASE64_ENCODED = `U2FsZXNmb3JjZSBzYW1wbGUgcGF5bG9hZA==`;
+export const SAMPLE_HASH_INPUT = `Acme
+Salesforce Tools
+Hash Generator`;
 
 export const SAMPLE_URL_TEXT = `https://example.com/search?q=salesforce tools&sort=updated#results`;
 export const SAMPLE_URL_ENCODED = `https%3A%2F%2Fexample.com%2Fsearch%3Fq%3Dsalesforce%20tools%26sort%3Dupdated%23results`;

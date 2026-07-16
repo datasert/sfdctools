@@ -7,7 +7,7 @@ export default function SldsStylingHooksPage() {
 
   return (
     <>
-      <SetPageTitle title="SLDS Styling Hooks" />
+      <SetPageTitle title="SLDS CSS Vars" />
       <SldsStylingHooks initialHooks={hooks} availableTypes={availableTypes} />
     </>
   );

@@ -319,13 +319,13 @@ export const helpContent: Record<string, HelpContent> = {
     ),
   },
   "slds-styling-hooks": {
-    title: "SLDS Styling Hooks",
+    title: "SLDS CSS Vars",
     content: (
       <div className="space-y-4">
         <div>
           <h3 className="font-semibold text-[var(--text-primary)] mb-2">Overview</h3>
           <p className="text-[var(--text-secondary)]">
-            Search and browse Salesforce Lightning Design System styling hooks with live type-based previews. Copy hook names, computed color values, and ready-to-use CSS usage snippets.
+            Search and browse Salesforce Lightning Design System CSS variables with live type-based previews. Copy variable names, computed color values, and ready-to-use CSS usage snippets.
           </p>
         </div>
         <div>

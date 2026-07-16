@@ -845,7 +845,7 @@ export function SldsStylingHooks({
         <div className="flex-1 overflow-y-auto p-3">
           {filteredHooks.length === 0 ? (
             <div className="flex h-full items-center justify-center text-sm text-[var(--text-secondary)]">
-              No styling hooks found
+              No SLDS CSS Vars found
             </div>
           ) : (
             <div className="grid grid-cols-[repeat(auto-fill,minmax(300px,1fr))] gap-2.5">

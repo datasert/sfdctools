@@ -529,7 +529,7 @@ export function SldsColors({ initialColors }: SldsColorsProps) {
   return (
     <>
       {ToastComponent}
-      <div className="h-full overflow-y-auto p-3">
+      <div className="h-full overflow-auto p-3">
         <div className="mb-3 flex items-center gap-2">
           <Input
             value={search}
@@ -560,7 +560,7 @@ export function SldsColors({ initialColors }: SldsColorsProps) {
                       <div className="w-36 flex-shrink-0 text-xs font-semibold text-[var(--text-secondary)]">
                         {group.label}
                       </div>
-                      <div className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto pb-1">
+                      <div className="flex flex-1 items-center gap-2 pb-1">
                         {group.swatches.map(({ hook, cssColor, formats }) => (
                           <div
                             key={hook.cssVar}

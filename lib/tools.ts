@@ -18,11 +18,11 @@ export const tools: Tool[] = [
   },
   {
     id: "slds-styling-hooks",
-    name: "SLDS Styling Hooks",
+    name: "SLDS CSS Vars",
     description:
-      "Search and explore SLDS styling hooks with type-based previews for color, spacing, typography, radius, shadows, and more.",
+      "Search and explore SLDS CSS variables with type-based previews for color, spacing, typography, radius, shadows, and more.",
     path: "/slds-styling-hooks",
-    tags: ["SLDS", "Styling Hooks", "Salesforce", "Design Tokens"],
+    tags: ["SLDS", "CSS Vars", "Salesforce", "Design Tokens"],
   },
   {
     id: "slds-css-classes",
